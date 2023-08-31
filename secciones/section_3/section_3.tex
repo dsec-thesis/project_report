@@ -1,0 +1,313 @@
+\newpage
+\section{Marco Teórico}
+En este capítulo se presentan conceptos relevantes que se utilizaran como investigación en este proyecto. También se incluyen presentaciones de tecnologías disponibles que pueden no formar parte de la implementación del proyecto, pero que ilustran la variedad de tecnologías alternativas y ayudan a decidir cual es la mejor.
+
+Primeramente, en la sección 3.1 serán presentados los conceptos de IoT y tecnologías inalámbricas disponibles. La sección 3.2 introduce edge computing. Esta sección presenta los conceptos que envuelven al edge computing y explica las tecnologías existentes. Posteriormente en la sección 3.3 se presenta el cloud computing y su conexión con edge computing. Finalmente 3.4 presenta los diferentes tipos de sensores disponibles como potenciales candidatos de este trabajo.
+
+% SUB-SECCIÓN
+\subsection{IoT (Internet of Things)}
+En esta sección desarrollaremos los conceptos detrás del “Internet de las Cosas” y las diferentes tecnologías de comunicación inalámbricas que existen en este, junto también al porqué de la elección de LoRa y posterior su implementación en este proyecto.
+
+% SUB-SECCIÓN
+\subsubsection{De Internet a Internet de las Cosas}
+Internet es una red de miles de millones de computadoras interconectadas, principalmente a través de cables de alta velocidad. Estas computadoras alojan una amplia variedad de servidores (servidores web, servidores de almacenamiento, servidores de correo electrónico, etc.) y clientes. La Internet está enlazada mediante una amplia gama de tecnologías electrónicas, inalámbricas y ópticas de redes. Internet transporta una vasta cantidad de recursos y servicios de información, como las aplicaciones de la World Wide Web (WWW), el correo electrónico, la telefonía y el intercambio de archivos. Por lo tanto, conectar objetos a Internet conlleva muchos beneficios. 
+
+El mundo ha experimentado estos beneficios con nuestros teléfonos celulares, computadoras portátiles y tabletas, pero esto también es cierto para todo lo demás, que esta proliferación de objetos se ha convertido en una nueva tendencia y continúa creciendo en organizaciones y empresas. Con el surgimiento de la Internet de las Cosas (IoT), se ha ampliado la conexión a objetos físicos, como sensores y actuadores, que recopilan y comparten datos a través de la Internet.
+
+El IoT abarca una variedad de aplicaciones, como las ciudades inteligentes, donde se utilizan sensores y dispositivos conectados para monitorear y gestionar el tráfico, la iluminación, la recolección de basura y otros servicios urbanos. Estos dispositivos inteligentes recopilan información en tiempo real y la envían a estaciones base inteligentes, que analizan los datos para tomar decisiones informadas y mejorar la eficiencia de las operaciones urbanas.
+
+Además, el mismo ha facilitado la creación de sistemas de recopilación de datos más eficientes y precisos en diversos campos, como la agricultura, la salud y la industria. Los sensores integrados en los dispositivos recolectan datos sobre el entorno, el rendimiento de las máquinas o la salud de las personas, permitiendo un monitoreo detallado y la toma de decisiones basada en datos en tiempo real.
+
+Algo para destacar del IoT es que el mismo supone una interconexión entre estos dispositivos físicos, pero con la particularidad que generalmente utilizan tecnología inalámbrica en su interconexión y no cableada. Esto último supone todo un reto tecnológico en la búsqueda de la mejor tecnología para lograr la mayor performance de un dispositivo de acuerdo a las necesidades que el mismo deba cumplir.
+
+
+% SUB-SECCIÓN
+\subsubsection{IoT - Tecnologías de comunicación y sus limitaciones}
+Durante las últimas décadas, las comunicaciones inalámbricas han sido objeto de mucho entusiasmo debido a su creciente integración en la vida cotidiana. Como resultado, han evolucionado significativamente desde los primeros sistemas de voz hasta las sofisticadas plataformas de comunicación integradas de hoy en día que ofrecen numerosos servicios utilizados por miles de millones de personas en todo el mundo. El Internet de las cosas (IoT) se considera la próxima revolución de las comunicaciones, que desempeñará un papel importante en la mejora de la eficiencia en la gestión de recursos humanos, naturales y energéticos, así como en la optimización de los procesos de producción. Como consecuencia, se estimó que aproximadamente 12 billones de dispositivos de IoT estaban conectados en el año 2020 [fuente] y con continua tendencia a crecer. Por otro lado, a medida que los sistemas de IoT evolucionan, nos enfrentamos a limitaciones inherentes que impiden mejoras adicionales en el rendimiento. Por lo tanto, es necesario desarrollar tecnologías adecuadas que satisfagan esos requisitos (en nuestro caso, es selección adecuada dado que no desarrollaremos la tecnologia de comunicacion, solo la adoptaremos).
+
+Hasta hace poco, no existía una tecnología económica, flexible y confiable para la conexión de dispositivos de IoT en la red. Las soluciones tradicionales, como las redes inalámbricas de corto alcance (por ejemplo, Bluetooth, ZigBee, Z-Wave) y las redes locales inalámbricas (WLAN, por ejemplo, WiFi, HiperLAN), así como las redes celulares (por ejemplo, GSM, LTE), aunque permiten la conexión inalámbrica de dispositivos de IoT en la red, suelen tener un alto costo, consumo de energía, complejidad y baja confiabilidad. Como resultado, se ha desarrollado recientemente la tecnología de redes de área amplia de bajo consumo de energía (LPWAN, por sus siglas en inglés). Las LPWAN se consideran excelentes candidatas para aplicaciones de IoT, ya que prometen una alta eficiencia energética, bajo consumo de energía y capacidades de cobertura amplia.
+
+A continuación, presentaremos las diversas tecnologías de comunicación que hemos evaluado junto con sus principales características y limitaciones.
+
+% SUB-SECCIÓN
+\subsubsubsection{WiFi}
+La tecnología de Wireless Fidelity (WiFi) está diseñada para conectar dispositivos electrónicos en una red inalámbrica de área local (WLAN, por sus siglas en inglés). WiFi se basa en la familia de estándares IEEE 802.11, que opera en las bandas no licenciadas de 2.4 GHz y 5 GHz disponibles en todo el mundo. WiFi incluye los estándares IEEE 802.11a/b/g para WLAN.
+
+WiFi tiene un ancho de banda masivo de 22 MHz y, como resultado, permite alcanzar velocidades de transferencia de datos muy rápidas. La velocidad de transferencia de datos es de 54 Mbps Y puede llegar incluso a 800 Mb/s con un ancho de banda de 40 MHz. WiFi utiliza el protocolo de acceso al canal Carrier Sense Multiple Access with Collision Avoidance (CSMA/CA) y, opcionalmente, un mecanismo de solicitud de envío/confirmación de envío (RTS/CTS). Hasta el 2017, se estimaba que había más de 7 mil millones de dispositivos con tecnología WiFi en uso \cite{ref9}.
+
+En el mundo del IoT, WiFi se utiliza para muchas aplicaciones, como monitoreo y gestión inalámbricos remotos de luces, enchufes eléctricos, vigilancia, alarmas, electrodomésticos, control climático (como control de temperatura y humedad), medición, control y diagnóstico de fabricación, equipos médicos, etc. WiFi es una tecnología clave en el desarrollo del IoT y proporciona un amplio campo para diversas soluciones de IoT.
+
+A pesar de que WiFi es el protocolo de comunicación inalámbrica más extendido y conocido, su uso generalizado en el mundo del IoT está principalmente limitado por un mayor consumo de energía debido a la necesidad de mantener una alta intensidad de señal y una transferencia rápida de datos para una mejor conectividad y confiabilidad. La principal desventaja de WiFi es su consumo relativamente alto de energía en entornos IoT de tipo outdoor.
+
+% SUB-SECCIÓN
+\subsubsubsection{Bluetooth}
+Bluetooth, también conocido como el estándar IEEE 802.15.1, es una tecnología de conectividad de corto alcance. La misma se considera una solución clave para el futuro del mercado de dispositivos electrónicos portátiles debido a su amplia integración con los teléfonos inteligentes. 
+
+Bluetooth se basa en un sistema de radio inalámbrico diseñado para dispositivos de corto alcance y económicos que reemplazan los cables de los periféricos de computadora, como ratones, teclados, impresoras, etc. Esta gama de periféricos se utiliza en un tipo de red conocida como red inalámbrica de área personal (WPAN, por sus siglas en inglés). Diseñado con eficiencia en costos y consumo reducido de energía, el protocolo Bluetooth de baja energía (BLE, por sus siglas en inglés) requiere muy poca energía del dispositivo. Sin embargo, esto implica un compromiso: cuando se transfieren frecuentemente grandes cantidades de datos, BLE no es una solución efectiva ya que se consume más energía. La velocidad de transferencia de datos es de 3 Mb/s. Bluetooth opera en la banda de frecuencia de radio de 2.4 GHz ISM que está disponible para uso sin licencia en todo el mundo. 
+
+Un conjunto de dispositivos Bluetooth que comparten un canal común se denomina piconet. Un piconet es una configuración en forma de estrella en la que el dispositivo en el centro desempeña el papel de maestro y todos los demás dispositivos funcionan como esclavos. Hasta siete esclavos pueden estar activos y ser atendidos simultáneamente por el maestro. Si el maestro necesita comunicarse con más de siete dispositivos, puede hacerlo pidiendo a los dispositivos esclavos activos que pasen al modo de bajo consumo de energía y luego invitando a otros esclavos estacionarios a activarse en el piconet. Este comportamiento puede repetirse, lo que permite que un maestro sirva a un gran número de esclavos. 
+
+Sin embargo aunque este protocolo parece prometedor para nuestra solución, tiene algunos inconvenientes en la aplicación del mismo, principalmente relacionados con el consumo de energia, donde el BLE (Bluetooth Low Energy) ha mejorado su performance, todavía sigue siendo mayor en consumo que otras alternativas como Zigbee o LoRaWAN. Por lo tanto podríamos decir que en aplicaciones donde nos interese tener un tiempo de vida prolongado, esto sería un problema. Sumado además a lo anterior, el mismo en áreas metropolitanas congestionadas por otras tecnologías como WiFi, dado que opera en una banda de 2.4 GHz puede verse afectado por interferencias y/o congestión de la señal, lo cual puede afectar la calidad y estabilidad de la conexión.
+
+% SUB-SECCIÓN
+\subsubsubsection{IEEE 802.15.4 / ZigBee}
+ZigBee es un estándar de comunicación basado en IEEE 802.15.4 que se utiliza ampliamente en aplicaciones de redes inalámbricas de malla. Utiliza un enfoque de autoorganización y autorreparación, lo que significa que la red puede adaptarse y corregir automáticamente problemas de conectividad. Se destaca por su bajo consumo de energía y su capacidad para proporcionar conectividad confiable en diversos entornos. Este, se centra en aplicaciones de baja potencia y ofrece soporte para servicios de red, seguridad y aplicaciones. Se utiliza en una variedad de sectores, incluidos sistemas de gestión de tráfico, electrónica doméstica e industria de máquinas.
+
+Podemos considerar que estas son las características principales de esta tecnología:
+\begin{itemize}
+    \item Bajo consumo de energía, con una vida útil de la batería que varía desde meses hasta años.
+    \item Tres bandas sin licencia: 2.4-2.4835 GHz, 902-928 MHz y 868-870 MHz. El número de canales asignados a cada banda de frecuencia es fijo en dieciséis, diez y uno respectivamente. La banda de frecuencia más alta se puede utilizar en todo el mundo y las dos bandas más bajas en las áreas de América del Norte y Europa
+    \item Las tasas máximas de datos permitidas para cada una de estas bandas de frecuencia son de 250 kbps a 2.4 GHz, 40 kbps a 915 MHz y 20 kbps a 868 MHz.
+    \item Acceso al canal mediante Carrier Sense Multiple Access with Collision Avoidance (CSMA/CA) para acceder al medio compartido.
+\end{itemize}
+
+Más allá de las ventajas que ofrece esta tecnología, también debemos mencionar que tenemos asociados problemas de complejidad de configuraciones en la administración de una red ZigBee con respecto a otros competidores como LoRa y también su precio en el mercado argentino es superior.
+
+% SUB-SECCIÓN
+\subsubsubsection{Sigfox}
+Sigfox es una tecnología LPWAN diseñada por una empresa francesa que ofrece una solución de conectividad IoT de extremo a extremo basada en su propia tecnología patentada. 
+
+Sigfox despliega sus propias estaciones equipadas con radios y las conecta a los servidores de backend mediante un red basada en IP. Luego los dispositivos finales se conectan a estas estaciones base utilizando la banda ISM ultra estrecha (ultra-narrow band). Esta tecnología utiliza bandas ISM sin licencia y al emplear ultra-narrow band logra optimizar el ancho de banda de frecuencias de forma eficiente, haciendo que los niveles de ruido sean muy bajos, lo que permite que el consumo de energía sea muy bajo a su vez, la sensibilidad del receptor sea alta.
+
+Inicialmente esta tecnología sólo admitía la comunicación uplink, aunque evolucionó posteriormente a un tecnología bidireccional con una importante asimetría de enlace. Haciendo que la comunicación downlink, es decir, los datos que se envían desde el backend hacia los dispositivos finales solo es posible si se ha producido en primer lugar una comunicación uplink.
+
+Si bien Sigfox ha mejorado a lo largo de los años, todavía cuenta con una limitación en cuenta a la cantidad de mensajes diarios que pueden ser enviados por dia desde un mismo dispositivo final, el cual está limitado a 140 mensajes diarios con una carga útil de 12 bytes y cuando analizamos el downlink (los que un dispositivo puede recibir) esto es aún peor con una limitación de 4 mensajes diarios. Al margen de lo mencionado anteriormente una gran característica que tiene esta tecnología es la fiabilidad de la comunicación mediante la diversidad de tiempo y frecuencia así como la duplicación de transmisión. Cada mensaje se transmite varias veces
+(tres por defecto) por diferentes canales de frecuencia. Como las estaciones base pueden recibir mensajes simultáneamente en todos los canales, el dispositivo final puede elegir aleatoriamente un canal de frecuencia para transmitir sus mensajes. Esto simplifica el diseño del dispositivo final y reduce su coste.
+
+Cabe aclarar también que aunque Sigfox presente muchas buenas características que la harían un candidato ideal, además de las limitaciones anteriormente mencionadas en cuanto a la cantidad de mensajes, también tenemos el apartado de cobertura de la red. Dado que esta tecnología depende de torres dedicadas, que deben ser instaladas por el propio fabricante, esto pasa a ser un problema mayor para poder utilizarla dado que la implementación de la misma no tiene cobertura total en el país de acuerdo con el sitio oficial de Sigfox. Lo que hace que la misma sea rechazada para una posterior elección.
+
+% SUB-SECCIÓN
+\subsubsubsection{Tecnología LoRa}
+LoRa es un esquema de modulación utilizado para la comunicación de largo alcance y es un protocolo propietario desarrollado por Semtech. Debido a que es propietario, la información sobre su implementación no está fácilmente disponible. Sin embargo, se ha publicado parte de la información por parte de Semtech y también el protocolo ha sido analizado e invertido por los investigadores hasta un punto en el que su implementación se ha comprendido bien. 
+
+LoRa está basado en la técnica de modulación CSS (Chirp Spread Spectrum) y puede utilizar uno o más canales. Este, se ha convertido en una de las tecnologías preferidas para las redes de IoT gracias a su capacidad para proporcionar largo alcance y bajo consumo de energía. Opera en la banda no licenciada ISM y utiliza bandas de frecuencia sub-GHz. También utiliza seis factores de propagación para adaptar la velocidad de datos y el alcance; donde un mayor factor de dispersión permite un mayor alcance a costa de una menor velocidad de datos, y viceversa. La velocidad de datos de LoRa oscila entre 300 bps y 50 kbps, dependiendo del factor  de dispersión y del ancho de banda del canal. Finalmente algo para notar en esta tecnología es que la misma tiene un parámetro importante llamado SF (Spreading Factor) que es ortogonal, lo que habilita a múltiples señales a ser transmitidas por el mismo canal concurrentemente sin interferencia y luego en el receptor se pueden detectar los diferentes paquetes enviados con los diferentes SF. La única condición aquí es que dos SF no deben ser iguales. Esto es algo importante para notar dado que significa un aumento importante en la eficiencia y el ancho de banda del canal.
+
+% SUB-SECCIÓN
+\subsubsubsection{LoRaWAN}
+LoRaWAN es el protocolo de comunicación a nivel de enlace (OSI 2) y red (OSI 3) que va sobre la capa física LoRa, el protocolo de comunicación LoRaWAN es abierto, esto permite que multitud de fabricantes puedan desarrollar dispositivos y de esta forma abaratar los costes de estos. De forma análoga a una red Ethernet se podría decir que LoRa son los cables que conectan los dispositivos en una red Ethernet y LoraWAN es la comunicación de los dispositivos a nivel de la dirección MAC y de la dirección IP de red de los dispositivos en la red Ethernet.
+
+El protocolo y la arquitectura de red tienen la mayor influencia en determinar la vida útil de la batería de un nodo, la capacidad de la red, la calidad del servicio, la seguridad y la variedad de aplicaciones atendidas por la red.
+
+Una gran ventaja de este protocolo es que los nodos no están asociados con una gateway específica. En su lugar, los datos transmitidos por un nodo suelen ser recibidos por múltiples gateways, y cada uno retransmitirá el paquete recibido desde el nodo final al servidor de red basado en la nube a través de algún enlace de retorno (ya sea celular, Ethernet, satélite o Wi-Fi). En esta tecnología, la inteligencia y complejidad se transfieren al servidor de red, que gestiona la misma y filtra los paquetes redundantes recibidos, realiza verificaciones de seguridad, programa los acuses de recibo a través de la puerta de enlace óptima y realiza adaptaciones de la velocidad de datos, entre otras funciones. Entonces, por ejemplo si un nodo es móvil o se está moviendo, no se necesita una transferencia de conexión de un gateway a otro, lo cual es una característica importante para habilitar aplicaciones de seguimiento de activos. 
+
+LoRaWAN ofrece una ventaja energética significativa, ya que los nodos se comunican de forma asíncrona, transmitiendo datos solo cuando están listos, ya sea por eventos o programación. Esto contrasta con redes en malla o sincrónicas, como las celulares, donde los nodos deben "despertar" frecuentemente para sincronizarse y verificar mensajes, lo que resulta en un consumo de energía más alto y una menor vida útil de la batería.
+
+Como parte de la arquitectura de este protocolo también se definen tipos de nodo, características de seguridad, etc. Estas características permiten que una red LoRaWAN tenga una capacidad muy alta de escalabilidad muy alta. Y que se pueda implementar la misma con una cantidad mínima de infraestructura y a medida que se necesitan más capacidad se agreguen gateways para manejarlas. Por estas características mencionadas anteriormente, creemos que esta es una tecnología ideal para nuestro proyecto.
+
+% SUB-SECCIÓN
+\subsubsubsection{Elección de la tecnología - ¿Por qué LoRa?}
+Al momento de seleccionar el tipo de tecnología a utilizar en este proyecto, tuvimos en cuenta los siguientes factores en el análisis:
+
+\begin{itemize}
+    \item Costo del nodo
+    \item Costo de infraestructura de la red
+    \item Consumo energético
+    \item Ancho de banda
+    \item Cobertura
+    \item Disponibilidad de acceso a la tecnología
+    \item Latencia
+    \item Etc,
+\end{itemize}
+
+Particularmente también por la naturaleza del proyecto, asumimos que la tasa de transferencia y la latencia de nuestra comunicación son factores menos relevantes, esto se debe a que se necesitan enviar pocos bytes de información al servidor. Pero por otro lado, nos importa maximizar la vida útil de la batería, el costo del nodo y de la infraestructura de la red, el rango de transmisión y cobertura, y la disponibilidad en Argentina de acceso a la tecnología.
+
+Entonces, del análisis anterior surge que dentro de las tecnologías inalámbricas disponibles, nos enfocamos en las denominadas LPWAN  (Low Power Wide Area Network, en español Red de Bajo Consumo y Área Extensa),  que como su nombre indica, son redes con poco volumen de datos capaz de transmitirse a kilómetros de distancia. Entre ellas se encuentran Sigfox y LoRaWAN analizadas en este proyecto.
+
+Las redes LPWAN tienen como características principales el bajo consumo energético y una baja potencia, junto también con una reducida capacidad de transmisión de datos. De esta manera, se logra que los dispositivos finales puedan ser alimentados mediante baterías con una prolongada vida útil.
+Durante toda esta sección se han mencionado algunas de las tecnologías inalámbricas que existen. Aunque quizás para la mayoría de la sociedad tecnologías como Wi-Fi y Bluetooth resultan más conocidas, en este caso interesa concentrarse en aquellas más adecuadas a las soluciones IoT.
+
+Wi-Fi y Bluetooth no se emplean como soluciones por dos razones principales, el 
+consumo de potencia y el radio de cobertura. Por un lado, el consumo de potencia del Wi-Fi sobrepasa el deseado, ya que se busca un consumo muy pequeño que permita alargar la vida útil de la batería. Por otro lado, Bluetooth permite conexiones de área personal, pero su inmunidad a ruidos en el canal es realmente muy baja y puede afectar a la comunicación del sensor con el servidor. 
+
+Por último, ambas tecnologías presentan un inconveniente común, no son capaces de conectarse a internet a menos que haya otro dispositivo o gateway presente (por ejemplo, en el caso del Wi-Fi el router) y en un rango en el que pueda crear una conexión a internet, lo que en muchas aplicaciones podría no ser útil.
+
+En el caso de Zigbee, su principal desventaja es que depende en gran medida del factor humano. El mantenimiento de la red no es llevado a cabo por un operador, si no por quien la explota. Por lo que crear un dispositivo final que pueda instalarse “sencillamente” sería una desventaja potencial en este caso.
+
+Finalmente, los factores de IoT desarrollados en la tabla a continuación y representados visualmente en la figura próxima, junto con las diferencias técnicas entre Sigfox y LoRa determinarán su viabilidad para este proyecto. Como hemos visto, una tecnología no puede servir por igual para todas las aplicaciones de IoT. 
+
+De nuestro análisis entre Sigfox y LoRa, vemos que ambos servirán como dispositivos de menor coste, ambos comparten un gran alcance y cobertura, junto también con una tendencia a duración larga de la batería. Si bien Sigfox está enfocada para despliegues de redes de área amplia, LoRa cumple ambas funciones (despliegue de área amplia y area local) además de que no tiene limitación en la cantidad máxima de mensajes que pueden ser enviados por un dispositivo como si es el caso de Sigfox (con un máximo de 140 mensajes diarios). 
+
+Sumado a la limitación de mensajes diarios por parte de Sigfox, podemos mencionar esta es una red operada, es decir que tras la suscripción a los servicios, el usuario no debe preocuparse por la conexión a la red, ni por el mantenimiento de la infraestructura, ya que los operadores son quienes se encargan del despliegue de la red. Sin embargo, esto que es un beneficio de Sigfox, está limitado por la cobertura del servicio, el cual carece de cobertura en gran parte de toda América Latina, incluyendo Argentina. 
+
+Por último, cabe aclarar que LoRa tiene su implementación de servicios de manera gratuita y que el mantenimiento de la red y el gateway corren por parte del usuario. Además, aprovechando las funcionalidades de la misma, podrían con un mismo gateway manejarse múltiples estacionamientos lo que el costo operativo de la red descendería. 
+
+Resumiendo, la tecnología de comunicación inalámbrica que adoptamos para este proyecto es LoRa / LoRaWAN por todas las características expuestas anteriormente. 
+
+% Tablas
+\enabletablerowcolor[2] % Activa el color de celda
+\begin{table}[H]
+    \centering
+    \caption{Tabla comparativa sobre tecnologías de comunicación}
+    \begin{tabular}{|l|*{5}{>{\raggedright\arraybackslash}p{1.8cm}|}}
+        \hline
+        \textbf{} & \textbf{BLE} & \textbf{WiFi} & \textbf{ZigBee} & \textbf{Sigfox} & \textbf{LoRa} \\
+        \hline
+        Frecuency               & Unlicensed ISM    & Unlicensed ISM bands & Unlicensed ISM & Unlicensed ISM bands & Unlicensed ISM bands \\
+        Bandwidth               & 2,4 GHz           & 2,4-5GHz             & 868MHz (Europe) and 2.4 GHz (World) & 100 Hz & 250kHz and 125 kHz \\
+        Maximum data rate       & 1Mbps             & 150-200 Mbps up to  600Mbps & 250 kbps & 100 bps &50 kbps \\
+        Bidirectional           & Yes               & Yes & Yes & Limited & Yes \\
+        Maximum messages/day    & Unlimited         & Unlimited & Unlimited & 140 (UL), 4(DL) &Unlimited \\
+        Range                   & 10m ~ 1 km        & 15m ~ 100m & 10 ~100m & 10 km (urban), 40 km (rural) & 5 km (urban), 20 km (rural) \\
+        Interference immunity   & Low               & Low & High & Very high & Very high \\
+        Allow private network   & Yes               & Yes & Yes & No &Yes \\
+        Spectrum cost           & Free              & Free & Free & Free & Free \\
+        Supported Topology      & P2P, Start, Mesh  & Start, Mesh & Mesh & Start & Start \\
+        Energy consumption      & Mid               & High & Mid & Low & Low \\
+        \hline
+        \end{tabular}
+    \label{tab:tabla_comparativa_tecnologia}
+\end{table}
+\disabletablerowcolor % Desactiva el color de celda
+
+% SUB-SECCIÓN
+\subsection{Edge Computing}
+El Edge Computing, o computación de borde en español, es un paradigma que persigue el objetivo de acercar el almacenamiento y procesamiento de datos cerca del lugar donde se producen. Este paradigma tiene como objetivo lograr una menor latencia, mayor ancho de banda disponible y más privacidad.
+
+La computación de borde, presenta una respuesta al desafío de procesar la gran cantidad de datos generados por dispositivos electrónicos y sensores de manera oportuna. De acuerdo a una predicción de Cisco, para el año 2023 se espera que el 70 por ciento de la población mundial tenga conectividad móvil, es aquí donde nos preguntamos si ¿la computación de borde ayudará a enfrentar la creciente necesidad de procesamiento de datos?.
+
+Como podemos analizar a nuestro alrededor, cada día son más los dispositivos IoT que se conectan a la internet, como luces LED, cámaras, smartwatches, redes de sensores, etc. Y estos comienzan a tener implicancia cada vez mayor en la toma de decisiones de áreas como atención médica, transporte, seguridad, etc. Entonces, con este paradigma se busca aprovechar las capacidades existentes en procesamientos de datos en sistemas integrados para lograr una menor congestión en los sistemas distribuidos, como así también mejorar la velocidad de actuación de los nodos finales.
+
+Entonces ¿qué es un nodo de borde? A grandes rasgos podemos decir que cualquier componente que pueda realizar operaciones de cálculo o almacenar información acerca de la localización donde los datos fueron generados cumple con la definición. En comparación a otros paradigmas donde generalmente se recolecta la información en el edge, luego se la transfiere a través de la red a un sistema de servidores densos y luego de ser procesada en el cloud la misma vuelve a al edge. Siendo que los poderes de cómputo son mayores hoy en día en los dispositivos de borde, se elimina esta necesidad de transferir toda la información para ser procesada. 
+
+Para este proyecto, como dispositivo de borde emplearemos una Raspberry Pi, que nos ayuda junto con una red de ML a detectar si efectivamente debemos informarle al servidor sobre la disponibilidad/ocupación de una plaza de estacionamiento o no. Profundizaremos esto más adelante, pero a grandes rasgos los nodos sensores transmiten la información mediante LoRa a nuestro dispositivo de borde, y una vez que este tenga la información procesada, le informará al servidor sobre el estado de la plaza logrando reflejar la reserva o disponibilidad de la misma.
+
+De esta forma, evitamos que los sensores congestionen la red, con el envío de datos al servidor, lo que en gran medida implica un costo elevado del servicio.
+
+% SUB-SECCIÓN
+\subsection{Cloud Computing}
+La computación en la nube está evolucionando como un nuevo modelo de computación diseñado para ofrecer entornos informáticos dinámicos y bajo demanda para los usuarios, brindando un servicio rápido, seguro y personalizable. Esta tecnología evita que las empresas tengan que encargarse de aprovisionar, configurar o gestionar los recursos y permite que paguen únicamente por los que usen.
+
+% SUB-SECCIÓN
+\subsubsection{Tipos de modelo}
+Hay tres tipos de modelos de servicio de cloud computing:
+
+\begin{itemize}
+    \item Infraestructura como servicio (IaaS)
+    \item Plataforma como servicio (PaaS)
+    \item Software como servicio (SaaS)
+\end{itemize}
+
+\subsubsubsection{Infraestructura como servicio (IaaS):}
+La infraestructura como servicio proporciona a las empresas recursos informáticos, incluyendo servidores, redes, almacenamiento y espacio en centro de datos con pago en función del uso. Las ventajas del IaaS son:
+
+\begin{itemize}
+    \item No es necesario invertir en tener hardware propio
+    \item La infraestructura escala on demand para dar soporte a las cargas de trabajo dinámicas.
+    \item Se pueden crear servicios flexibles e innovadores a demanda.
+\end{itemize}
+
+\subsubsubsection{Plataforma como servicio (PaaS):}
+La plataforma como servicio proporciona un entorno basado en cloud con todos los requisitos necesarios para dar soporte a todo el ciclo de vida de creación y puesta en marcha de aplicaciones basadas en web (cloud), sin el coste y la complejidad de comprar y gestionar el hardware, software, aprovisionamiento y alojamiento necesario. La ventajas de este tipo de modelo son:
+
+\begin{itemize}
+    \item Acelerar el desarrollo y la comercialización de aplicaciones.
+    \item Desplegar en cuestión de minutos nuevas aplicaciones web en cloud.
+    \item Reducir la complejidad con middleware como servicio.
+\end{itemize}
+
+\subsubsubsection{Software como servicio (SaaS):}
+Las aplicaciones basadas en cloud, o software como servicio, se ejecutan en sistemas distantes "en el cloud", que pertenecen y son administrados por otros y que están conectados a los sistemas de usuario a través de Internet y, por lo general, de un navegador web. Algunas ventajas son:
+
+\begin{itemize}
+    \item Las aplicaciones y los datos son accesibles desde cualquier sistema conectado.
+    \item No se pierden datos si su sistema falla, ya que los datos están en el cloud.
+    \item El servicio permite escalar dinámicamente en función de las necesidades de uso.
+\end{itemize}
+
+\subsubsection{¿Cómo funciona el Cloud computing?}
+Los modelos de servicio de cloud computing se basan en el concepto de compartir recursos informáticos, software e información bajo demanda por Internet. Las empresas o personas físicas pagan para acceder a un grupo virtual de recursos compartidos, incluidos servicios de computación, almacenamiento y redes, que se encuentran en servidores remotos propiedad de proveedores de servicios y gestionados por ellos. 
+
+Una de las numerosas ventajas que proporciona el cloud computing es el modelo de pago por uso, lo que permite a las organizaciones escalar de manera rápida y eficiente sin la obligación de adquirir y mantener sus propios centros de datos físicos y servidores. 
+
+Es decir, el cloud computing utiliza una red (normalmente, Internet) para conectar a los usuarios a una plataforma en la nube donde solicitan y acceden a servicios informáticos alquilados. Un servidor central gestiona toda la comunicación entre los dispositivos y los servidores del cliente para facilitar el intercambio de datos. Las funciones de seguridad y privacidad son componentes habituales para mantener la seguridad de esta información.  
+
+A la hora de adoptar una arquitectura de cloud computing, no hay una solución universal. Puede que lo que funcione para un proyecto (o empresa) no se adapte a otro proyecto dadas las necesidades del mismo. Es de hecho, que esta flexibilidad y versatilidad son dos de los aspectos distintivos de la nube que permiten a las empresas adaptarse rápidamente a los cambios de los mercados.
+
+Hay tres modelos diferentes de despliegue de cloud computing: nube pública, nube privada y nube híbrida.
+\begin{itemize}
+    \item Los clouds públicos pertenecen y son administrados por empresas que ofrecen a través de una red pública acceso rápido a recursos informáticos asequibles. Con los servicios de cloud público, los usuarios no necesitan adquirir hardware, ni software ni infraestructura de soporte, ya que pertenece a los proveedores y lo gestionan ellos.
+    \item Un cloud privado se trata de una infraestructura que utiliza únicamente una única organización, ya sea gestionada internamente o por terceros y alojada internamente o externamente. Los clouds privados aprovechan la eficiencia del cloud, a la vez que ofrecen un mayor control de los recursos y evitan la multitenencia.
+    \item Un cloud híbrido utiliza una base de cloud privada, combinada con la integración estratégica y el uso de servicios cloud públicos. En realidad, un cloud privado no puede existir aislado del resto de los recursos de TI de una empresa ni del cloud público. La mayoría de las empresas con clouds privados evolucionarán para gestionar cargas de trabajo en todos los centros de datos, clouds privados y clouds públicos, creando así clouds híbridos.
+\end{itemize}
+
+\subsection{Tipos de Sensores}
+Los sistemas de estacionamiento inteligente  ocupan un lugar importante como una de las infraestructuras esenciales que permite llevar a cabo el IoT en las Smart Cities. Por lo tanto, la parte fundamental del sistema se encuentra en la detección de vehículos ubicados en el estacionamiento. En esta sección se presentan una serie de sensores disponibles para la detección de la plaza libre en un estacionamiento. 
+
+En particular, nos enfocamos en los sensores más populares utilizados en escenarios reales como: sensor de ultrasonido, sensor de tiempo de vuelo (infrarrojo) y magnetómetro
+
+Estos sensores fueron analizados conectando los mismos a una placa NodeMCU y realizando varios ensayos en una cochera privada. En primer lugar, se colocaron los sensores en slots libres para obtener la información de referencia de los mismos cuando un vehículo no está situado sobre el mismo. Una vez obtenidas las lecturas de referencia, se probó colocando los mismos sensores debajo de diferentes vehículos (por la diferencia de distancia entre el chasis y el suelo) para obtener valores de una media.
+
+\subsubsection{Sensor Ultrasónico}
+Un sensor ultrasónico es un dispositivo electrónico que mide la distancia de un objeto objetivo emitiendo ondas de sonido ultrasónico y convierte el sonido reflejado en una señal eléctrica. Las ondas ultrasónicas viajan más rápido que la velocidad del sonido audible (es decir, el sonido que los humanos pueden escuchar). Los sensores ultrasónicos tienen dos componentes principales: el transmisor (que emite el sonido utilizando cristales piezoeléctricos) y el receptor (que detecta el sonido después de que ha viajado hacia y desde el objetivo).
+
+Midiendo el tiempo transcurrido entre la generación de la onda sonora y la recepción de la onda reflejada, se puede calcular la distancia al objeto en estudio. mediante la siguiente fórmula:
+
+\insertequation[\label{eqn:velocidad_del_sonido}]{vs = 340 m/s}
+\insertindexequation[\label{eqn:tiempo_recorrido_señal}]{h_{lt}}{Tiempo de recorrido de la señal}
+\insertequation[\label{eqn:distancia_de_la_onda}]{\frac{h_{lt} . vs}{2} = d}
+
+\insertimage[\label{sensor_ultrasonico}]{secciones/section_3/images/sensor_ultrasonico}{width=13cm}{Sensor ultrasónico HC-SR04}
+
+Especificaciones del sensor:
+\begin{itemize}
+    \item Modelo HC-SR04
+    \item Rango de detección: 2cm ~ 450cm
+    \item Resolución: 0.3 cm
+\end{itemize}
+
+
+\subsubsection{Sensor de tiempo de vuelo o Radar (Time-of-Flight)}
+Los sensores de este tipo se basan en el mismo principio de funcionamiento que los sensores ultrasónicos solo que en este caso la onda transmitida es una onda electromagnética.Debido a que utiliza una fuente de luz con un haz muy estrecho, es bueno para determinar la distancia de solamente la superficie que está directamente delante.
+
+\insertimage[\label{sensor_radar}]{secciones/section_3/images/sensor_radar}{width=8cm}{Sensor tiempo de vuelo VL53L0X}
+
+Especificaciones del sensor:
+\begin{itemize}
+    \item Modelo VL53L0X
+    \item Rango de detección: hasta 200 cm
+    \item Resolución: 0,1 cm
+\end{itemize}
+
+
+\subsubsection{Magnetómegro}
+Los magnetómetros son dispositivos utilizados para medir y detectar campos magnéticos en el entorno. Estos campos magnéticos pueden ser generados por imanes, corrientes eléctricas o incluso por la presencia de materiales magnéticos. Los magnetómetros juegan un papel importante en una amplia gama de aplicaciones, desde navegación y geofísica hasta ciencia espacial y medicina.
+
+Los magnetómetros permiten medir la intensidad y la dirección del campo magnético en una ubicación específica. Esto proporciona información crucial para entender y analizar fenómenos magnéticos en diferentes contextos. Algunos magnetómetros también son capaces de medir campos magnéticos en varias dimensiones, lo que proporciona una visión completa de la distribución y orientación del campo magnético.
+
+Existen diferentes tipos de magnetómetros, cada uno con sus propias características y principios de funcionamiento. Algunos de los tipos más comunes incluyen magnetómetros de efecto Hall, magnetómetros de flujo de inducción, magnetómetros de SQUID (Superconducting Quantum Interference Device) y magnetómetros de protones.
+
+En resumen, dado que estos miden el campo magnético de la tierra, cuando un vehículo se encuentra dentro del alcance del mismo, este detectara un cambio en el campo magnético generado por el vehículo lo que nos permitirá poder decidir la ocupación de la plaza de estacionamiento.
+
+
+\insertimage[\label{magnetometro}]{secciones/section_3/images/magnetometro}{width=8cm}{Magnetómetro HMC5883L}
+
+\subsubsection{Ensayos de campo y conclusión}
+Luego de realizar una extensa investigación con respecto a cuáles son los sensores más utilizados en la industria para este tipo de productos, nos encontramos que uno de los principales fabricantes de soluciones inteligentes para estacionamientos como es el caso de la empresa Libelium optaba por utilizar dos (2) sensores para realizar el sensado de la presencia de un automóvil (un sensor magnético y un sensor de tipo Radar LiDar) lo cual tenía sentido dado que utilizar por ejemplo un sensor ultrasónico sería ineficiente en un ámbito real dado que el mismo puede verse perturbado por el entorno y arrojar falsos positivos.
+
+Siguiendo con nuestra investigación, analizamos el sensor de tipo radar VL53L0X, el cual emplea un haz infrarrojo para realizar la medición y es mucho menos sensible a las perturbaciones externas. Como se puede visualizar en la figura a continuación, conseguimos detectar correctamente la presencia de un vehículo con este tipo de sensor, lo cual lo vuelve un buen candidato. Cabe aclarar que no existe una línea de referencia para un umbral máximo, dado que el sensor arroja un “Fuera de rango” cuando queda en un espacio completamente vacío.
+
+Finalmente, para el sensor magnético analizamos el eje Z que es nuestra variable de importancia aquí. Si bien pueden existir algunos falsos positivos que dependen en gran medida de la distancia entre el chasis y el suelo, junto con la estructura metálica del chasis y principalmente la colocación correcta del magnetómetro en el estacionamiento para que el mismo se encuentre lo menos perturbado por las variaciones externas. Este resultó ser un buen candidato para analizar la posibilidad de que exista un automóvil, y confirmarlo con el sensor de tipo Radar. Los magnetómetros son sensores que tienen un muy bajo consumo de energía y permiten realizar varias muestras con un mínimo gasto energético, lo cual en nuestro proyecto será utilizado como el sensor que disparara al sensor Radar para la confirmación. A continuación dejamos una tabla comparativa entre ambos sensores y su aplicación:
+
+\enabletablerowcolor[2] % Activa el color de celda
+\begin{table}[ht]
+    \centering
+    \caption{Tabla comparativa entre sensores}
+    \begin{tabular}{|p{8cm}|*{2}{>{\raggedright\arraybackslash}p{3cm}|}}
+        \hline
+        \textbf{} & \textbf{Radar} & \textbf{Magnetómetro} \\
+        \hline
+        Fiabilidad frente al movimiento de vehículos cercanos & SI & NO \\
+        Fiabilidad frente a vehículos estacionados en las proximidades & SI & NO \\
+        Fiabilidad frente a interferencias electromagnéticas & SI &NO \\
+        Fiabilidad en cualquier escenario de iluminación &SI &SI \\
+        Estabilidad durante estancias prolongadas del vehículo &SI &NO \\
+        No necesita apertura en la caja &SI &SI \\
+        Inmunidad contra la suciedad o el polvo en la caja &SI &SI \\
+        Optimización en consumo de energía &NO &SI \\
+        \hline
+        \end{tabular}
+    \label{tab:tabla_comparativa_sensore}
+\end{table}
+\disabletablerowcolor % Desactiva el color de celda
+
+Con todo lo anterior expuesto, hemos optado por la combinación de ambos sensores para su implementación en este proyecto.

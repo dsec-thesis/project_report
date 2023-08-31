@@ -1,0 +1,49 @@
+\newpage
+\section{Introducción}
+El creciente aumento en el número de vehículos en nuestras ciudades ha planteado un desafío significativo para los conductores: encontrar un lugar adecuado para estacionar. El estacionamiento se ha convertido en una tarea frustrante y estresante que consume tiempo y afecta negativamente la eficiencia y comodidad del transporte urbano. Este problema no solo afecta a los conductores individuales, sino que también tiene un impacto en la congestión del tráfico, la contaminación ambiental y la calidad de vida en general.
+
+En este contexto, surge la necesidad de buscar soluciones innovadoras que aborden eficazmente el problema de conseguir estacionamiento. El presente proyecto de grado, titulado \quotes{Estacionando}, se propone como una respuesta a esta problemática. El objetivo principal de este proyecto es desarrollar una solución integral que facilite a los conductores encontrar y asegurar lugares de estacionamiento de manera eficiente, reduciendo así la congestión y mejorando la experiencia de conducción.
+
+ 
+% SUB-SECCIÓN
+\subsection{Propósito del proyecto}
+La movilidad urbana se ha convertido en un tema crucial para la Comisión Europea y muchas naciones del mundo, en su búsqueda por desarrollar modelos de ciudades inteligentes que mejoren la calidad de vida de sus habitantes. En esta visión de las Smart Cities, la Movilidad Inteligente y Sostenible desempeña un papel central.
+
+En un entorno urbano cada vez más poblado y congestionado, se presentan nuevos desafíos para mejorar la movilidad. Según un informe de McKinsey Sustainability \cite{ref1}, se están explorando diversas alternativas para abordar este problema, como la implementación de coches eléctricos, navegación autónoma, políticas de transporte público y servicios de compartición de vehículos, como el carpooling y Uber, entre otros.
+
+Además, según un informe del Observatorio de Movilidad Urbana (Eltis) \cite{ref2}, financiado por la Comisión Europea, es fundamental diseñar e integrar Sistemas de Estacionamientos Inteligentes (Smart Parking Systems) en las políticas de movilidad urbana sostenible. Una gestión eficiente del estacionamiento puede liberar valioso espacio público, hacer que las ciudades sean más atractivas, reducir el tráfico vehicular, aliviar la congestión y disminuir las emisiones de carbono. De acuerdo con un estudio realizado por la División de Ingeniería de Sistemas y el Centro de Ingeniería de Información y Sistemas de la Universidad de Boston \cite{ref3}, se estima que el 30\% de los conductores de las principales ciudades de Estados Unidos invierten en promedio 7.8 minutos diarios en buscar lugares de estacionamiento libres. Además, según el ensayo "A Reservation-Based Smart Parking System" \cite{ref4}, durante las horas pico, el tráfico generado por los conductores buscando estacionamiento representa el 40\% del tráfico total en las grandes ciudades estadounidenses. En zonas densamente pobladas, la congestión y los retrasos en el tráfico se deben, en parte, a la problemática del estacionamiento.
+
+Es evidente que una Smart City debe abordar el problema del estacionamiento y la congestión vehicular. En este sentido, la tecnología y el Internet de las Cosas (IoT) desempeñan un papel fundamental en el desarrollo de sistemas de estacionamiento inteligentes que ayuden a los conductores a encontrar plazas disponibles de manera eficiente.
+
+En línea con los desafíos planteados anteriormente, este proyecto propone el desarrollo e implementación de un nodo sensor de baja energía ubicado en el suelo de un estacionamiento privado. Este sensor detectará la ocupación de las plazas de estacionamiento por vehículos y se comunicará con un nodo concentrador para transmitir la información en tiempo real. Finalmente, el nodo concentrador enviará los datos a un servidor en la nube, permitiendo que los conductores encuentren plazas de estacionamiento libres a través de sus teléfonos móviles.
+
+% SUB-SECCIÓN
+\subsection{Objetivos del proyecto}
+El objetivo principal de este proyecto es diseñar y desarrollar un prototipo integral de notificaciones de plazas libres para estacionamientos de vehículos, utilizando una aplicación móvil.
+
+En la implementación de este sistema, existe una variedad de tecnologías disponibles para establecer las comunicaciones entre los sensores y/o entre el sensor y el gateway. Entre estas tecnologías, se encuentran opciones como ZigBee, RF LoRa, GPRS, Sigfox y, la más común, WiFi.
+
+Dado que esta diversidad tecnológica existe, es necesario realizar una investigación previa para determinar cuál se ajusta mejor a las necesidades de nuestro proyecto. En este caso, después del análisis, concluimos que LoRa es la más adecuada.
+
+Esta elección de LoRa se basa en sus características y ventajas, como su bajo consumo de energía, amplio alcance de comunicación, capacidad para atravesar obstáculos y su idoneidad para aplicaciones de Internet de las Cosas (IoT). Estas cualidades hacen de LoRa una opción sólida para establecer una red de comunicación confiable y eficiente en nuestro sistema de notificación de plazas libres.
+
+% SUB-SECCIÓN
+\subsection{Alcance}
+Definimos el alcance primario de este proyecto como: 
+\begin{itemize}
+    \item Comparar los distintos tipos de sensores utilizados para la detección de vehículos en el contexto de estacionamientos.
+    \item Desarrollar un prototipo de nodo sensor capaz de detectar la disponibilidad de una plaza de estacionamiento.
+    \item Realizar un estudio comparativo de las tecnologías de comunicación existentes en el área, con el fin de determinar la más adecuada para la implementación del proyecto.
+    \item Desarrollar un sistema que haga uso de los datos recopilados por el nodo sensor, permitiendo a los usuarios reservar plazas de estacionamiento.
+\end{itemize}
+
+% SUB-SECCIÓN
+\subsection{Limitaciones}
+A continuación, se enumeran las limitaciones del proyecto, que están determinadas por el tiempo de desarrollo y los recursos disponibles. Estas limitaciones establecen las características que estarán fuera del alcance del proyecto:
+\begin{itemize}
+    \item Detección de vehículos que no sean un automóvil
+    \item El tamaño del producto está limitado al tamaño de la plataforma elegida y sus componentes.
+    \item No se desarrollará la vista para el administrador.
+    \item El prototipo del nodo sensor se realizará utilizando kits de desarrollo.
+    \item El diseño mecánico solo será presentado de forma teórica.
+\end{itemize}

@@ -1,0 +1,34 @@
+\newpage
+\section{Análisis de la solución}
+En este capítulo presentaremos una visión general de la implementación del sistema de reservas propuesto, como implementamos la detección del vehículo en un slot del estacionamiento y la integración general entre la aplicación desarrollada, el backend, nodo sensor y de borde. También se presenta la arquitectura del mismo, describiendo el papel de cada componente que constituye el sistema.
+
+
+% SUB-SECCIÓN
+\subsection{Introducción}
+Uno de los objetivos principales en este proyecto final, es el desarrollo de un nodo que sea capaz de detectar la ocupación de una plaza de estacionamiento y el desarrollo de un sistema integral de reservas. En resumen se utilizaron las ventajas ofrecidas por el concepto de arquitectura de sistemas IoT (Internet of Things), el paradigma de Edge Computing (Computación de Borde) y el poder de la nube (Cloud Computing) como entorno de ejecución. A continuación se deja una representación simple de la arquitectura de la misma.
+
+\insertimage[\label{architecture_minimal_diagram}]{secciones/section_4/images/minimal_architecture}{width=17cm}{Arquitectura minimalista del sistema}
+
+Y en la imagen a continuación se presenta como sería el caso de uso real:
+\insertimage[\label{representacion_estacionamiento_real}]{secciones/section_4/images/parking_lot}{width=17cm}{Representación Estacionamiento con sensores}
+
+% SUB-SECCIÓN
+\subsection{Arquitectura del sistema}
+Haciendo referencia a lo mencionado en el apartado anterior, haremos el desarrollo de los siguientes componentes del sistema:
+
+\begin{itemize}
+    \item Nodo sensor
+    \item Nodo de borde (collector)
+    \item Software integral (arquitectura Cloud-based)
+\end{itemize}
+
+En resumen, el sistema realiza la interconexión y comunicación entre los componentes físicos del mismo (sensores) y los componentes computacionales, que logran conectar al usuario final con el de una plaza de estacionamiento.
+
+% Insertar Nodo Sensor
+\input{secciones/section_4/nodo_sensor}
+
+% Insertar Nodo de Borde
+\input{secciones/section_4/nodo_de_borde}
+
+% Insertar seccion sofware
+\input{secciones/section_4/software_integral}
