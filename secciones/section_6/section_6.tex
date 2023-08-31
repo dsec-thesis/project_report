@@ -1,0 +1,34 @@
+\clearpage
+\section{Potenciales Mejoras}
+A continuación se adjuntan algunas potenciales mejoras que el proyecto podría tener en estadíos futuros.
+
+% SUB-SECCIÓN
+\subsection{Extensión del sistema a lugares públicos de estacionamiento}
+
+Si bien el enfoque principal de nuestro proyecto fue utilizar el producto en estacionamientos privados, el hecho de poder encontrar también estacionamiento en zona pública contribuye a la disminución de tráfico en horas pico, ayuda a reducir emisiones de CO2, etc. 
+
+La mejora que estamos proponiendo en este apartado cambia el modelo de negocio inicial. En este caso hablamos de extenderlos para que la información sea de uso gratuito en los lugares públicos de estacionamiento. A continuación listamos las potenciales mejoras que creemos deberían llevarse a cabo para lograr extender el mismo a lugares públicos, aunque no las desarrollaremos dado que no es el objetivo de este informe.
+
+% SUB-SECCIÓN
+\subsection{LoRa Gateway Industrial}
+Para poder manejar eficientemente la escalabilidad del sistema en usos públicos, se debería incorporar un Gateway LoRa industrial como el que se visualiza en la figura XX 
+
+% CAMBIAR POR FOTOS DEL LORA GATEWAY
+\insertimage[\label{lora_gateway}]{secciones/section_6/images/lora_gateway}{width=7.3cm}{Gateway Industrial Lora}
+
+Este dispositivo es un elemento central en una red LoraWAN. La función de un Gateway es generar la red inalámbrica LoRaWAN para cobertura a los nodos, comunicar con los nodos para recibir la información que estos mandan o para transmitirles los comandos pertinentes y, por último, comunicarse con el Network Server aguas arriba (Para este último paso ya se utiliza una comunicación TCP/IP). 
+
+Esto inicialmente no estaba en el proyecto porque para el caso de redes privadas pequeñas como era el caso de uso nuestro, el gateway puede omitirse dado que nuestra placa raspberry pi utiliza LoRa directamente en la comunicación. Pero para el caso de redes extensas, deben utilizarse varios Gateways para asegurar la redundancia y la entrega exitosa de los datos. A continuación se presenta una ilustración de cómo influye el gateway en una red de sensores: 
+
+% CAMBIAR POR FOTOS LORA WAN
+\insertimage[\label{lorawan}]{secciones/section_6/images/lorawan}{width=14cm}{Arquitectura LoraWAN}
+
+% SUB-SECCIÓN
+\subsection{Integración con sistema de pagos electrónicos}
+
+Pensando este sistema en un entorno de producción, el mismo debe contar con un sistema integrados de pagos electrónicos como podría ser Mercado Pago para eliminar la necesidad de efectivo o tarjetas físicas. Además, en términos de eficiencia operativa esto, simplifica la recolección de pagos para los operadores de estacionamientos. Los pagos se registrarían automáticamente en la plataforma, lo que reduciría la carga administrativa y minimizaría los errores manuales.
+
+% SUB-SECCIÓN
+\subsection{Automatización sistema de ingreso}
+[\label{automatizacion_ingreso}]
+La automatización del acceso a través de la lectura de patentes vehiculares y códigos QR generados en la aplicación, busca simplificar el proceso de ingreso y salida de vehículos en estacionamientos, eliminando la necesidad de un operador humano y optimizando la eficiencia en la gestión del estacionamiento. La implementación de esta mejora conlleva múltiples beneficios. En primer lugar, mejora la experiencia del usuario al minimizar el tiempo de espera entre la entrada y la salida del estacionamiento. Además, al eliminar la necesidad de personal humano en las barreras, se reducen los costos operativos y se aumenta la disponibilidad del sistema durante todo el día.

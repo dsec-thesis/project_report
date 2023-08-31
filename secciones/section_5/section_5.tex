@@ -1,0 +1,88 @@
+\clearpage
+\section{Despliegue y resultados}
+En este proyecto se abordó la propuesta, diseño y desarrollo de un prototipo de aplicación funcional con el objetivo de ayudar a los usuarios finales a conseguir estacionamiento por medio de un sistema de reservas en las cercanías de su destino deseado.
+Para llevar esto a cabo en el capítulo 4, se explicó el desarrollo principal de tres “Nodos” (o módulos) del sistema:
+
+\begin{itemize}
+    \item Nodo sensor
+    \item Nodo de borde (collector)
+    \item Software integral (arquitectura Cloud-based)
+\end{itemize}
+
+Con base a esto y para la integración entre los diferentes módulos se utiliza la aplicación móvil desarrollada en Flutter. Por lo tanto esta sección demuestra y adjunta el ciclo completo del proyecto, desde el onboarding de la aplicación, la búsqueda de un estacionamiento disponible, pasando por su reserva, detección del estacionamiento y checkout del vehículo.
+
+% SUB-SECCIÓN
+\subsection{Onboarding}
+La interfaz inicial de la aplicación lleva a usuario al usuario a través de un menú de opciones en las cuales se le solicita aceptar los términos necesarios para que el hardware del teléfono móvil pueda interactuar con el software (como es el caso del GPS) y también muestra el marketplace digital de aplicación, como una pequeña descripción del objetivo de la app.
+
+% CAMBIAR POR FOTOS DEL ONBOARDING EN UNA FOTO DE 3 ELEMENTOS
+\begin{images}[\label{onboarding_process}]{Proceso de onboarding}
+    \addimage[\label{onboarding_1}]{secciones/section_5/images/onboarding_1}{width=5cm}{}
+    \addimage[\label{onboarding_2}]{secciones/section_5/images/onboarding_2}{width=5cm}{}
+    \addimage[\label{onboarding_3}]{secciones/section_5/images/onboarding_3}{width=5cm}{}
+\end{images}
+
+% SUB-SECCIÓN
+\subsection{Login}
+Como se explicó anteriormente, primero para que el usuario pueda utilizar el software deberá registrarse en el mismo. Para lograr esto, se ha adoptado el uso de un Social Login como Google dado su extenso uso e integración en la mayoría de teléfonos actuales. Una vez que el usuario ingresa a la aplicación ya está listo para comenzar a buscar estacionamientos disponibles.
+
+Si bien para nuestra solución adoptó utilizar Google como un mecanismo de autenticación, cabe destacar que existen otras alternativas como Auth0, Firebase, Cognito, etc.
+
+% CAMBIAR POR FOTOS DEL LOGIN EN FOTO DE 3 SECCIONES TAMBIEN
+\begin{images}[\label{login_process}]{Proceso de login}
+    \addimage[\label{login_1}]{secciones/section_5/images/login_1}{width=5cm}{}
+    \addimage[\label{login_2}]{secciones/section_5/images/login_2}{width=5cm}{}
+    \addimage[\label{login_3}]{secciones/section_5/images/main_screen}{width=5cm}{}
+\end{images}
+
+% SUB-SECCIÓN
+\subsection{Búsqueda y reserva de una plaza}
+Para hacer una reserva el usuario puede navegar en el mapa, o bien utilizar la barra de búsqueda para introducir su destino. Una vez que el mismo esté seleccionado, se realiza una consulta en el backend para poder verificar cuales estacionamientos cuentan aún con disponibilidad y mostrarselos al usuario. Como puede verse en la Figura ~\ref{busqueda_process}.
+
+\begin{images}[\label{busqueda_process}]{Proceso de busqueda de estacionamientos disponibles}
+    \addimage[\label{busqueda_1}]{secciones/section_5/images/busqueda_1}{width=5cm}{}
+    \addimage[\label{busqueda_2}]{secciones/section_5/images/busqueda_2}{width=5cm}{}
+    \addimage[\label{busqueda_3}]{secciones/section_5/images/busqueda_3}{width=5cm}{}
+\end{images}
+
+Ya el usuario habiendo seleccionado el estacionamiento que desea, completa con el tipo de reserva que quiere elegir, teniendo la posibilidad de que la reserva sea fija según un esquema de tiempo definido o libre.
+
+\begin{images}[\label{reserva_process}]{Selección del tipo de reserva (libre o limitada)}
+    \addimage[\label{reserva_limitada}]{secciones/section_5/images/reserva_limitada}{width=4cm}{}
+    \addimage[\label{reserva_libre}]{secciones/section_5/images/reserva_libre}{width=4cm}{}
+\end{images}
+
+Finalmente se envía esa información al backend el cual valida e informa el estado de la reserva al usuario.
+
+\begin{images}[\label{reservacion_checkout}]{Información sobre el estado de la reserva}
+    \addimage[\label{reserva_checkout_1}]{secciones/section_5/images/reserva_checkout_1}{width=4cm}{}
+    \addimage[\label{reserva_checkout_2}]{secciones/section_5/images/reserva_checkout_2}{width=4cm}{}
+    \addimage[\label{reserva_checkout_4}]{secciones/section_5/images/reserva_checkout_4}{width=4cm}{}
+\end{images}
+
+
+% SUB-SECCIÓN
+\subsection{Reservaciones en curso e historial}
+En cualquier aplicación orientada a la reserva de servicios, resulta fundamental contar con una sección que permita a los usuarios visualizar tanto sus reservaciones actuales como las históricas. Esta función proporciona una perspectiva completa de las reservas realizadas y en curso, ofreciendo una experiencia integral de seguimiento y gestión de las mismas.
+
+Basándonos en el contexto anteriormente descrito, hemos desarrollado un componente destinado a la visualización de estas reservas, el cual se puede apreciar en la imagen \ref{vista_reservaciones}
+
+\begin{images}[\label{vista_reservaciones}]{Vista reservaciones en curso e historicas}
+    \addimage[\label{reservacion_en_curso}]{secciones/section_5/images/reservacion_en_curso}{width=5cm}{}
+    \addimage[\label{reservacion_historica}]{secciones/section_5/images/reservacion_historica}{width=5cm}{}
+\end{images}
+
+\subsubsection{Vista detallada de la reserva}
+Tanto para las reservaciones en curso como para las historicas, al ingresar en un item el usuario puede tener una vista detallada de la reserva con algunos datos de interes y un codigo QR generado que podría ser utilizado a futuro en una automatización del ingreso como se detalla en \ref{automatizacion_ingreso}
+
+\insertimage[\label{vista_detallada_reserva}]{secciones/section_5/images/vista_detallada_reserva}{width=5cm}{Vista detallada de la reserva}
+
+\subsubsection{Cancelación de la reserva}
+
+Finalmente, en caso de que el usuario cambie de opinión después de haber realizado la reserva, se le brinda la opción de cancelarla directamente desde la interfaz. En un entorno de producción, podría ser contemplado dentro del modelo de negocio implementar reembolsos en base al momento en que se efectúa la cancelación. Aunque este aspecto no se aborda en detalle en este proyecto final, se menciona como una nota relevante para los lectores interesados.
+
+\begin{images}[\label{cancelacion_reserva}]{Proceso de cancelación de una reserva}
+    \addimage[\label{cancelacion_1}]{secciones/section_5/images/cancelacion_1}{width=5cm}{}
+    \addimage[\label{cancelacion_2}]{secciones/section_5/images/cancelacion_2}{width=5cm}{}
+    \addimage[\label{cancelacion_3}]{secciones/section_5/images/cancelacion_3}{width=5cm}{}
+\end{images}

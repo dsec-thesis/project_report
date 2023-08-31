@@ -1,0 +1,91 @@
+\clearpage
+
+\subsubsection{Software integral (Cloud-based)}
+Está sección presenta una visión general de la arquitectura propuesta para el sistema de Smart Parking, contextualizando brevemente el sistema multiagente a integrar y las razones detrás de la elección de la utilización de tecnologías en la nube. También se describe la estructura de la arquitectura detallando el papel de los componentes principales que constituyen al sistema.
+
+\subsubsubsection{Resumen de la Arquitectura}
+
+Uno de los principales objetivos de la arquitectura propuesta es permitir la interacción del usuario con el sistema multiagente desarrollado en este proyecto. En resumen, este sistema realiza la interconexión entre componentes físicos y recursos computacionales con un enfoque basado en la descentralización del sistema. En la figura a continuación se puede observar la arquitectura completa del sistema y su interconexión con la interfaz del usuario y los sensores.
+
+% CAMBIAR FOTO ARQUITECTURA
+\insertimage[\label{arquitectura_software}]{secciones/section_4/images/arquitectura_software}{width=13cm}{Resumen de Arquitectura en el Cloud}
+
+Como se puede apreciar debemos poder tener una comunicación entre los sensores físicos y la información visualizada por los conductores. Pensando esto en una escalabilidad muy alta es necesario integrar todo el sistema a una plataforma que permita la comunicación entre ambas partes sin tener limitaciones que afectan la experiencia de usuario. Basado en esto hemos optado por alojar la solución en el cloud (específicamente AWS), como se ha mencionado en capítulos anteriores esta opción no depende solo de un servidor físico. Alojar la solución en el cloud permite un número ilimitado de servidores actuando como un único sistema unificado, permitiendo así la flexibilidad, escalabilidad y ahorro de costos dado que se paga únicamente por los recursos utilizados. En este caso el uso del cloud será como PaaS (Platform as a Service) que variará los recursos computacionales en función de la demanda.
+
+En esta arquitectura, los componentes principales son autenticación del usuario, capa de base de datos, motor en tiempo real, manejo de eventos por publicación con SNS.
+
+\subsubsubsectionanumnoi{Autenticación del usuario}
+El objetivo principal de un módulo de autenticación es verificar la identidad del usuario, lo que implica métodos de validación de datos para confirmar su autenticidad. Es importante contar con un módulo de autenticación flexible y accesible en todo momento para que los usuarios puedan acceder a la aplicación. Dado que también es a través de este módulo que se verifican los roles del mismo, de esta forma se pueden limitar las características a la que un usuario tiene acceso frente a un administrador (no desarrollado en este trabajo).
+
+En las aplicaciones actuales, es comúnmente compatible la autenticación mediante correo electrónico y contraseña, números de teléfono e incluso proveedores como Google, Facebook y Twitter. Cuando se utiliza uno de estos métodos, el sistema puede reconocer qué usuario está llevando a cabo una determinada acción y, en función del rol asignado, puede controlar el acceso al uso de los recursos del sistema. Para nuestro caso se decidió implementar la autenticación con un proveedor social (Social Provider) como Google dado que es ampliamente difundido y la mayor parte del mercado cuenta con un dispositivo Android lo que hace que deba tener una cuenta de Google activa.
+
+\subsubsubsectionanumnoi{Base de datos NoSQL}
+Ha habido un aumento masivo en el almacenamiento de datos en los últimos años, en gran parte debido a las enormes redes sociales como Facebook y Twitter, los motores de búsqueda como Google y otros sitios web que almacenan grandes cantidades de datos. Por lo tanto, surgen varios desafíos relacionados con el almacenamiento, captura, análisis y transferencia de estos datos, y ahí es donde entran en juego las bases de datos NoSQL (por ejemplo, MongoDB, Firestore, DynamoDB), conocidas por funcionar bien con big data y aplicaciones en tiempo real.
+
+\subsubsubsectionanumnoi{Concepto}
+La principal ventaja de utilizar este tipo de base de datos es su modelo extremadamente flexible. Al comparar con el desarrollo de bases de datos relacionales como MySQL o Postgres, se nota la importancia de modelar toda su estructura en un esquema predefinido, que incluye tablas, campos, restricciones y también el tipo de cada campo. En las bases de datos NoSQL, también conocidas como bases de datos no relacionales, no es necesario crear esquemas, lo que significa que no hay restricciones a nivel de base de datos en tablas predefinidas o qué tipo de datos colocar en ciertos campos, lo que permite iterar fácilmente en el diseño de la base de datos, agregando o cambiando campos según sea necesario sin el alto riesgo de corromper los procesos actuales. Sin embargo, es importante realizar cierta planificación para que la estructura no se desorganice con el tiempo.
+
+Las bases de datos NoSQL son, en muchos casos, más rápidas y más económicas de administrar debido al aspecto de la escalabilidad. La escalabilidad es de gran importancia en la industria actual, que está creciendo cada vez más, donde los sitios web y las aplicaciones tienden a atraer a más clientes y, por lo tanto, más datos. Las bases de datos relacionales tienden a utilizar métodos de escalabilidad vertical, lo que significa que se deben agregar componentes adicionales, como memoria RAM, potencia de CPU, puertos de red y otros componentes normalmente costosos, a una máquina para escalarla. Este proceso de escalabilidad vertical tiene algunas desventajas, como el costoso costo de nuevos materiales o incluso la necesidad de una nueva infraestructura. Desde este punto de vista, el hardware y la centralización de datos en una sola máquina tienen muchas desventajas.
+
+% CAMBIAR FOTO VERTICAL VS HORIZONTAL
+\insertimage[\label{scaling_concept}]{secciones/section_4/images/scaling_concept}{width=13cm}{Comparativa escalado vertical vs horizontal}
+
+Por otro lado, el enfoque de escalabilidad horizontal permite agregar nuevas máquinas al clúster de recursos como nodos y facilita el mantenimiento y la adición de nuevos nodos en bases de datos no relacionales. Este enfoque implica separar una parte secuencial de la lógica en partes más pequeñas para que se puedan realizar en varias máquinas en paralelo, aumentando la eficiencia de las lecturas y escrituras a gran escala.
+
+Existen diferentes tipos de bases de datos NoSQL, como los pares de clave-valor, que son las más simples de ellas, donde solo están presentes las claves y sus respectivos valores, siendo ideales para conjuntos de datos grandes con detalles muy básicos. Son extremadamente rápidas, personalizables y no muy complicadas, similares a un hash o un arreglo asociativo. Además, existen bases de datos de gráficos, que no son tan comunes, donde todo se trata como un nodo, que puede tener relaciones con otros nodos a través de lo que se llama un "edge".
+
+Finalmente, las bases de datos de documentos almacenan datos similares a la Notación de Objetos JavaScript (JSON), donde los datos están envueltos entre llaves y tienen pares de clave-valor. Estos valores pueden contener cadenas, números, arreglos, objetos incrustados, etc. A nivel de base de datos, es completamente sin esquema, por lo que la aplicación puede ser muy dinámica
+
+
+\subsubsubsectionanumnoi{Indexación H3 - Uber System Approach}
+En el desarrollo de nuestro proyecto nos encontramos con un potencial problema asociado a costos y performance que tiene que ver con la base de datos y cómo los datos dentro de esta podrían ser consultados. Inicialmente se consideró que teniendo como dato la Latitud y Longitud del estacionamiento junto con un radio de búsqueda era suficiente para que un usuario pueda hallar el estacionamiento próximo a su destino, sin embargo esto requeriría consultar todos los datos de la tabla cada vez que un usuario procesa una solicitud lo cual además de ser altamente costoso es también no performante.
+
+De nuestra investigación, descubrimos que actualmente Uber (plataforma de contratación de taxis online) había tenido este problema y desarrolló un sistema de indexación geoespacial denominado H3 para lidiar con este problema.
+
+% CAMBIAR FOTO INDEX UBER
+\insertimage[\label{uber_index_globe}]{secciones/section_4/images/uber_index_globe}{width=15cm}{Representación indexación H3 Uber en imagen de globo}
+
+Esta biblioteca (H3) es un sistema de indexación geoespacial que divide el mundo en celdas hexagonales. El mismo es de código abierto y está disponible en Github para la comunidad. H3 asigna un índice jerárquico único a cada celda, formando una malla hexagonal que cubre toda la superficie terrestre. Este enfoque jerárquico permite representar ubicaciones con diferentes niveles de precisión, desde grandes áreas geográficas hasta puntos específicos en el mapa. La estructura hexagonal se adapta particularmente bien a la representación de datos geoespaciales debido a su uniformidad y capacidad para abordar el problema de la distorsión de área, común en otros sistemas de cuadrícula.
+
+% CAMBIAR FOTO INDEX UBER rectangulo
+\insertimage[\label{hexagono_uber}]{secciones/section_4/images/hexagono_uber}{width=15cm}{Vista de una celda con codificación H3}
+
+Una de las ventajas más destacadas del sistema H3 es su capacidad para reducir significativamente el número de consultas a una base de datos, al organizar la información en una jerarquía de celdas hexagonales. De esta forma, el sistema reduce la cantidad de datos que deben ser recuperados en cada consulta, lo que se traduce en una mejora notable en el rendimiento y la eficiencia del acceso a la base de datos. Esto es especialmente relevante cuando se trata de grandes volúmenes de datos geoespaciales que deben ser procesados en tiempo real para soportar aplicaciones como rastreo de vehículos, optimización de rutas, etc.
+
+Por lo explicado anteriormente, es que hemos adoptado el sistema de indexado H3 en nuestro proyecto para poder representar donde se encuentran los estacionamientos. Y al momento en el que el conductor realice una consulta, de fondo se estarán convirtiendo la latitud y longitud a un hash específico lo que nos permitirá optimizar el número de consultas a realizar para encontrar la opción que desea el usuario. En la imagen a continuación se puede apreciar un mapa de la ciudad de Rosario en la cual hemos graficado como se representa el mismo utilizando el indexado de H3. En este caso, estamos utilizando la resolución por defecto que es de 8 y corresponde con un promedio de 0.737327598 KM2 de área hexagonal aproximadamente.
+
+% CAMBIAR FOTO INDEX UBER rosario cuadricula
+\insertimage[\label{rosario_celdas}]{secciones/section_4/images/rosario_celdas}{width=15cm}{Mapa de la ciudad de Rosario con índices superpuestos}
+
+\subsubsubsection{Flutter como framework principal}
+Flutter fue adoptado como el lenguaje principal para escribir nuestra aplicación móvil dado que es un marco de desarrollo de aplicaciones móviles de código abierto creado por Google para crear aplicaciones de alto rendimiento para iOS y Android en una única base de código. 
+
+Esto evita tener que realizar el doble de trabajo en caso que se quiera correr en más de una plataforma. Además actualmente el mismo, también soporta integración con aplicaciones de escritorio e interfaz web, lo que en un principio podría extenderse las funcionalidades a Windows o MacOS (aunque no está cubierto en este trabajo final). Además de lo mencionado anteriormente, este framework destaca hoy en el marcado por la abstracción lograda por el mismo, ya que los desarrolladores pueden enfocarse en la lógica del negocio en sí y utilizar los widgets que la comunidad crea para la parte visual de la aplicación, logrando buenos resultados aceptables en cuanto al diseño gráfico de la aplicación y preservando todas las funcionalidades de fondo en cuanto a performance nativa. En las siguientes secciones agregaremos pantallas de la aplicación creada.
+
+\subsubsubsection{Búsqueda de estacionamientos disponibles}
+El proceso de búsqueda y reserva de estacionamientos disponibles comienza con el usuario ingresando a la aplicación, previamente autenticado. A través del uso del mapa o la barra de búsqueda, seleccione su destino y la ubicación cercana donde desea estacionar su vehículo. Al seleccionar el destino, la aplicación envía una consulta al backend, que a su vez devuelve una lista de estacionamientos cercanos con disponibilidad.
+
+Para evitar sobrecargar el sistema con datos innecesarios, solo se muestra la disponibilidad de los estacionamientos en la parte gráfica. Una vez que el usuario visualiza los estacionamientos disponibles, puede seleccionar el que prefiera y proceder a confirmar su reserva. En ese momento, el backend verifica si el booking es aceptado o rechazado, informando al usuario sobre el resultado. Para una mejor visualización de lo descrito en este párrafo se adjunta a continuación un diagrama de flujos que corresponde al proceso de creación de reserva de una usuario.
+
+% CAMBIAR FOTO BUSQUEDA DESTINO
+\insertimage[\label{busqueda_parking_software}]{secciones/section_4/images/busqueda_parking_software}{width=5cm}{Diagrama de flujos con representación de la búsqueda de destinos}
+
+En caso de que la reserva sea aceptada, el usuario puede ver el estado de su reserva en la sección "Mis reservas", manteniéndose al tanto de los detalles de la reserva realizada. Este sistema de búsqueda y reserva proporciona a los usuarios una forma eficiente y conveniente de encontrar estacionamientos disponibles en las cercanías de su destino, mejorando la experiencia de estacionamiento para los usuarios de la aplicación.
+
+Algo a remarcar en en este proceso, es el funcionamiento del backend y como tiene un rol crucial en la búsqueda de estacionamientos cercanos. De secciones anteriores hemos visto que utilizamos el sistema de indexado H3 de Uber en nuestra base de datos y a continuación adjuntamos de una manera gráfica como es el proceso que realiza el backend para decidir el estacionamiento más cercano próximo a nuestro destino. De esta forma el lector puede interpretar de una manera gráfica y simple cómo está funcionando el sistema sin necesidad de incurrir en detalles técnicos específicos.
+
+% CAMBIAR FOTO PROCESO DE BUSQUEDA
+\insertimage[\label{funcionamiento_h3}]{secciones/section_4/images/funcionamiento_h3}{width=13cm}{Representación funcionamiento búsqueda basada en índices}
+
+\subsubsubsection{AWS (Amazon Web Services)}
+
+Es una plataforma de servicios en la nube que ofrece soluciones para el desarrollo y el despliegue de aplicaciones web. La elección de AWS como opción para el hosteo del backend de la aplicación del proyecto se basa en varias características: 
+
+\begin{itemize}
+    \item El equipo tiene más de 4 años de experiencia utilizando esta compañía.
+    \item Son el mayor proveedor de servicios cloud del mundo con más del 70\% del mercado.
+    \item Permiten la escalabilidad de servicios y gran disponibilidad asegurando un modelo de mercado de pago por demanda.
+    \item Etc.
+\end{itemize}
+
+AWS, siglas de Amazon Web Services, es una plataforma de servicios en la nube que ofrece soluciones para el desarrollo y el despliegue de aplicaciones web. La elección de AWS como opción para el hosteo del backend de la aplicación se basa en varios factores que se explicarán en esta tesis. Al usar AWS, se puede acceder a una infraestructura de computación, almacenamiento y red flexible y de alta disponibilidad, que se adapta a las necesidades y al crecimiento de la aplicación. Además, esta proporciona una variedad de herramientas y servicios que facilitan la integración, el monitoreo y la optimización del rendimiento del backend. En esta tesis se analizarán las ventajas y los desafíos de usar AWS para el hosteo del backend de la aplicación, así como las mejores prácticas y las lecciones aprendidas durante el proceso.
