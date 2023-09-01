@@ -129,7 +129,7 @@ Para poder explicar mejor el software implementado en el sensor, presentamos pri
 
 \insertimage[\label{diagrama_de_eventos_del_sistem}]{secciones/section_4/images/diagrama_de_eventos_del_sistem}{width=13cm}{Diagrama de eventos del sistema}
 
-Los datos a transmitirse desde el nodo sensor hacia el colector son recopilados por la tarjeta Heltec WiFi LoRa 32. Esta tarjeta permite la interacción con el magnetómetro y el sensor de tiempo de vuelo a través del protocolo I2C.
+Los datos a transmitirse desde el nodo sensor hacia el concentrador son recopilados por la tarjeta Heltec WiFi LoRa 32. Esta tarjeta permite la interacción con el magnetómetro y el sensor de tiempo de vuelo a través del protocolo I2C.
 
 El microprocesador ESP32 de la tarjeta Heltec, maneja el chip SX1278 (LoRa) y sus parámetros de transmisión (frecuencia, potencia, SF) así como las claves de seguridad de la red. La programación de este controlador se encuentran disponibles en el repositorio de GitHub del proyecto. Ver anexo ~\ref{codigo_sensor}
 
