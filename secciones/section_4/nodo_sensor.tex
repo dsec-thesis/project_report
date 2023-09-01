@@ -15,6 +15,17 @@ Al momento de la elección de un microcontrolador para llevar a cabo nuestro pro
 
 El equipo Heltec WiFi LoRa 32 es un dispositivo orientado a IoT, diseñado y producido por Heltec Automation. La tarjeta de desarrollo basa su funcionamiento en el microcontrolador ESP32, y se vale del chip integrado SX1278, para las funciones de comunicación LoRa, estos dos dispositivos interactúan por medio de una interfaz Serial Peripheral Interface (SPI).
 
+Sumado a lo mencionado anteriormente, cabe destacar que antes de que el nodo pueda entrar en funcionamiento, es esencial 
+configurar varios parámetros cruciales, tales como el ID del espacio de estacionamiento o el ID del concentrador al 
+que reporta los datos. Es aquí donde la presencia de una antena WiFi en la ESP32 desempeña un rol fundamental en esta etapa. 
+Ya que durante la inicialización, el sistema puede buscar estos datos en la memoria y en caso de no encontrarlos o si no 
+están definidos previamente, podría crear una zona WiFi y sirvir una página web de interfaz al usuario para lograr que 
+a través de esta página, los mismos puedan configurar los valores de los atributos requeridos.
+
+Es importante mencionar que aunque la creacion de la zona WiFi y la configuración detallada de los parametros a traves de un
+servidor web no esta dentro del alcance de este proyecto, se proporciona en el anexo ~\ref{configuracion_wifi} una breve descripción introductoria
+de como WiFi OTA podria ser beneficiosa. Además se lo plantea como potencial futura mejora en la sección ~\ref{potencial_mejora_wifiOTA}
+
 \insertimage[\label{heltec_lora}]{secciones/section_4/images/heltec}{width=13cm}{Placa de desarrollo Heltec Lora WiFi v2}
 
 Luego de la elección del kit de desarrollo, nos enfocamos en la determinación del sensor, y como hemos visto de la sección de “ensayos y conclusiones”, optamos por utilizar dos sensores en conjunto, un magnetómetro y otro de tipo radar. A raíz de lo disponible en el mercado, concluimos que los sensores que mejor se ajustan a nuestro proyecto son: HMC5883L (magnetómetro) y VL53L0X (radar).
@@ -108,6 +119,9 @@ esta diseñado unicamente con los kits de desarrollo, más adelante incluiremos 
 %\insertimage[\label{heltec_conexion_sensores}]{secciones/section_4/images/heltec_conexion_sensores}{width=13cm}{Diagrama de conexión entre Heltec y Sensores}
 
 \insertimage[\label{heltec_diagrama_conexion}]{secciones/section_4/images/heltec_diagrama_conexion}{width=16cm}{Diagrama de conexión esquematico entre Heltec y Sensores}
+
+\subsubsubsection{Plano esquemático}
+\insertimage[\label{plano_esquematico}]{secciones/section_4/images/Schematic_smartparking-sensor}{width=15cm}{Plano esquematico del nodo sensor}
 
 \subsubsubsection{Configuración del nodo sensor}
 Para poder explicar mejor el software implementado en el sensor, presentamos primero un pequeño diagrama inicial de eventos del sistema. Cabe aclarar que este es un diagrama simplificado y no incluye toda la interacción del sistema.

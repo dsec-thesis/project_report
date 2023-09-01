@@ -29,6 +29,19 @@ Esto inicialmente no estaba en el proyecto porque para el caso de redes privadas
 Pensando este sistema en un entorno de producción, el mismo debe contar con un sistema integrados de pagos electrónicos como podría ser Mercado Pago para eliminar la necesidad de efectivo o tarjetas físicas. Además, en términos de eficiencia operativa esto, simplifica la recolección de pagos para los operadores de estacionamientos. Los pagos se registrarían automáticamente en la plataforma, lo que reduciría la carga administrativa y minimizaría los errores manuales.
 
 % SUB-SECCIÓN
-\subsection{Automatización sistema de ingreso}
-[\label{automatizacion_ingreso}]
+\subsection{Automatización sistema de ingreso}{\label{automatizacion_ingreso}}
 La automatización del acceso a través de la lectura de patentes vehiculares y códigos QR generados en la aplicación, busca simplificar el proceso de ingreso y salida de vehículos en estacionamientos, eliminando la necesidad de un operador humano y optimizando la eficiencia en la gestión del estacionamiento. La implementación de esta mejora conlleva múltiples beneficios. En primer lugar, mejora la experiencia del usuario al minimizar el tiempo de espera entre la entrada y la salida del estacionamiento. Además, al eliminar la necesidad de personal humano en las barreras, se reducen los costos operativos y se aumenta la disponibilidad del sistema durante todo el día.
+
+% SUB-SECCIÓN
+\subsection{Creación de zona WiFi para la configuración del sensor}{\label{potencial_mejora_wifiOTA}}
+Como potencial futura mejora también, añadimos la viabilidad de incorporar la funcionalidad de creación de una red WiFi temporal
+diseñada específicamente para la configuración de nodos sensores. Esta iniciativa, conocida como WiFi OTA (Over-The-Air), 
+abriría la posibilidad de llevar a cabo la configuración de sensores de manera inalámbrica y directa mediante un smartphone u otro dispositivo compatible.
+
+Esta propuesta se fundamenta en las capacidades del chip ESP32, el cual dispone de un módulo WiFi integrado. La implementación requeriría
+no solo la habilidad para establecer una red ad-hoc entre el nodo sensor y el dispositivo configurador, sino también la creación de un servidor HTTP
+que deberá estar alojado en la ESP32, que permita la visualización y ajuste de los parámetros de configuración.Para obtener más información de referencia, se
+pueden explorar las implementaciones ya existentes, como las proporcionadas por la librería WiFiManager.
+
+Al permitir la configuración inalámbrica de sensores, se podría agilizar y simplificar el proceso de despliegue y ajuste de los dispositivos,
+mejorando la experiencia del usuario y la eficiencia operativa en situaciones donde la configuración por cable puede resultar poco práctica o inviable.
