@@ -140,10 +140,10 @@ Al lograr estimar la vida útil de la batería, se pueden tomar mejores decision
 
 A continuación introduciremos los conceptos claves junto con los cálculos necesarios para lograr la implementación y la estimación del tiempo de vida.
 
-\subsubsubsectionanumnoi{ESP8266 - Low-Power Management}
+\subsubsubsectionanumnoi{ESP32 - Low-Power Management}
 Conforme se destacó en la introducción de esta sección, resulta crucial considerar el consumo de energía durante el desarrollo del nodo sensor. Nuestra investigación revela que el microcontrolador a emplear ofrece cuatro (4) perfiles de energía distintos, como se muestra en la imagen adjunta.
 
-\insertimage[\label{esp_low_power}]{secciones/section_4/images/esp_low_power}{width=17cm}{Modos de consumo de energía ESP8266}
+\insertimage[\label{esp_low_power}]{secciones/section_4/images/esp_low_power}{width=17cm}{Modos de consumo de energía ESP32}
 
 Durante el modo de suspensión profunda (deep sleep), la CPU principal se apaga, mientras que el Coprocesador Ultra-Bajo Consumo (ULP) puede tomar lecturas de sensores y despertar a la CPU según sea necesario. Este tipo de perfil de energía es útil para diseñar aplicaciones en las que la CPU debe despertarse por un evento externo, un temporizador o una combinación de estos eventos, manteniendo un consumo mínimo de energía.
 
@@ -152,7 +152,7 @@ Debido a que la memoria RTC se mantiene activa, su contenido se conserva incluso
 \insertimage[\label{diagrama_low_power_bloques}]{secciones/section_4/images/diagrama_low_power_bloques}{width=15cm}{Bloques activos en modo Deep-Sleep}
 
 \subsubsubsectionanumnoi{Funcionamiento del nodo (considerando los modos de energía)}
-En apartados anteriores, hemos explicado el principio de funcionamiento de nuestro nodo sensor y los distintos modos de consumo de energía que ofrece el microcontrolador ESP8266. Ahora, detallaremos cómo funciona nuestro nodo en conjunto con los periféricos y el software diseñado.
+En apartados anteriores, hemos explicado el principio de funcionamiento de nuestro nodo sensor y los distintos modos de consumo de energía que ofrece el microcontrolador ESP32. Ahora, detallaremos cómo funciona nuestro nodo en conjunto con los periféricos y el software diseñado.
 
 Antes de adentrarnos, asumiremos que el nodo ya está configurado, es decir, las variables necesarias para una comunicación exitosa con la etapa de comunicaciones LoRa han sido establecidas (frecuencia, canales de TX y RX, SF, etc.). Además, los pines para la comunicación mediante I2C han sido configurados previamente. En esta ocasión, nos centraremos en el funcionamiento del nodo para llevar a cabo la detección de vehículos.
 
@@ -160,7 +160,7 @@ Antes de adentrarnos, asumiremos que el nodo ya está configurado, es decir, las
 
 Tras la configuración previa, el microcontrolador entra en modo de Deep-Sleep. Durante este tiempo, toma lecturas del magnetómetro HMC5883L, procesa los datos y determina si se ha superado el valor límite establecido. Es importante mencionar que durante esta fase, el microcontrolador utiliza el coprocesador ULP para el cómputo de los datos, lo que permite reducir el consumo de energía a tan solo 10 μA durante los 500 mS que el procesador principal se encuentra apagado, según las especificaciones oficiales.
 
-\insertimage[\label{esquema_energia}]{secciones/section_4/images/esquema_energia}{width=15cm}{Esquema de energía interno ESP8266}
+\insertimage[\label{esquema_energia}]{secciones/section_4/images/esquema_energia}{width=15cm}{Esquema de energía interno ESP32}
 
 Cuando se detecta que el valor límite ha sido superado, el coprocesador llama a una función previamente definida, indicando a la ESP que debe salir del modo Deep-Sleep y entrar en modo de funcionamiento activo.
 
