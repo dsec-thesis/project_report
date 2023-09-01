@@ -33,7 +33,7 @@ A continuación se visualiza el pinout de la placa Raspberry Pi 3 Model B+:
 
 Dado que nuestra Raspberry Pi 3 debe recibir y enviar mensajes a través de LoRa, se presenta a continuación el diagrama de conexión entre la Raspberry Pi y la placa Heltec. Para lograr esta comunicación, se utilizará el protocolo SPI (Interfaz Periférica en Serie) entre ambas placas:
 
-\insertimage[\label{raspberry_pi_conexion}]{secciones/section_4/images/raspberry_pi_conexion}{width=17cm}{Raspberry Pi conexión con kit de desarrollo}
+\insertimage[\label{concentrator_schematic}]{secciones/section_4/images/concentrator_schematic}{width=17cm}{Conexión entre la Raspberry Pi y el módulo LoRa}
 
 \subsubsubsection{Software}
 Desarrollamos un servidor web en flask (framework de Python) que permite de una manera rápida y sencilla poder servir una red ad-hoc para lograr la configuración inicial del dispositivo como la red WiFi, la toma de credenciales y los parámetros de transmisión y recepción (Tx, Rx) de LoRa para una correcta conexión y envío de datos entre los sensores y la placa.
