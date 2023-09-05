@@ -231,21 +231,32 @@ Hay tres modelos diferentes de despliegue de cloud computing: nube pública, nub
 \end{itemize}
 
 \subsection{Tipos de Sensores}
-Los sistemas de estacionamiento inteligente  ocupan un lugar importante como una de las infraestructuras esenciales que permite llevar a cabo el IoT en las Smart Cities. Por lo tanto, la parte fundamental del sistema se encuentra en la detección de vehículos ubicados en el estacionamiento. En esta sección se presentan una serie de sensores disponibles para la detección de la plaza libre en un estacionamiento. 
+Los sistemas de estacionamiento inteligente ocupan un lugar importante como una de las
+infraestructuras esenciales que permite llevar a cabo el IoT en las Smart Cities. Por lo
+tanto, la parte fundamental del sistema se encuentra en la detección de vehículos
+ubicados en el estacionamiento. En esta sección se presentan una serie de sensores
+disponibles para la detección de la plaza libre en un estacionamiento. 
 
-En particular, nos enfocamos en los sensores más populares utilizados en escenarios reales como: sensor de ultrasonido, sensor de tiempo de vuelo (infrarrojo) y magnetómetro
-
-Estos sensores fueron analizados conectando los mismos a una placa ESP32 y realizando varios ensayos en una cochera privada. En primer lugar, se colocaron los sensores en slots libres para obtener la información de referencia de los mismos cuando un vehículo no está situado sobre el mismo. Una vez obtenidas las lecturas de referencia, se probó colocando los mismos sensores debajo de diferentes vehículos (por la diferencia de distancia entre el chasis y el suelo) para obtener valores de una media.
+En particular, nos enfocamos en los sensores más populares utilizados en escenarios
+reales como: sensor de ultrasonido, sensor de tiempo de vuelo (infrarrojo) y
+magnetómetro
 
 \subsubsection{Sensor Ultrasónico}
-Un sensor ultrasónico es un dispositivo electrónico que mide la distancia de un objeto objetivo emitiendo ondas de sonido ultrasónico y convierte el sonido reflejado en una señal eléctrica. Las ondas ultrasónicas viajan más rápido que la velocidad del sonido audible (es decir, el sonido que los humanos pueden escuchar). Los sensores ultrasónicos tienen dos componentes principales: el transmisor (que emite el sonido utilizando cristales piezoeléctricos) y el receptor (que detecta el sonido después de que ha viajado hacia y desde el objetivo).
+Un sensor ultrasónico es un dispositivo electrónico que mide la distancia de un objeto
+objetivo emitiendo ondas de sonido ultrasónico y convierte el sonido reflejado en una
+señal eléctrica. Las ondas ultrasónicas viajan más rápido que la velocidad del sonido
+audible (es decir, el sonido que los humanos pueden escuchar). Los sensores ultrasónicos
+tienen dos componentes principales: el transmisor (que emite el sonido utilizando
+cristales piezoeléctricos) y el receptor (que detecta el sonido después de que ha
+viajado hacia y desde el objetivo).
 
-Midiendo el tiempo transcurrido entre la generación de la onda sonora y la recepción de la onda reflejada, se puede calcular la distancia al objeto en estudio. mediante la siguiente fórmula:
+Midiendo el tiempo transcurrido entre la generación de la onda sonora y la recepción de
+la onda reflejada, se puede calcular la distancia al objeto en estudio. mediante la
+siguiente fórmula:
 
 \insertequation[\label{eqn:velocidad_del_sonido}]{vs = 340 m/s}
 \insertindexequation[\label{eqn:tiempo_recorrido_señal}]{h_{lt}}{Tiempo de recorrido de la señal}
 \insertequation[\label{eqn:distancia_de_la_onda}]{\frac{h_{lt} . vs}{2} = d}
-
 \insertimage[\label{sensor_ultrasonico}]{secciones/section_3/images/sensor_ultrasonico}{width=13cm}{Sensor ultrasónico HC-SR04}
 
 Especificaciones del sensor:
@@ -255,9 +266,12 @@ Especificaciones del sensor:
     \item Resolución: 0.3 cm
 \end{itemize}
 
-
 \subsubsection{Sensor de tiempo de vuelo o Radar (Time-of-Flight)}
-Los sensores de este tipo se basan en el mismo principio de funcionamiento que los sensores ultrasónicos solo que en este caso la onda transmitida es una onda electromagnética.Debido a que utiliza una fuente de luz con un haz muy estrecho, es bueno para determinar la distancia de solamente la superficie que está directamente delante.
+Los sensores de este tipo se basan en el mismo principio de funcionamiento que los
+sensores ultrasónicos solo que en este caso la onda transmitida es una onda
+electromagnética. Debido a que utiliza una fuente de luz con un haz muy estrecho, es
+bueno para determinar la distancia de solamente la superficie que está directamente
+delante.
 
 \insertimage[\label{sensor_radar}]{secciones/section_3/images/sensor_radar}{width=8cm}{Sensor tiempo de vuelo VL53L0X}
 
@@ -268,15 +282,26 @@ Especificaciones del sensor:
     \item Resolución: 0,1 cm
 \end{itemize}
 
-
 \subsubsection{Magnetómegro}
-Los magnetómetros son dispositivos utilizados para medir y detectar campos magnéticos en el entorno. Estos campos magnéticos pueden ser generados por imanes, corrientes eléctricas o incluso por la presencia de materiales magnéticos. Los magnetómetros juegan un papel importante en una amplia gama de aplicaciones, desde navegación y geofísica hasta ciencia espacial y medicina.
+Los magnetómetros son dispositivos utilizados para medir y detectar campos magnéticos en
+el entorno. Estos campos magnéticos pueden ser generados por imanes, corrientes
+eléctricas o incluso por la presencia de materiales magnéticos. Los magnetómetros juegan
+un papel importante en una amplia gama de aplicaciones, desde navegación y geofísica
+hasta ciencia espacial y medicina.
 
-Los magnetómetros permiten medir la intensidad y la dirección del campo magnético en una ubicación específica. Esto proporciona información crucial para entender y analizar fenómenos magnéticos en diferentes contextos. Algunos magnetómetros también son capaces de medir campos magnéticos en varias dimensiones, lo que proporciona una visión completa de la distribución y orientación del campo magnético.
+Los magnetómetros permiten medir la intensidad y la dirección del campo magnético en una
+ubicación específica. Esto proporciona información crucial para entender y analizar
+fenómenos magnéticos en diferentes contextos. Algunos magnetómetros también son capaces
+de medir campos magnéticos en varias dimensiones, lo que proporciona una visión completa
+de la distribución y orientación del campo magnético.
 
-Existen diferentes tipos de magnetómetros, cada uno con sus propias características y principios de funcionamiento. Algunos de los tipos más comunes incluyen magnetómetros de efecto Hall, magnetómetros de flujo de inducción, magnetómetros de SQUID (Superconducting Quantum Interference Device) y magnetómetros de protones.
+Existen diferentes tipos de magnetómetros, cada uno con sus propias características y
+principios de funcionamiento. Algunos de los tipos más comunes incluyen magnetómetros de
+efecto Hall, magnetómetros de flujo de inducción, magnetómetros de SQUID
+(Superconducting Quantum Interference Device) y magnetómetros de protones.
 
-En resumen, podemos utilizar estos dispositivos para medir cómo un vehículo distorsiona el campo magnético terrestre y así determinar si una plaza de estacionamiento está ocupada o no.
-
+En resumen, podemos utilizar estos dispositivos para medir cómo un vehículo distorsiona
+el campo magnético terrestre y así determinar si una plaza de estacionamiento está
+ocupada o no.
 
 \insertimage[\label{magnetometro}]{secciones/section_3/images/magnetometro}{width=8cm}{Magnetómetro HMC5883L}
