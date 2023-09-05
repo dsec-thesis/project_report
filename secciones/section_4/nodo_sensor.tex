@@ -28,10 +28,72 @@ de como WiFi OTA podria ser beneficiosa. Además se lo plantea como potencial fu
 
 \insertimage[\label{heltec_lora}]{secciones/section_4/images/heltec}{width=13cm}{Placa de desarrollo Heltec Lora WiFi v2}
 
-Luego de la elección del kit de desarrollo, nos enfocamos en la determinación del sensor, y como hemos visto de la sección de “ensayos y conclusiones”, optamos por utilizar dos sensores en conjunto, un magnetómetro y otro de tipo radar. A raíz de lo disponible en el mercado, concluimos que los sensores que mejor se ajustan a nuestro proyecto son: HMC5883L (magnetómetro) y VL53L0X (radar).
+Luego de la elección del kit de desarrollo, nos enfocamos en la determinación de los sensores a utilizar. En la sección a continuación profundizaremos porque hemos optado por utilizar dos sensores en conjunto, un magnetómetro y otro de tipo radar.
+% A raíz de lo disponible en el mercado, concluimos que los sensores que mejor se ajustan a nuestro proyecto son: HMC5883L (magnetómetro) y VL53L0X (radar).
 
-De esta forma queda determinado cuál va a ser el hardware de nuestro proyecto.
+%De esta forma queda determinado cuál va a ser el hardware de nuestro proyecto.
 
+\subsubsubsection{Determinación de sensores}
+Después de una exhaustiva investigación sobre los sensores más empleados en la industria para productos de este tipo, 
+hemos descubierto que uno de los principales fabricantes de soluciones inteligentes para estacionamientos, 
+como es el caso de la empresa Libelium, elige combinar dos tipos de sensores para detectar la presencia de vehículos: 
+un magnetómetro y un medidor de rango. El magnetómetro presenta un consumo de energía bajo, del orden de microamperios, 
+lo que nos permite operarlo a altas frecuencias y detectar cambios en el entorno que activarán el segundo sensor. 
+Este último tiene un consumo mayor, en el orden de miliamperios, pero nos garantiza la detección segura de la presencia o ausencia de vehículos.
+
+Siguiendo con nuestra investigación, analizamos el sensor de tipo radar VL53L0X, el cual emplea un haz infrarrojo para realizar la 
+medición y es mucho menos sensible a las perturbaciones externas. Como se puede visualizar en la figura a continuación, conseguimos 
+detectar correctamente la presencia de un vehículo con este tipo de sensor, lo cual lo vuelve un buen candidato. Cabe aclarar que no existe 
+una línea de referencia para un umbral máximo, dado que el sensor arroja un “Fuera de rango” cuando queda en un espacio completamente vacío.
+
+\begin{images}[\label{VL53L0X_PLOTS}]{Mediciones realizadas con el sensor VL53L0X}
+    \addimage[\label{VL53L0X_PLOTS_1}]{secciones/section_3/images/vl53l0x_forward}{width=8cm}{}
+    \addimage[\label{VL53L0X_PLOTS_2}]{secciones/section_3/images/vl53l0x_back}{width=8cm}{}
+\end{images}
+
+
+Finalmente, para el sensor magnético analizamos el eje Z que es nuestra variable de importancia aquí.
+\begin{images}[\label{QMC5883L_PLOT}]{Mediciones realizadas con el sensor QMC5883L}
+    \addimage[\label{QMC5883L_PLOT_1}]{secciones/section_3/images/qmc5883l_forward}{width=8cm}{}
+    \addimage[\label{QMC5883L_PLOT_2}]{secciones/section_3/images/qmc5883l_back}{width=8cm}{}
+\end{images}
+
+
+Si bien pueden existir algunos falsos positivos que dependen en gran medida de la distancia entre el chasis y el suelo, junto con la estructura metálica del chasis y principalmente la colocación correcta del magnetómetro en el estacionamiento para que el mismo se encuentre lo menos perturbado por las variaciones externas. Este resultó ser un buen candidato para analizar la posibilidad de que exista un automóvil, y confirmarlo con el sensor de tipo Radar. Los magnetómetros son sensores que tienen un muy bajo consumo de energía y permiten realizar varias muestras con un mínimo gasto energético, lo cual en nuestro proyecto será utilizado como el sensor que disparara al sensor Radar para la confirmación. A continuación dejamos una tabla comparativa entre ambos sensores y su aplicación:
+
+\enabletablerowcolor[2] % Activa el color de celda
+\begin{table}[ht]
+    \centering
+    \caption{Tabla comparativa entre sensores}
+    \begin{tabular}{|p{8cm}|*{2}{>{\raggedright\arraybackslash}p{3cm}|}}
+        \hline
+        \textbf{} & \textbf{Radar} & \textbf{Magnetómetro} \\
+        \hline
+        Fiabilidad frente al movimiento de vehículos cercanos & SI & NO \\
+        Fiabilidad frente a vehículos estacionados en las proximidades & SI & NO \\
+        Fiabilidad frente a interferencias electromagnéticas & SI &NO \\
+        Fiabilidad en cualquier escenario de iluminación &SI &SI \\
+        Estabilidad durante estancias prolongadas del vehículo &SI &NO \\
+        No necesita apertura en la caja &SI &SI \\
+        Inmunidad contra la suciedad o el polvo en la caja &SI &SI \\
+        Optimización en consumo de energía &NO &SI \\
+        \hline
+        \end{tabular}
+    \label{tab:tabla_comparativa_sensore}
+\end{table}
+\disabletablerowcolor % Desactiva el color de celda
+
+Con todo lo anterior expuesto, hemos optado por la combinación de ambos sensores para su implementación en este proyecto.
+
+\subsubsubsection{Detección de anomalías}
+La detección de anomalías en el contexto de IoT se ha convertido en una disciplina fundamental debido a su capacidad para 
+identificar eventos inusuales, comportamientos atípicos o desviaciones significativas en los datos generados por los sensores IoT. 
+Aunque la mayoría de los datos recopilados por estos sensores son típicamente normales y esperados, la detección de anomalías juega un 
+papel crucial en la detección temprana de problemas, la optimización de procesos y la garantía de seguridad en diversas aplicaciones.
+A continuación, se destacan algunas de las razones clave por las cuales la detección de anomalías en IoT es de vital importancia:
+
+\insertimage[\label{comparativa_anomalias_back}]{secciones/section_4/images/qmc5883l_back_analysis}{width=16cm}{Comparativa detección de anomalías}
+\insertimage[\label{comparativa_anomalias_forw}]{secciones/section_4/images/qmc5883l_forward_analysis}{width=16cm}{Comparativa detección de anomalías}
 
 \subsubsubsection{Hardware}
 A continuación se muestran las características técnicas de la placa WiFi LoRa 32 V2 utilizada en este proyecto, junto con los parámetros principales de los sensores MC5883L y VL53L0X.

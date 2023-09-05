@@ -280,34 +280,3 @@ En resumen, podemos utilizar estos dispositivos para medir cómo un vehículo di
 
 
 \insertimage[\label{magnetometro}]{secciones/section_3/images/magnetometro}{width=8cm}{Magnetómetro HMC5883L}
-
-\subsubsection{Ensayos de campo y conclusión}
-Después de una exhaustiva investigación sobre los sensores más empleados en la industria para productos de este tipo, hemos descubierto que uno de los principales fabricantes de soluciones inteligentes para estacionamientos, como es el caso de la empresa Libelium, elige combinar dos tipos de sensores para detectar la presencia de vehículos: un magnetómetro y un medidor de rango. El magnetómetro presenta un consumo de energía bajo, del orden de microamperios, lo que nos permite operarlo a altas frecuencias y detectar cambios en el entorno que activarán el segundo sensor. Este último tiene un consumo mayor, en el orden de miliamperios, pero nos garantiza la detección segura de la presencia o ausencia de vehículos.
-
-Siguiendo con nuestra investigación, analizamos el sensor de tipo radar VL53L0X, el cual emplea un haz infrarrojo para realizar la medición y es mucho menos sensible a las perturbaciones externas. Como se puede visualizar en la figura a continuación, conseguimos detectar correctamente la presencia de un vehículo con este tipo de sensor, lo cual lo vuelve un buen candidato. Cabe aclarar que no existe una línea de referencia para un umbral máximo, dado que el sensor arroja un “Fuera de rango” cuando queda en un espacio completamente vacío.
-
-Finalmente, para el sensor magnético analizamos el eje Z que es nuestra variable de importancia aquí. Si bien pueden existir algunos falsos positivos que dependen en gran medida de la distancia entre el chasis y el suelo, junto con la estructura metálica del chasis y principalmente la colocación correcta del magnetómetro en el estacionamiento para que el mismo se encuentre lo menos perturbado por las variaciones externas. Este resultó ser un buen candidato para analizar la posibilidad de que exista un automóvil, y confirmarlo con el sensor de tipo Radar. Los magnetómetros son sensores que tienen un muy bajo consumo de energía y permiten realizar varias muestras con un mínimo gasto energético, lo cual en nuestro proyecto será utilizado como el sensor que disparara al sensor Radar para la confirmación. A continuación dejamos una tabla comparativa entre ambos sensores y su aplicación:
-
-\enabletablerowcolor[2] % Activa el color de celda
-\begin{table}[ht]
-    \centering
-    \caption{Tabla comparativa entre sensores}
-    \begin{tabular}{|p{8cm}|*{2}{>{\raggedright\arraybackslash}p{3cm}|}}
-        \hline
-        \textbf{} & \textbf{Radar} & \textbf{Magnetómetro} \\
-        \hline
-        Fiabilidad frente al movimiento de vehículos cercanos & SI & NO \\
-        Fiabilidad frente a vehículos estacionados en las proximidades & SI & NO \\
-        Fiabilidad frente a interferencias electromagnéticas & SI &NO \\
-        Fiabilidad en cualquier escenario de iluminación &SI &SI \\
-        Estabilidad durante estancias prolongadas del vehículo &SI &NO \\
-        No necesita apertura en la caja &SI &SI \\
-        Inmunidad contra la suciedad o el polvo en la caja &SI &SI \\
-        Optimización en consumo de energía &NO &SI \\
-        \hline
-        \end{tabular}
-    \label{tab:tabla_comparativa_sensore}
-\end{table}
-\disabletablerowcolor % Desactiva el color de celda
-
-Con todo lo anterior expuesto, hemos optado por la combinación de ambos sensores para su implementación en este proyecto.
