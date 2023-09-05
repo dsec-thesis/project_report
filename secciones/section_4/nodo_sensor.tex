@@ -11,9 +11,17 @@ Como se puede ver en la figura a continuación:
 
 \insertimage[\label{architecture_nodo_sensor}]{secciones/section_4/images/sensor}{width=18cm}{Arquitectura del nodo sensor}
 
-Al momento de la elección de un microcontrolador para llevar a cabo nuestro prototipo, nos enfocamos en la etapa de comunicaciones principalmente. De capítulos anteriores hemos optado por LoRa como la tecnología a utilizar en este proyecto, por lo que en nuestra búsqueda, encontramos que el hardware que presentaba la mejor relación costo-beneficio para un prototipo eran las placas WiFi LoRa 32 V2 de la compañía HELTEC.
+Al momento de la elección de un microcontrolador para llevar a cabo nuestro prototipo,
+nos enfocamos en la etapa de comunicaciones principalmente. De capítulos anteriores
+hemos optado por LoRa como la tecnología a utilizar en este proyecto, por lo que en
+nuestra búsqueda, encontramos que el hardware que presentaba la mejor relación
+costo-beneficio para un prototipo eran las placas WiFi LoRa 32 V2 de la compañía HELTEC.
 
-El equipo Heltec WiFi LoRa 32 es un dispositivo orientado a IoT, diseñado y producido por Heltec Automation. La tarjeta de desarrollo basa su funcionamiento en el microcontrolador ESP32, y se vale del chip integrado SX1278, para las funciones de comunicación LoRa, estos dos dispositivos interactúan por medio de una interfaz Serial Peripheral Interface (SPI).
+El equipo Heltec WiFi LoRa 32 es un dispositivo orientado a IoT, diseñado y producido
+por Heltec Automation. La tarjeta de desarrollo basa su funcionamiento en el
+microcontrolador ESP32, y se vale del chip integrado SX1278, para las funciones de
+comunicación LoRa, estos dos dispositivos interactúan por medio de una interfaz Serial
+Peripheral Interface (SPI).
 
 Sumado a lo mencionado anteriormente, cabe destacar que antes de que el nodo pueda entrar en funcionamiento, es esencial 
 configurar varios parámetros cruciales, tales como el ID del espacio de estacionamiento o el ID del concentrador al 
@@ -28,7 +36,9 @@ de como WiFi OTA podria ser beneficiosa. Además se lo plantea como potencial fu
 
 \insertimage[\label{heltec_lora}]{secciones/section_4/images/heltec}{width=13cm}{Placa de desarrollo Heltec Lora WiFi v2}
 
-Luego de la elección del kit de desarrollo, nos enfocamos en la determinación de los sensores a utilizar. En la sección a continuación profundizaremos porque hemos optado por utilizar dos sensores en conjunto, un magnetómetro y otro de tipo radar.
+Luego de la elección del kit de desarrollo, nos enfocamos en la determinación de los
+sensores a utilizar. En la sección a continuación profundizaremos porque hemos optado
+por utilizar dos sensores en conjunto, un magnetómetro y otro de tipo radar.
 % A raíz de lo disponible en el mercado, concluimos que los sensores que mejor se ajustan a nuestro proyecto son: HMC5883L (magnetómetro) y VL53L0X (radar).
 
 %De esta forma queda determinado cuál va a ser el hardware de nuestro proyecto.
@@ -59,7 +69,16 @@ Finalmente, para el sensor magnético analizamos el eje Z que es nuestra variabl
 \end{images}
 
 
-Si bien pueden existir algunos falsos positivos que dependen en gran medida de la distancia entre el chasis y el suelo, junto con la estructura metálica del chasis y principalmente la colocación correcta del magnetómetro en el estacionamiento para que el mismo se encuentre lo menos perturbado por las variaciones externas. Este resultó ser un buen candidato para analizar la posibilidad de que exista un automóvil, y confirmarlo con el sensor de tipo Radar. Los magnetómetros son sensores que tienen un muy bajo consumo de energía y permiten realizar varias muestras con un mínimo gasto energético, lo cual en nuestro proyecto será utilizado como el sensor que disparara al sensor Radar para la confirmación. A continuación dejamos una tabla comparativa entre ambos sensores y su aplicación:
+Si bien pueden existir algunos falsos positivos que dependen en gran medida de la
+distancia entre el chasis y el suelo, junto con la estructura metálica del chasis y
+principalmente la colocación correcta del magnetómetro en el estacionamiento para que el
+mismo se encuentre lo menos perturbado por las variaciones externas. Este resultó ser un
+buen candidato para analizar la posibilidad de que exista un automóvil, y confirmarlo
+con el sensor de tipo Radar. Los magnetómetros son sensores que tienen un muy bajo
+consumo de energía y permiten realizar varias muestras con un mínimo gasto energético,
+lo cual en nuestro proyecto será utilizado como el sensor que disparara al sensor Radar
+para la confirmación. A continuación dejamos una tabla comparativa entre ambos sensores
+y su aplicación:
 
 \enabletablerowcolor[2] % Activa el color de celda
 \begin{table}[ht]
@@ -96,7 +115,9 @@ A continuación, se destacan algunas de las razones clave por las cuales la dete
 \insertimage[\label{comparativa_anomalias_forw}]{secciones/section_4/images/qmc5883l_forward_analysis}{width=16cm}{Comparativa detección de anomalías}
 
 \subsubsubsection{Hardware}
-A continuación se muestran las características técnicas de la placa WiFi LoRa 32 V2 utilizada en este proyecto, junto con los parámetros principales de los sensores MC5883L y VL53L0X.
+A continuación se muestran las características técnicas de la placa WiFi LoRa 32 V2
+utilizada en este proyecto, junto con los parámetros principales de los sensores MC5883L
+y VL53L0X.
 
 \enabletablerowcolor[2] % Activa el color de celda
 \begin{table}[ht]
@@ -170,7 +191,8 @@ A continuación se muestran las características técnicas de la placa WiFi LoRa
 
 
 \subsubsubsection{PinOut}
-A continuación se visualiza el pinout del kit de desarrollo. Más adelante incluiremos un esquemático de la conexión entre el sensor y la misma.
+A continuación se visualiza el pinout del kit de desarrollo. Más adelante incluiremos un
+esquemático de la conexión entre el sensor y la misma.
 
 \insertimage[\label{heltec_pinout}]{secciones/section_4/images/pinout_heltec}{width=16cm}{Pinout placa de desarrollo Heltec Lora WiFi v2}
 
@@ -187,55 +209,107 @@ A continuación se visualiza el plano esquematico del nodo sensor desarrollado p
 \insertimage[\label{plano_esquematico}]{secciones/section_4/images/Schematic_smartparking-sensor}{width=15cm}{Plano esquematico del nodo sensor}
 
 \subsubsubsection{Configuración del nodo sensor}
-Para poder explicar mejor el software implementado en el sensor, presentamos primero un pequeño diagrama inicial de eventos del sistema. Cabe aclarar que este es un diagrama simplificado y no incluye toda la interacción del sistema.
+Para poder explicar mejor el software implementado en el sensor, presentamos primero un
+pequeño diagrama inicial de eventos del sistema. Cabe aclarar que este es un diagrama
+simplificado y no incluye toda la interacción del sistema.
 
 \insertimage[\label{diagrama_de_eventos_del_sistem}]{secciones/section_4/images/diagrama_de_eventos_del_sistem}{width=13cm}{Diagrama de eventos del sistema}
 
-Los datos a transmitirse desde el nodo sensor hacia el concentrador son recopilados por la tarjeta Heltec WiFi LoRa 32. Esta tarjeta permite la interacción con el magnetómetro y el sensor de tiempo de vuelo a través del protocolo I2C.
+Los datos a transmitirse desde el nodo sensor hacia el concentrador son recopilados por
+la tarjeta Heltec WiFi LoRa 32. Esta tarjeta permite la interacción con el magnetómetro
+y el sensor de tiempo de vuelo a través del protocolo I2C.
 
-El microprocesador ESP32 de la tarjeta Heltec, maneja el chip SX1278 (LoRa) y sus parámetros de transmisión (frecuencia, potencia, SF) así como las claves de seguridad de la red. La programación de este controlador se encuentran disponibles en el repositorio de GitHub del proyecto. Ver anexo ~\ref{codigo_sensor}
+El microprocesador ESP32 de la tarjeta Heltec, maneja el chip SX1278 (LoRa) y sus
+parámetros de transmisión (frecuencia, potencia, SF) así como las claves de seguridad de
+la red. La programación de este controlador se encuentran disponibles en el repositorio
+de GitHub del proyecto. Ver anexo ~\ref{codigo_sensor}
 
 \insertimage[\label{architectura_nodo_facil}]{secciones/section_4/images/architectura_nodo_facil}{width=13cm}{Diagrama de bloques nodo sensor}
 
 \subsubsubsection{Estimación tiempo de vida util - bateria del nodo sensor}{\label{sec:bateria_del_nodo_sensor}}
-Dada la naturaleza de nuestro proyecto, uno de los aspectos clave del mismo en la implementación del nodo sensor es el diseño de este para que consuma muy poca energía y además acompañar esta implementación junto con la estimación en el tiempo de vida útil del nodo.
-Al lograr estimar la vida útil de la batería, se pueden tomar mejores decisiones para realizar una planificación del mantenimiento y la sustitución anticipada de la batería, lo que contribuye a evitar interrupciones en el funcionamiento del sistema.
+Dada la naturaleza de nuestro proyecto, uno de los aspectos clave del mismo en la
+implementación del nodo sensor es el diseño de este para que consuma muy poca energía y
+además acompañar esta implementación junto con la estimación en el tiempo de vida útil
+del nodo.
+Al lograr estimar la vida útil de la batería, se pueden tomar mejores decisiones para
+realizar una planificación del mantenimiento y la sustitución anticipada de la batería,
+lo que contribuye a evitar interrupciones en el funcionamiento del sistema.
 
-A continuación introduciremos los conceptos claves junto con los cálculos necesarios para lograr la implementación y la estimación del tiempo de vida.
+A continuación introduciremos los conceptos claves junto con los cálculos necesarios
+para lograr la implementación y la estimación del tiempo de vida.
 
 \subsubsubsectionanumnoi{ESP32 - Low-Power Management}
-Conforme se destacó en la introducción de esta sección, resulta crucial considerar el consumo de energía durante el desarrollo del nodo sensor. Nuestra investigación revela que el microcontrolador a emplear ofrece cuatro (4) perfiles de energía distintos, como se muestra en la imagen adjunta.
+Conforme se destacó en la introducción de esta sección, resulta crucial considerar el
+consumo de energía durante el desarrollo del nodo sensor. Nuestra investigación revela
+que el microcontrolador a emplear ofrece cuatro (4) perfiles de energía distintos, como
+se muestra en la imagen adjunta.
 
 \insertimage[\label{esp_low_power}]{secciones/section_4/images/esp_low_power}{width=17cm}{Modos de consumo de energía ESP32}
 
-Durante el modo de suspensión profunda (deep sleep), la CPU principal se apaga, mientras que el Coprocesador Ultra-Bajo Consumo (ULP) puede tomar lecturas de sensores y despertar a la CPU según sea necesario. Este tipo de perfil de energía es útil para diseñar aplicaciones en las que la CPU debe despertarse por un evento externo, un temporizador o una combinación de estos eventos, manteniendo un consumo mínimo de energía.
+Durante el modo de suspensión profunda (deep sleep), la CPU principal se apaga, mientras
+que el Coprocesador Ultra-Bajo Consumo (ULP) puede tomar lecturas de sensores y
+despertar a la CPU según sea necesario. Este tipo de perfil de energía es útil para
+diseñar aplicaciones en las que la CPU debe despertarse por un evento externo, un
+temporizador o una combinación de estos eventos, manteniendo un consumo mínimo de
+energía.
 
-Debido a que la memoria RTC se mantiene activa, su contenido se conserva incluso durante el modo de suspensión profunda y se puede recuperar una vez que el chip se despierta. Para una mejor ejemplificación adjuntamos el diagrama de bloques con aquellos bloques que siguen activos durante el modo de funcionamiento Deep-Sleep.
+Debido a que la memoria RTC se mantiene activa, su contenido se conserva incluso durante
+el modo de suspensión profunda y se puede recuperar una vez que el chip se despierta.
+Para una mejor ejemplificación adjuntamos el diagrama de bloques con aquellos bloques
+que siguen activos durante el modo de funcionamiento Deep-Sleep.
 
 \insertimage[\label{diagrama_low_power_bloques}]{secciones/section_4/images/diagrama_low_power_bloques}{width=15cm}{Bloques activos en modo Deep-Sleep}
 
 \subsubsubsectionanumnoi{Funcionamiento del nodo (considerando los modos de energía)}
-En apartados anteriores, hemos explicado el principio de funcionamiento de nuestro nodo sensor y los distintos modos de consumo de energía que ofrece el microcontrolador ESP32. Ahora, detallaremos cómo funciona nuestro nodo en conjunto con los periféricos y el software diseñado.
+En apartados anteriores, hemos explicado el principio de funcionamiento de nuestro nodo
+sensor y los distintos modos de consumo de energía que ofrece el microcontrolador ESP32.
+Ahora, detallaremos cómo funciona nuestro nodo en conjunto con los periféricos y el
+software diseñado.
 
-Antes de adentrarnos, asumiremos que el nodo ya está configurado, es decir, las variables necesarias para una comunicación exitosa con la etapa de comunicaciones LoRa han sido establecidas (frecuencia, canales de TX y RX, SF, etc.). Además, los pines para la comunicación mediante I2C han sido configurados previamente. En esta ocasión, nos centraremos en el funcionamiento del nodo para llevar a cabo la detección de vehículos.
+Antes de adentrarnos, asumiremos que el nodo ya está configurado, es decir, las
+variables necesarias para una comunicación exitosa con la etapa de comunicaciones LoRa
+han sido establecidas (frecuencia, canales de TX y RX, SF, etc.). Además, los pines para
+la comunicación mediante I2C han sido configurados previamente. En esta ocasión, nos
+centraremos en el funcionamiento del nodo para llevar a cabo la detección de vehículos.
 
 \insertimage[\label{power_modes_system}]{secciones/section_4/images/power_modes_system}{width=15cm}{Esquema simplificado de los modos de energia y su interacción.}
 
-Después de completar la configuración inicial, el microcontrolador entra en un estado Deep-Sleep y activa ULP para analizar las lecturas del magnetómetro. Este proceso permite determinar si la variación del campo magnético ha excedido el umbral predefinido.
+Después de completar la configuración inicial, el microcontrolador entra en un estado
+Deep-Sleep y activa ULP para analizar las lecturas del magnetómetro. Este proceso
+permite determinar si la variación del campo magnético ha excedido el umbral predefinido.
 
 \insertimage[\label{esquema_energia}]{secciones/section_4/images/esquema_energia}{width=15cm}{Esquema de energía interno ESP32}
 
-Cuando se detecta que el valor límite ha sido superado, el coprocesador llama a una función previamente definida, indicando a la ESP que debe salir del modo Deep-Sleep y entrar en modo de funcionamiento activo.
+Cuando se detecta que el valor límite ha sido superado, el coprocesador llama a una
+función previamente definida, indicando a la ESP que debe salir del modo Deep-Sleep y
+entrar en modo de funcionamiento activo.
 
-En el modo activo, el microcontrolador solicita la lectura del sensor láser VL53I0x y espera una interrupción que se produce cuando la lectura está lista. Una vez que se obtiene la lectura, se compara con la última registrada para determinar si ha habido algún cambio significativo. En caso afirmativo, se envía el valor a través de LoRa.
-Mientras se espera recibir una señal de ACK (acknowledgement) por parte del nodo de borde, el microcontrolador entra en un estado de sueño intermitente durante un segundo para evitar un gasto innecesario de energía.
+En el modo activo, el microcontrolador solicita la lectura del sensor láser VL53I0x y
+espera una interrupción que se produce cuando la lectura está lista. Una vez que se
+obtiene la lectura, se compara con la última registrada para determinar si ha habido
+algún cambio significativo. En caso afirmativo, se envía el valor a través de LoRa.
+Mientras se espera recibir una señal de ACK (acknowledgement) por parte del nodo de
+borde, el microcontrolador entra en un estado de sueño intermitente durante un segundo
+para evitar un gasto innecesario de energía.
 
-Finalmente, una vez que se recibe la señal de ACK, el microcontrolador vuelve a ingresar en el modo de Deep-Sleep, preparado para realizar nuevas detecciones.
+Finalmente, una vez que se recibe la señal de ACK, el microcontrolador vuelve a ingresar
+en el modo de Deep-Sleep, preparado para realizar nuevas detecciones.
 
 \subsubsubsectionanumnoi{Cálculo teórico - tiempo de vida batería}
-Para poder estimar de manera precisa el tiempo de vida de la batería que se requiere para nuestro equipo, se ha realizado una cuidadosa identificación de dos patrones de consumo claramente definidos, a los cuales hemos denominado \textit{Alto Consumo} y \textit{Bajo Consumo}, cada uno con sus respectivos periodos de funcionamiento "ON" y de inactividad "OFF". Este desglose minucioso nos proporcionará una estimación más detallada y precisa del tiempo de vida esperado para la batería, permitiéndonos tomar decisiones informadas acerca de la capacidad y durabilidad óptimas para el sistema electrónico en cuestión. Este análisis está basado en que muchos de los sistemas IoT pasan una pequeña parte de su tiempo en un modo activo (o de funcionamiento) y el resto en modo de inactividad.
+Para poder estimar de manera precisa el tiempo de vida de la batería que se requiere
+para nuestro equipo, se ha realizado una cuidadosa identificación de dos patrones de
+consumo claramente definidos, a los cuales hemos denominado \textit{Alto Consumo} y
+\textit{Bajo Consumo}, cada uno con sus respectivos periodos de funcionamiento "ON" y de
+inactividad "OFF". Este desglose minucioso nos proporcionará una estimación más
+detallada y precisa del tiempo de vida esperado para la batería, permitiéndonos tomar
+decisiones informadas acerca de la capacidad y durabilidad óptimas para el sistema
+electrónico en cuestión. Este análisis está basado en que muchos de los sistemas IoT
+pasan una pequeña parte de su tiempo en un modo activo (o de funcionamiento) y el resto
+en modo de inactividad.
 
-Para comenzar con el cálculo teórico, vamos a tomar los niveles de consumo de acuerdo a los datasheet de los fabricantes. En el sistema de bajo consumo tenemos los siguientes parámetros:
+Para comenzar con el cálculo teórico, vamos a tomar los niveles de consumo de acuerdo a
+los datasheet de los fabricantes. En el sistema de bajo consumo tenemos los siguientes
+parámetros:
 
 \insertindexequation[\label{consumo_ulp_modo_activo}]{I_{ULP A} = 0.0004 mA}{consumo ULP en modo activo}
 \insertindexequation[\label{consumo_ulp_modo_off}]{I_{ULP Off} = 0.00001 mA}{consumo ULP en modo off}
@@ -247,7 +321,8 @@ Por lo tanto la corriente total queda definida como:
 
 \insertindexequation[\label{corriente_magnetometro}]{I_{Magnetometer}= 0.00002 mA}{Corriente total}{}
 
-Finalmente el valor de la corriente de bajo consumo queda definida como la suma del procesador ULP y la corriente consumida por el magnetómetro.
+Finalmente el valor de la corriente de bajo consumo queda definida como la suma del
+procesador ULP y la corriente consumida por el magnetómetro.
 
 \insertindexequation[\label{corriente_I_low_power}]{I_{Low Power}= I_{ULP} + I_{Magnetometer}}{Corriente total del sistema bajo consumo}{}
 
@@ -259,7 +334,8 @@ En el sistema de alto consumo consideramos los siguientes valores:
 \insertindexequation[\label{tiempo_esp_modo_activo}]{t_{ESP A} = 300 ms}{tiempo que la ESP permanece en modo activo}{}
 \insertindexequation[\label{tiempo_laser_activo}]{t_{Laser On} = 40 ms}{tiempo que el laser está activo}{}
 
-Con las variables anteriores queda definido el tiempo en la que el nodo sensor se encuentra recolectando la información sobre la ocupación de un slot de estacionamiento.
+Con las variables anteriores queda definido el tiempo en la que el nodo sensor se
+encuentra recolectando la información sobre la ocupación de un slot de estacionamiento.
 
 \insertindexequation[\label{corriente_esp_collecting}]{I_{ESP Collecting} = \frac{I_{ESP A} * t_{ESP A}}{t_{ESP A} + t_a}}{corriente de la ESP mientras collecta información}{}
 \insertindexequation[\label{tiempo_laser_activo}]{I_{Laser Collecting} = \frac{I_{Laser ON} * t_{Laser ON}}{t_{Laser ON} + t_a}}{corriente total mientras el laser collecta información}{}
@@ -278,7 +354,9 @@ Por último, una vez recolectada la información, tenemos la etapa de envío y r
 \insertequation{t_{ESP A} = t_{sx stby}}
 \insertequation{t_{ESP_Light_Sleep} = t_{sx tx} + t_{sx rx}}
 
-La etapa de comunicación queda definida entonces por la suma entre la corriente que consume el nodo mientras transmite y mientras recibe como se puede ver en las fórmulas a continuación.
+La etapa de comunicación queda definida entonces por la suma entre la corriente que
+consume el nodo mientras transmite y mientras recibe como se puede ver en las fórmulas
+a continuación.
 
 \insertequation{I_{Transmitting\ ESP} = \frac{I_{ESP\ A} * t_{ESP\ A} + I_{ESP\ Light\ Sleep} * t_{ESP\ Light\ Sleep}}{t_a+ t_{ESP\ A}+ t_{ESP\ Light\ Sleep}}}
 
@@ -287,8 +365,12 @@ La etapa de comunicación queda definida entonces por la suma entre la corriente
 \insertequation{I_{Transmitting} = I_{Transmitting\ ESP} + I_{Transmitting\ SX}}
 \insertequation{I_{High\ Power} = I_{Collecting} + I_{Transmitting}}
 
-En este punto ya tenemos todos los valores de intensidad expresados y podemos estimar el tiempo de vida útil de una batería. Asumiendo que tenemos una batería de 5000 mAh, en la gráfica a continuación se puede visualizar el tiempo de vida estimado en función de la permanencia de vehículos en una plaza del estacionamiento.
+En este punto ya tenemos todos los valores de intensidad expresados y podemos estimar el
+tiempo de vida útil de una batería. Asumiendo que tenemos una batería de 5000 mAh, en la
+gráfica a continuación se puede visualizar el tiempo de vida estimado en función de la
+permanencia de vehículos en una plaza del estacionamiento.
 
 \insertimage[\label{calculo_bateria}]{secciones/section_4/images/calculo_bateria}{width=17cm}{Calculo teórico tiempo de vida de la batería}
 
-En la sección de anexos, puede encontrarse el código para el cálculo y generación de la gráfica anterior. Ver anexo ~\ref{codigo_estimacion_bateria}
+En la sección de anexos, puede encontrarse el código para el cálculo y generación de la
+gráfica anterior. Ver anexo ~\ref{codigo_estimacion_bateria}
