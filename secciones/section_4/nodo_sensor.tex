@@ -38,41 +38,37 @@ de como WiFi OTA podria ser beneficiosa. Además se lo plantea como potencial fu
 
 
 \subsubsubsection{Determinación de sensores}
-Después de una exhaustiva investigación sobre los sensores más empleados en la industria para productos de este tipo, 
-hemos descubierto que uno de los principales fabricantes de soluciones inteligentes para estacionamientos, 
-como es el caso de la empresa Libelium, elige combinar dos tipos de sensores para detectar la presencia de vehículos: 
-un magnetómetro y un medidor de rango. El magnetómetro presenta un consumo de energía bajo, del orden de microamperios, 
-lo que nos permite operarlo a altas frecuencias y detectar cambios en el entorno que activarán el segundo sensor. 
-Este último tiene un consumo mayor, en el orden de miliamperios, pero nos garantiza la detección segura de la presencia o ausencia de vehículos.
+Después de una exhaustiva investigación sobre los sensores más empleados en la industria
+para productos de este tipo, hemos descubierto que uno de los principales fabricantes de
+soluciones inteligentes para estacionamientos, como es el caso de la empresa Libelium,
+elige combinar dos tipos de sensores para detectar la presencia de vehículos: un
+magnetómetro y un medidor de rango.
 
-Siguiendo con nuestra investigación, analizamos el sensor de tipo radar VL53L0X, el cual emplea un haz infrarrojo para realizar la 
-medición y es mucho menos sensible a las perturbaciones externas. Como se puede visualizar en la figura a continuación, conseguimos 
-detectar correctamente la presencia de un vehículo con este tipo de sensor, lo cual lo vuelve un buen candidato. Cabe aclarar que no existe 
-una línea de referencia para un umbral máximo, dado que el sensor arroja un “Fuera de rango” cuando queda en un espacio completamente vacío.
+El magnetómetro habilita al sistema para detectar cambios en el entorno con un consumo
+de energía reducido, aunque con una precisión limitada. En contraste, el sensor de rango
+se encarga de confirmar si estos cambios se deben a la entrada o salida de un automóvil
+en el espacio de estacionamiento.
+
+Para evaluar el rendimiento de los sensores, llevamos a cabo un experimento en el que
+estacionamos un automóvil, tanto en posición frontal como trasera, sobre estos
+dispositivos mientras registraban lecturas.
+
+Las muestras del sensor de rango confirman que solo se obtienen datos cuando el objeto
+se encuentra dentro del rango de detección. Por otro lado, las lecturas del magnetómetro
+son considerablemente más ruidosas, pero se observa una variación evidente cuando el
+automóvil pasa sobre él.
 
 \begin{images}[\label{VL53L0X_PLOTS}]{Mediciones realizadas con el sensor VL53L0X}
     \addimage[\label{VL53L0X_PLOTS_1}]{secciones/section_4/images/vl53l0x_forward}{width=8cm}{}
     \addimage[\label{VL53L0X_PLOTS_2}]{secciones/section_4/images/vl53l0x_back}{width=8cm}{}
 \end{images}
 
-
-Finalmente, para el sensor magnético analizamos el eje Z que es nuestra variable de importancia aquí.
 \begin{images}[\label{QMC5883L_PLOT}]{Mediciones realizadas con el sensor QMC5883L}
     \addimage[\label{QMC5883L_PLOT_1}]{secciones/section_4/images/qmc5883l_forward}{width=8cm}{}
     \addimage[\label{QMC5883L_PLOT_2}]{secciones/section_4/images/qmc5883l_back}{width=8cm}{}
 \end{images}
 
-
-Si bien pueden existir algunos falsos positivos que dependen en gran medida de la
-distancia entre el chasis y el suelo, junto con la estructura metálica del chasis y
-principalmente la colocación correcta del magnetómetro en el estacionamiento para que el
-mismo se encuentre lo menos perturbado por las variaciones externas. Este resultó ser un
-buen candidato para analizar la posibilidad de que exista un automóvil, y confirmarlo
-con el sensor de tipo Radar. Los magnetómetros son sensores que tienen un muy bajo
-consumo de energía y permiten realizar varias muestras con un mínimo gasto energético,
-lo cual en nuestro proyecto será utilizado como el sensor que disparara al sensor Radar
-para la confirmación. A continuación dejamos una tabla comparativa entre ambos sensores
-y su aplicación:
+A continuación dejamos una tabla comparativa entre ambos sensores y su aplicación:
 
 \enabletablerowcolor[2] % Activa el color de celda
 \begin{table}[ht]
@@ -99,14 +95,25 @@ y su aplicación:
 Con todo lo anterior expuesto, hemos optado por la combinación de ambos sensores para su implementación en este proyecto.
 
 \subsubsubsection{Detección de anomalías}
-La detección de anomalías en el contexto de IoT se ha convertido en una disciplina fundamental debido a su capacidad para 
-identificar eventos inusuales, comportamientos atípicos o desviaciones significativas en los datos generados por los sensores IoT. 
-Aunque la mayoría de los datos recopilados por estos sensores son típicamente normales y esperados, la detección de anomalías juega un 
-papel crucial en la detección temprana de problemas, la optimización de procesos y la garantía de seguridad en diversas aplicaciones.
-A continuación, se destacan algunas de las razones clave por las cuales la detección de anomalías en IoT es de vital importancia:
+Un detector de anomalías, en el contexto de análisis de datos, es una herramienta
+esencial que se emplea en diversas aplicaciones para identificar patrones inusuales o
+atípicos dentro de un conjunto de datos específico. En este caso particular, el conjunto
+de datos en cuestión corresponde a las magnitudes registradas por el magnetómetro.
+Para establecer una referencia sobre lo que se considera un valor típico en este,
+se utiliza una técnica conocida como "media móvil", que calcula el promedio de las
+mediciones anteriores.
 
-\insertimage[\label{comparativa_anomalias_back}]{secciones/section_4/images/qmc5883l_back_analysis}{width=16cm}{Comparativa detección de anomalías}
-\insertimage[\label{comparativa_anomalias_forw}]{secciones/section_4/images/qmc5883l_forward_analysis}{width=16cm}{Comparativa detección de anomalías}
+La media móvil proporciona una base para evaluar las mediciones actuales en relación con
+el comportamiento histórico de los datos. La detección de anomalías se lleva a cabo al
+comparar la última medición registrada con el valor más reciente calculado a partir de
+la media móvil. Cuando la diferencia entre la medición actual y la media móvil excede
+cierto umbral predeterminado, se identifica como una anomalía.
+
+Este proceso se aplicó a los datos obtenidos en la seccion previa obteniendo como
+resultado las siguientes imagenes.
+
+\insertimage[\label{comparativa_anomalias_forw}]{secciones/section_4/images/qmc5883l_forward_analysis}{width=16cm}{Estacionamiento frontal}
+\insertimage[\label{comparativa_anomalias_back}]{secciones/section_4/images/qmc5883l_back_analysis}{width=16cm}{Estacionamiento trasero}
 
 \subsubsubsection{Hardware}
 A continuación se muestran las características técnicas de la placa WiFi LoRa 32 V2
@@ -190,13 +197,6 @@ esquemático de la conexión entre el sensor y la misma.
 
 \insertimage[\label{heltec_pinout}]{secciones/section_4/images/pinout_heltec}{width=16cm}{Pinout placa de desarrollo Heltec Lora WiFi v2}
 
-% \subsubsubsection{Conexión}
-% A continuación se visualiza la conexión entre el kit de desarrollo y los sensores utilizados en este proyecto. Cabe aclarar que este es el modelo esquemático 
-% esta diseñado unicamente con los kits de desarrollo, más adelante incluiremos un apartado del diseño del PCB.
-
-% %\insertimage[\label{heltec_conexion_sensores}]{secciones/section_4/images/heltec_conexion_sensores}{width=13cm}{Diagrama de conexión entre Heltec y Sensores}
-
-% \insertimage[\label{heltec_diagrama_conexion}]{secciones/section_4/images/heltec_diagrama_conexion}{width=16cm}{Diagrama de conexión esquematico entre Heltec y Sensores}
 
 \subsubsubsection{Plano esquemático}
 A continuación se visualiza el plano esquematico del nodo sensor desarrollado para el proyecto.
