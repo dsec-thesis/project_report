@@ -1,9 +1,10 @@
 \clearpage
 
-\subsubsection{Nodo de borde (concentrador)}
-El objetivo de este nodo es poder recolectar los datos enviados a través de LoRa por los diferentes sensores, procesar los mismos y enviar la información al cloud para que esté disponible en la aplicación.
+\subsubsection{Nodo de Concentrador}
+Este nodo desempeña el papel de intermediario entre los nodos sensores y el servidor. En una de sus funciones, recopila datos de los nodos sensores utilizando la tecnología LoRa y, en la otra, los transmite al servidor a través del protocolo HTTP.
 
-Para la elección como unidad de procesamiento, tuvimos en cuenta que los datos a ser procesados deben ser en tiempo real y con el mínimo tiempo de delay. Por lo cual el dispositivo de borde debía tener la capacidad de poder manejar esta carga. Dado que el equipo ya contaba con un mini ordenador utilizado ampliamente en la comunidad para prototipado (Raspberry Pi), hicimos pruebas de campo con resultados aceptables y decidimos utilizar el mismo para nuestro proyecto.
+Desde esta descripción, podemos derivar algunos de sus requisitos fundamentales. Esto incluye la necesidad de disponer de una conexión LoRa y la capacidad de establecer una conexión HTTP con un servidor. A pesar de que podríamos haber optado por utilizar el mismo dispositivo que se emplea para el nodo sensor, en este caso el Heltec WiFi LoRa 32, decidimos utilizar una Raspberry Pi. La elección se basó en la abundante cantidad de memoria que ofrece, lo que nos permite almacenar temporalmente mensajes en momentos de alta demanda. Además, teníamos una unidad de Raspberry Pi disponible para su implementación.
+
 
 \insertimage[\label{raspberry_pi}]{secciones/section_4/images/raspberry_pi}{width=18cm}{Raspberry Pi 3 Model B+}
 
