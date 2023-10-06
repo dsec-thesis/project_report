@@ -1,0 +1,4 @@
+Nodo Sensor->Nodo Concentrador:Notificar cambio de estado\ninternal_space_id
+Nodo Concentrador-->Nodo Sensor:Confirmar recepción\ninternal_space_id
+Nodo Concentrador->Nodo Concentrador: Procesar evento
+Nodo Concentrador->Servidor: Cambiar estado de espacio de estacionamiento\nparkinglot_id\nspace_id
