@@ -1,4 +1,4 @@
-\subsubsection{Nodo sensor}
+\subsection{Nodo sensor}
 El nodo sensor de nuestro proyecto está compuesto de las siguientes etapas:
 
 \begin{itemize}
@@ -37,7 +37,7 @@ de como WiFi OTA podria ser beneficiosa. Además se lo plantea como potencial fu
 \insertimage[\label{heltec_lora}]{secciones/section_4/images/heltec}{width=13cm}{Placa de desarrollo Heltec Lora WiFi v2}
 
 
-\subsubsubsection{Determinación de sensores}
+\subsubsection{Determinación de sensores}
 Después de una exhaustiva investigación sobre los sensores más empleados en la industria
 para productos de este tipo, hemos descubierto que uno de los principales fabricantes de
 soluciones inteligentes para estacionamientos, como es el caso de la empresa Libelium,
@@ -94,7 +94,7 @@ A continuación dejamos una tabla comparativa entre ambos sensores y su aplicaci
 
 Con todo lo anterior expuesto, hemos optado por la combinación de ambos sensores para su implementación en este proyecto.
 
-\subsubsubsection{Detección de anomalías}
+\subsubsection{Detección de anomalías}
 Un detector de anomalías, en el contexto de análisis de datos, es una herramienta
 esencial que se emplea en diversas aplicaciones para identificar patrones inusuales o
 atípicos dentro de un conjunto de datos específico. En este caso particular, el conjunto
@@ -115,7 +115,7 @@ resultado las siguientes imagenes.
 \insertimage[\label{comparativa_anomalias_forw}]{secciones/section_4/images/qmc5883l_forward_analysis}{width=16cm}{Estacionamiento frontal}
 \insertimage[\label{comparativa_anomalias_back}]{secciones/section_4/images/qmc5883l_back_analysis}{width=16cm}{Estacionamiento trasero}
 
-\subsubsubsection{Hardware}
+\subsubsection{Hardware}
 A continuación se muestran las características técnicas de la placa WiFi LoRa 32 V2
 utilizada en este proyecto, junto con los parámetros principales de los sensores MC5883L
 y VL53L0X.
@@ -202,7 +202,7 @@ esquemático de la conexión entre el sensor y la misma.
 A continuación se visualiza el plano esquematico del nodo sensor desarrollado para el proyecto.
 \insertimage[\label{plano_esquematico}]{secciones/section_4/images/Schematic_smartparking-sensor}{width=12.5cm}{Plano esquematico del nodo sensor}
 
-\subsubsubsection{Configuración del nodo sensor}
+\subsubsection{Configuración del nodo sensor}
 Para poder explicar mejor el software implementado en el sensor, presentamos primero un
 pequeño diagrama inicial de eventos del sistema. Cabe aclarar que este es un diagrama
 simplificado y no incluye toda la interacción del sistema.
@@ -220,7 +220,7 @@ de GitHub del proyecto. Ver anexo ~\ref{codigo_sensor}
 
 \insertimage[\label{architectura_nodo_facil}]{secciones/section_4/images/architectura_nodo_facil}{width=13cm}{Diagrama de bloques nodo sensor}
 
-\subsubsubsection{Estimación tiempo de vida util - bateria del nodo sensor}{\label{sec:bateria_del_nodo_sensor}}
+\subsubsection{Estimación tiempo de vida util - bateria del nodo sensor}{\label{sec:bateria_del_nodo_sensor}}
 Dada la naturaleza de nuestro proyecto, uno de los aspectos clave del mismo en la
 implementación del nodo sensor es el diseño de este para que consuma muy poca energía y
 además acompañar esta implementación junto con la estimación en el tiempo de vida útil
@@ -232,7 +232,7 @@ lo que contribuye a evitar interrupciones en el funcionamiento del sistema.
 A continuación introduciremos los conceptos claves junto con los cálculos necesarios
 para lograr la implementación y la estimación del tiempo de vida.
 
-\subsubsubsectionanumnoi{ESP32 - Low-Power Management}
+\subsubsubsection{ESP32 - Low-Power Management}
 Conforme se destacó en la introducción de esta sección, resulta crucial considerar el
 consumo de energía durante el desarrollo del nodo sensor. Nuestra investigación revela
 que el microcontrolador a emplear ofrece cuatro (4) perfiles de energía distintos, como
@@ -254,7 +254,7 @@ que siguen activos durante el modo de funcionamiento Deep-Sleep.
 
 \insertimage[\label{diagrama_low_power_bloques}]{secciones/section_4/images/diagrama_low_power_bloques}{width=15cm}{Bloques activos en modo Deep-Sleep}
 
-\subsubsubsectionanumnoi{Funcionamiento del nodo (considerando los modos de energía)}
+\subsubsubsection{Funcionamiento del nodo (considerando los modos de energía)}
 En apartados anteriores, hemos explicado el principio de funcionamiento de nuestro nodo
 sensor y los distintos modos de consumo de energía que ofrece el microcontrolador ESP32.
 Ahora, detallaremos cómo funciona nuestro nodo en conjunto con los periféricos y el
@@ -289,7 +289,7 @@ para evitar un gasto innecesario de energía.
 Finalmente, una vez que se recibe la señal de ACK, el microcontrolador vuelve a ingresar
 en el modo de Deep-Sleep, preparado para realizar nuevas detecciones.
 
-\subsubsubsectionanumnoi{Cálculo teórico - tiempo de vida batería}
+\subsubsubsection{Cálculo teórico - tiempo de vida batería}
 Para poder estimar de manera precisa el tiempo de vida de la batería que se requiere
 para nuestro equipo, se ha realizado una cuidadosa identificación de dos patrones de
 consumo claramente definidos, a los cuales hemos denominado \textit{Alto Consumo} y
