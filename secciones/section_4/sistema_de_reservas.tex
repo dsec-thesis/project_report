@@ -1,25 +1,25 @@
 \clearpage
 
-\subsubsection{Software integral (Cloud-based)}
+\subsection{Sistema de Reservas}
 Esta sección presenta una visión general de la arquitectura propuesta para el sistema de Smart Parking, contextualizando brevemente el sistema multiagente a integrar y las razones detrás de la utilización de tecnologías en la nube. También se describe la estructura, detallando el papel de los componentes principales del sistema.
 
-\subsubsubsection{Resumen de la Arquitectura}
+\subsubsection{Resumen de la Arquitectura}
 
 Uno de los principales objetivos de la arquitectura propuesta es permitir la interacción del usuario con el sistema multiagente desarrollado en este proyecto. En resumen, este sistema realiza la interconexión entre componentes físicos y recursos computacionales con un enfoque basado en la descentralización del sistema. En la figura a continuación se puede observar la arquitectura completa del sistema y su interconexión con la interfaz del usuario y los sensores.
 
 % CAMBIAR FOTO ARQUITECTURA
-\insertimage[\label{arquitectura_software}]{secciones/section_4/images/arquitectura_software}{width=13cm}{Resumen de Arquitectura en el Cloud}
+\insertimage[\label{arquitectura_software}]{secciones/section_4/images/sistemas_reservas}{width=16cm}{Resumen de Arquitectura en el Cloud}
 
 Como se puede apreciar debemos poder tener una comunicación entre los sensores físicos y la información visualizada por los conductores. Pensando esto en una escalabilidad muy alta es necesario integrar todo el sistema a una plataforma que permita la comunicación entre ambas partes sin tener limitaciones que afectan la experiencia de usuario. Basado en esto hemos optado por alojar la solución en el cloud (específicamente AWS), como se ha mencionado en capítulos anteriores esta opción no depende solo de un servidor físico. Alojar la solución en el cloud permite un número ilimitado de servidores actuando como un único sistema unificado, permitiendo así la flexibilidad, escalabilidad y ahorro de costos dado que se paga únicamente por los recursos utilizados. En este caso el uso del cloud será como PaaS (Platform as a Service) que variará los recursos computacionales en función de la demanda.
 
 En esta arquitectura, los componentes principales son autenticación del usuario, capa de base de datos, motor en tiempo real, manejo de eventos por publicación con SNS.
 
-\subsubsubsectionanumnoi{Autenticación del usuario}
+\subsubsubsection{Autenticación del usuario}
 El objetivo principal de un módulo de autenticación es verificar la identidad del usuario, lo que implica métodos de validación de datos para confirmar su autenticidad. Es importante contar con un módulo de autenticación flexible y accesible en todo momento para que los usuarios puedan acceder a la aplicación. Dado que también es a través de este módulo que se verifican los roles del mismo, de esta forma se pueden limitar las características a la que un usuario tiene acceso frente a un administrador (no desarrollado en este trabajo).
 
 En las aplicaciones actuales, es comúnmente compatible la autenticación mediante correo electrónico y contraseña, números de teléfono e incluso proveedores como Google, Facebook y Twitter. Cuando se utiliza uno de estos métodos, el sistema puede reconocer qué usuario está llevando a cabo una determinada acción y, en función del rol asignado, puede controlar el acceso al uso de los recursos del sistema. Para nuestro caso se decidió implementar la autenticación con un proveedor social (Social Provider) como Google dado que es ampliamente difundido y la mayor parte del mercado cuenta con un dispositivo Android lo que hace que deba tener una cuenta de Google activa.
 
-\subsubsubsectionanumnoi{Base de datos NoSQL}
+\subsubsubsection{Base de datos NoSQL}
 Ha habido un aumento masivo en el almacenamiento de datos en los últimos años, en gran parte debido a las enormes redes sociales como Facebook y Twitter, los motores de búsqueda como Google y otros sitios web que almacenan grandes cantidades de datos. Por lo tanto, surgen varios desafíos relacionados con el almacenamiento, captura, análisis y transferencia de estos datos, y ahí es donde entran en juego las bases de datos NoSQL (por ejemplo, MongoDB, Firestore, DynamoDB), conocidas por funcionar bien con big data y aplicaciones en tiempo real.
 
 \subsubsubsectionanumnoi{Concepto}
@@ -37,7 +37,7 @@ Existen diferentes tipos de bases de datos NoSQL, como los pares de clave-valor,
 Finalmente, las bases de datos de documentos almacenan datos similares a la Notación de Objetos JavaScript (JSON), donde los datos están envueltos entre llaves y tienen pares de clave-valor. Estos valores pueden contener cadenas, números, arreglos, objetos incrustados, etc. A nivel de base de datos, es completamente sin esquema, por lo que la aplicación puede ser muy dinámica
 
 
-\subsubsubsectionanumnoi{Indexación H3 - Uber System Approach}
+\subsubsubsection{Indexación H3 - Uber System Approach}
 En el desarrollo de nuestro proyecto nos encontramos con un potencial problema asociado a costos y performance que tiene que ver con la base de datos y cómo los datos dentro de esta podrían ser consultados. Inicialmente se consideró que teniendo como dato la Latitud y Longitud del estacionamiento junto con un radio de búsqueda era suficiente para que un usuario pueda hallar el estacionamiento próximo a su destino, sin embargo esto requeriría consultar todos los datos de la tabla cada vez que un usuario procesa una solicitud lo cual además de ser altamente costoso es también no performante.
 
 De nuestra investigación, descubrimos que actualmente Uber (plataforma de contratación de taxis online) había tenido este problema y desarrolló un sistema de indexación geoespacial denominado H3 para lidiar con este problema.
@@ -57,12 +57,12 @@ Por lo explicado anteriormente, es que hemos adoptado el sistema de indexado H3 
 % CAMBIAR FOTO INDEX UBER rosario cuadricula
 \insertimage[\label{rosario_celdas}]{secciones/section_4/images/rosario_celdas}{width=15cm}{Mapa de la ciudad de Rosario con índices superpuestos}
 
-\subsubsubsection{Flutter como framework principal}
+\subsubsection{Flutter como framework principal}
 Flutter fue adoptado como el lenguaje principal para escribir nuestra aplicación móvil dado que es un marco de desarrollo de aplicaciones móviles de código abierto creado por Google para crear aplicaciones de alto rendimiento para iOS y Android en una única base de código. 
 
 Esto evita tener que realizar el doble de trabajo en caso que se quiera correr en más de una plataforma. Además actualmente el mismo, también soporta integración con aplicaciones de escritorio e interfaz web, lo que en un principio podría extenderse las funcionalidades a Windows o MacOS (aunque no está cubierto en este trabajo final). Además de lo mencionado anteriormente, este framework destaca hoy en el marcado por la abstracción lograda por el mismo, ya que los desarrolladores pueden enfocarse en la lógica del negocio en sí y utilizar los widgets que la comunidad crea para la parte visual de la aplicación, logrando buenos resultados aceptables en cuanto al diseño gráfico de la aplicación y preservando todas las funcionalidades de fondo en cuanto a performance nativa. En las siguientes secciones agregaremos pantallas de la aplicación creada.
 
-\subsubsubsection{Búsqueda de estacionamientos disponibles}
+\subsubsection{Búsqueda de estacionamientos disponibles}
 El proceso de búsqueda y reserva de estacionamientos disponibles comienza con el usuario ingresando a la aplicación, previamente autenticado. A través del uso del mapa o la barra de búsqueda, seleccione su destino y la ubicación cercana donde desea estacionar su vehículo. Al seleccionar el destino, la aplicación envía una consulta al backend, que a su vez devuelve una lista de estacionamientos cercanos con disponibilidad.
 
 Para evitar sobrecargar el sistema con datos innecesarios, solo se muestra la disponibilidad de los estacionamientos en la parte gráfica. Una vez que el usuario visualiza los estacionamientos disponibles, puede seleccionar el que prefiera y proceder a confirmar su reserva. En ese momento, el backend verifica si el booking es aceptado o rechazado, informando al usuario sobre el resultado. Para una mejor visualización de lo descrito en este párrafo se adjunta a continuación un diagrama de flujos que corresponde al proceso de creación de reserva de una usuario.
