@@ -3,7 +3,7 @@
 \subsubsection{Nodo de Concentrador}
 Este nodo desempeña el papel de intermediario entre los nodos sensores y el servidor. En una de sus funciones, recopila datos de los nodos sensores utilizando la tecnología LoRa y, en la otra, los transmite al servidor a través del protocolo HTTP.
 
-Desde esta descripción, podemos derivar algunos de sus requisitos fundamentales. Esto incluye la necesidad de disponer de una conexión LoRa y la capacidad de establecer una conexión HTTP con un servidor. A pesar de que podríamos haber optado por utilizar el mismo dispositivo que se emplea para el nodo sensor, en este caso el Heltec WiFi LoRa 32, decidimos utilizar una Raspberry Pi. La elección se basó en la abundante cantidad de memoria que ofrece, lo que nos permite almacenar temporalmente mensajes en momentos de alta demanda. Además, teníamos una unidad de Raspberry Pi disponible para su implementación.
+Desde esta descripción, podemos derivar algunos de sus requisitos fundamentales. Esto incluye la necesidad de disponer de una conexión LoRa y la capacidad de establecer una conexión HTTP con un servidor. A pesar de que podríamos haber optado por utilizar el mismo dispositivo que se emplea para el nodo sensor, en este caso el Heltec WiFi LoRa 32, decidimos utilizar una Raspberry Pi. La elección se basó en la abundante cantidad de memoria que ofrece, lo que nos permite almacenar temporalmente mensajes en momentos de alta demanda. Sumado a lo menconado, cabe aclarar también que disponiamos de una unidad de Raspberry Pi disponible para su implementación.
 
 
 \insertimage[\label{raspberry_pi}]{secciones/section_4/images/raspberry_pi}{width=18cm}{Raspberry Pi 3 Model B+}
@@ -37,9 +37,29 @@ Dado que nuestra Raspberry Pi 3 debe recibir y enviar mensajes a través de LoRa
 \insertimage[\label{concentrator_schematic}]{secciones/section_4/images/concentrator_schematic}{width=17cm}{Conexión entre la Raspberry Pi y el módulo LoRa}
 
 \subsubsubsection{Software}
-Hemos creado una aplicación web de fácil uso que posibilita la configuración inicial del dispositivo. Esta configuración abarca aspectos como la conexión a la red WiFi, credenciales y parámetros de transmisión y recepción (Tx, Rx) LoRa.
+Durante la inicialización de este dispositivo, y con el objetivo de simplificar su configuración, hemos desarrollado una aplicación que se ejecuta en el proceso de arranque del nodo concentrador.
 
-Luego de la configuración inicial, el sistema queda listo para comenzar a recibir y procesar los datos obtenidos por los sensores. El código completo se encuentra disponible en el repositorio de github del proyecto, y a continuación ponemos la estructura principal que permite mostrar el funcionamiento básico del sistema.
+La placa sirve una interfaz web, como se muestra en la secuencia de la Figura \ref{bootstrap_process}, que permite llevar a cabo la configuración de la red WiFi utilizada para la comunicación con el servidor. Configurar la conexión WiFi es de suma importancia, ya que sin esta configuración, no se puede proporcionar información sobre la disponibilidad del estacionamiento.
+
+\begin{images}[\label{bootstrap_process}]{Proceso de configuración inicial}
+\addimage[\label{bootstrap_1}]{secciones/section_4/images/bootstrap_1}{width=5.1cm}{}
+\addimage[\label{bootstrap_2}]{secciones/section_4/images/bootstrap_2}{width=5.1cm}{}
+\addimage[\label{bootstrap_3}]{secciones/section_4/images/bootstrap_3}{width=5.1cm}{}
+\end{images}
+
+Una vez que se ha establecido la conexión WiFi, se realiza una consulta HTTP para descargar automáticamente las credenciales de identificación desde el servidor (ver Figura \ref{identificacion_estacionamiento}). Estas credenciales validan al nodo concentrador y al estacionamiento dentro del sistema.
+
+\insertimage[\label{identificacion_estacionamiento}]{secciones/section_4/images/bootstrap_4}{width=7cm}{Credenciales de identificación del estacionamiento}
+
+Luego, debemos guardar los cambios, y la aplicación indicará que el nodo está listo para operar (Figura \ref{nodo_concentrador_listo}). En este punto, el nodo está preparado para recibir y procesar los datos obtenidos por los sensores.
+
+
+\begin{images}[\label{nodo_concentrador_listo}]{Proceso de configuración - nodo concentrador}
+    \addimage[\label{bootstrap_5}]{secciones/section_4/images/bootstrap_5}{width=6cm}{}
+    \addimage[\label{bootstrap_6}]{secciones/section_4/images/bootstrap_6}{width=6cm}{}
+\end{images}
+
+El código completo se encuentra disponible en el repositorio de github del proyecto, y a continuación ponemos la estructura principal que permite mostrar el funcionamiento básico del sistema.
 
 A grandes rasgos podemos visualizar el diagrama de flujo de funcionamiento del software que corre la Raspberry Pi.
 
