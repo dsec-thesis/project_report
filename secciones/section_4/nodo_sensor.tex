@@ -1,151 +1,107 @@
-\subsection{Nodo sensor}
-El nodo sensor de nuestro proyecto está compuesto de las siguientes etapas:
+\subsection{Nodo Sensor}
+El nodo sensor en el contexto de nuestro proyecto se compone de tres etapas esenciales:
 
 \begin{itemize}
-    \item Etapa de adquisición de datos
-    \item Etapa de procesamiento
-    \item Etapa de comunicación
+\item Etapa de Adquisición de Datos
+\item Etapa de Procesamiento
+\item Etapa de Comunicación
 \end{itemize}
 
-Como se puede ver en la figura a continuación:
+La arquitectura del nodo sensor se ilustra en la figura siguiente:
 
-\insertimage[\label{architecture_nodo_sensor}]{secciones/section_4/images/sensor}{width=18cm}{Arquitectura del nodo sensor}
+\insertimage[\label{architecture_nodo_sensor}]{secciones/section_4/images/sensor_simple}{width=16cm}{Arquitectura del Nodo Sensor}
 
-Al momento de la elección de un microcontrolador para llevar a cabo nuestro prototipo,
-nos enfocamos en la etapa de comunicaciones principalmente. De capítulos anteriores
-hemos optado por LoRa como la tecnología a utilizar en este proyecto, por lo que en
-nuestra búsqueda, encontramos que el hardware que presentaba la mejor relación
-costo-beneficio para un prototipo eran las placas WiFi LoRa 32 V2 de la compañía HELTEC.
+Dado que la función principal del nodo sensor es la detección de la presencia de un vehículo, es imperativo abordar la integración de componentes que cumplirán este propósito. Esto incluye la incorporación de sensores capaces de detectar la presencia de vehículos, un microcontrolador para procesar y transmitir los datos, así como la elección de la tecnología de comunicación. Continuando con nuestra discusión, nos enfocaremos en el primer componente esencial: los sensores. Analizaremos sus opciones y determinaremos cuáles son los candidatos más adecuados para nuestra solución.
 
-El equipo Heltec WiFi LoRa 32 es un dispositivo orientado a IoT, diseñado y producido
-por Heltec Automation. La tarjeta de desarrollo basa su funcionamiento en el
-microcontrolador ESP32, y se vale del chip integrado SX1278, para las funciones de
-comunicación LoRa, estos dos dispositivos interactúan por medio de una interfaz Serial
-Peripheral Interface (SPI).
+\subsubsection{Tipo de sensores disponibles}
+Los sistemas de estacionamiento inteligente ocupan un lugar importante como una de las
+infraestructuras esenciales que permite llevar a cabo el IoT en las Smart Cities. Como mencionamos anteriormente es fundamental poder detectar un vehículo con una buena presición sin arrojar falsos positivos y manteniendo un nivel de consumo de energía bajo para maximizar el tiempo de vida de la batería. 
 
-Sumado a lo mencionado anteriormente, cabe destacar que antes de que el nodo pueda entrar en funcionamiento, es esencial 
-configurar varios parámetros cruciales, tales como el ID del espacio de estacionamiento o el ID del concentrador al 
-que reporta los datos. Es aquí donde la presencia de una antena WiFi en la ESP32 desempeña un rol fundamental en esta etapa. 
-Ya que durante la inicialización, el sistema puede buscar estos datos en la memoria y en caso de no encontrarlos o si no 
-están definidos previamente, podría crear una zona WiFi y sirvir una página web de interfaz al usuario para lograr que 
-a través de esta página, los mismos puedan configurar los valores de los atributos requeridos.
+Del análisis de nuestra investigación en cuanto a los sensores disponibles y teniendo en cuenta también cuales son utilizados en productos comerciales de características similares vamos a enforcarnos en este informe en los siguientes sensores:
+\begin{itemize}
+    \item Sensor ultrasónico
+    \item Sensor ToF
+    \item Magnetómetro
+    \end{itemize}
+\subsubsubsection{Sensor Ultrasónico}
+Un sensor ultrasónico es un dispositivo electrónico que mide la distancia de un objeto
+objetivo emitiendo ondas de sonido ultrasónico y convierte el sonido reflejado en una
+señal eléctrica. Las ondas ultrasónicas viajan más rápido que la velocidad del sonido
+audible (es decir, el sonido que los humanos pueden escuchar). Los sensores ultrasónicos
+tienen dos componentes principales: el transmisor (que emite el sonido utilizando
+cristales piezoeléctricos) y el receptor (que detecta el sonido después de que ha
+viajado hacia y desde el objetivo). Midiendo el tiempo transcurrido entre la generación de la onda sonora y la recepción de la onda reflejada, se puede calcular la distancia al objeto en estudio mediante la
+siguiente fórmula:
+\begin{equation}
+    vs = 340 m/s \quad\text{(Velocidad del sonido)}\label{eqn:velocidad_del_sonido}
+\end{equation}
+\begin{equation}
+    h_{lt} \quad\text{(Tiempo de recorrido de la señal)} \label{eqn:tiempo_recorrido_señal}
+\end{equation}
+\begin{equation}
+    \frac{h_{lt} . vs}{2} = d \quad\text{(Formula de distancia al objetivo)} \label{eqn:distancia_de_la_onda}
+\end{equation}
 
-Es importante mencionar que aunque la creacion de la zona WiFi y la configuración detallada de los parametros a traves de un
-servidor web no esta dentro del alcance de este proyecto, se proporciona en el anexo ~\ref{configuracion_wifi} una breve descripción introductoria
-de como WiFi OTA podria ser beneficiosa. Además se lo plantea como potencial futura mejora en la sección ~\ref{potencial_mejora_wifiOTA}
+En nuestro contexto, dado que estamos trabajando en un prototipo y considerando las diversas opciones disponibles en el mercado, hemos elegido analizar el sensor ultrasónico HC-SR04. Este sensor es ampliamente utilizado en el ámbito del prototipado por ser sencillo de implementar, de facil acceso y coste y ofrece una resolución que se ajusta a los requisitos de nuestro proyecto. A continuación, se adjunta una imagen del sensor real:
 
-\insertimage[\label{heltec_lora}]{secciones/section_4/images/heltec}{width=13cm}{Placa de desarrollo Heltec Lora WiFi v2}
+\insertimage[\label{sensor_ultrasonico}]{secciones/section_3/images/sensor_ultrasonico}{width=11cm}{Sensor ultrasónico HC-SR04}
 
+\subsubsubsection{Sensor de tiempo de vuelo (Time-of-Flight)}
+Los sensores de este tipo se basan en el mismo principio de funcionamiento que los sensores ultrasónicos, con la diferencia de que en este caso la onda transmitida es una onda electromagnética. Debido a que emplean una fuente de luz con un haz muy estrecho, son especialmente adecuados para determinar la distancia a la superficie que se encuentra directamente enfrente de ellos.
 
-\subsubsection{Determinación de sensores}
-Después de una exhaustiva investigación sobre los sensores más empleados en la industria
-para productos de este tipo, hemos descubierto que uno de los principales fabricantes de
-soluciones inteligentes para estacionamientos, como es el caso de la empresa Libelium,
-elige combinar dos tipos de sensores para detectar la presencia de vehículos: un
-magnetómetro y un medidor de rango.
+Dentro de la gama de sensores de acceso comercial, se destaca el modelo VL53L0X, el cual comparte características similares con el sensor ultrasónico analizado previamente. Este sensor también es de fácil implementación y acceso, y ofrece lecturas mucho más precisas en comparación con el caso anterior. Además de esto, dado que es físicamente más pequeño, al momento de la implementación, la oclusa que debe dejarse en la carcasa es considerablemente menor en comparación con el espacio requerido por el sensor ultrasónico. Esto contribuye a reducir el potencial número de falsos positivos que puedan ocurrir. A continuación, se adjunta una imagen del sensor real:
 
-El magnetómetro habilita al sistema para detectar cambios en el entorno con un consumo
-de energía reducido, aunque con una precisión limitada. En contraste, el sensor de rango
-se encarga de confirmar si estos cambios se deben a la entrada o salida de un automóvil
-en el espacio de estacionamiento.
+\insertimage[\label{sensor_radar}]{secciones/section_3/images/sensor_radar}{width=6cm}{Sensor tiempo de vuelo VL53L0X}
 
-Para evaluar el rendimiento de los sensores, llevamos a cabo un experimento en el que
-estacionamos un automóvil, tanto en posición frontal como trasera, sobre estos
-dispositivos mientras registraban lecturas.
-
-Las muestras del sensor de rango confirman que solo se obtienen datos cuando el objeto
-se encuentra dentro del rango de detección. Por otro lado, las lecturas del magnetómetro
-son considerablemente más ruidosas, pero se observa una variación evidente cuando el
-automóvil pasa sobre él.
-
-\begin{images}[\label{VL53L0X_PLOTS}]{Mediciones realizadas con el sensor VL53L0X}
-    \addimage[\label{VL53L0X_PLOTS_1}]{secciones/section_4/images/vl53l0x_forward}{width=8cm}{}
-    \addimage[\label{VL53L0X_PLOTS_2}]{secciones/section_4/images/vl53l0x_back}{width=8cm}{}
-\end{images}
-
-\begin{images}[\label{QMC5883L_PLOT}]{Mediciones realizadas con el sensor QMC5883L}
-    \addimage[\label{QMC5883L_PLOT_1}]{secciones/section_4/images/qmc5883l_forward}{width=8cm}{}
-    \addimage[\label{QMC5883L_PLOT_2}]{secciones/section_4/images/qmc5883l_back}{width=8cm}{}
-\end{images}
-
-A continuación dejamos una tabla comparativa entre ambos sensores y su aplicación:
-\clearpage
 \enabletablerowcolor[2] % Activa el color de celda
-\begin{table}[ht]
+\begin{table}[H]
     \centering
-    \caption{Tabla comparativa entre sensores}
-    \begin{tabular}{|p{8cm}|*{2}{>{\raggedright\arraybackslash}p{3cm}|}}
+    \caption{Tabla de especificaciones del sensor laser VL53L0X}
+    \begin{tabular}{|p{6cm}|*{2}{>{\raggedright\arraybackslash}p{5cm}|}}
         \hline
-        \textbf{} & \textbf{Radar} & \textbf{Magnetómetro} \\
+        \textbf{Parámetro} & \textbf{VL53L0X} \\
         \hline
-        Fiabilidad frente al movimiento de vehículos cercanos & SI & NO \\
-        Fiabilidad frente a vehículos estacionados en las proximidades & SI & NO \\
-        Fiabilidad frente a interferencias electromagnéticas & SI &NO \\
-        Fiabilidad en cualquier escenario de iluminación &SI &SI \\
-        Estabilidad durante estancias prolongadas del vehículo &SI &NO \\
-        No necesita apertura en la caja &SI &SI \\
-        Inmunidad contra la suciedad o el polvo en la caja &SI &SI \\
-        Optimización en consumo de energía &NO &SI \\
+            Ranging chip &VL53L0X \\
+            Measuring distance & 2M (Max) \\
+            Measuring Mode & Default, High precision, Long Distance, High Speed \\
+            Infrared emission mechanish &940nm \\
+            FOV & 25º \\
+            Operating Voltage & 3 - 5V \\
+            Operating temperature & -20°C - 80°C \\
         \hline
         \end{tabular}
-    \label{tab:tabla_comparativa_sensore}
+    \label{tab:tabla_parametros_sensor_laser}
 \end{table}
-\disabletablerowcolor % Desactiva el color de celda
 
-Con todo lo anterior expuesto, hemos optado por la combinación de ambos sensores para su implementación en este proyecto.
 
-\subsubsection{Detección de anomalías}
-Un detector de anomalías, en el contexto de análisis de datos, es una herramienta
-esencial que se emplea en diversas aplicaciones para identificar patrones inusuales o
-atípicos dentro de un conjunto de datos específico. En este caso particular, el conjunto
-de datos en cuestión corresponde a las magnitudes registradas por el magnetómetro.
-Para establecer una referencia sobre lo que se considera un valor típico en este,
-se utiliza una técnica conocida como "media móvil", que calcula el promedio de las
-mediciones anteriores.
+\subsubsubsection{Magnetómegro}
+Los magnetómetros son dispositivos utilizados para medir y detectar campos magnéticos en
+el entorno. Estos campos magnéticos pueden ser generados por imanes, corrientes
+eléctricas o incluso por la presencia de materiales magnéticos. Los magnetómetros juegan
+un papel importante en una amplia gama de aplicaciones, desde navegación y geofísica
+hasta ciencia espacial y medicina.
 
-La media móvil proporciona una base para evaluar las mediciones actuales en relación con
-el comportamiento histórico de los datos. La detección de anomalías se lleva a cabo al
-comparar la última medición registrada con el valor más reciente calculado a partir de
-la media móvil. Cuando la diferencia entre la medición actual y la media móvil excede
-cierto umbral predeterminado, se identifica como una anomalía.
+Los magnetómetros permiten medir la intensidad y la dirección del campo magnético en una
+ubicación específica. Esto proporciona información crucial para entender y analizar
+fenómenos magnéticos en diferentes contextos. Algunos magnetómetros también son capaces
+de medir campos magnéticos en varias dimensiones, lo que proporciona una visión completa
+de la distribución y orientación del campo magnético.
 
-Este proceso se aplicó a los datos obtenidos en la seccion previa obteniendo como
-resultado las siguientes imagenes.
+\insertimage[\label{magnetometro}]{secciones/section_3/images/magnetometro}{width=6cm}{Magnetómetro HMC5883L}
 
-\insertimage[\label{comparativa_anomalias_forw}]{secciones/section_4/images/qmc5883l_forward_analysis}{width=16cm}{Estacionamiento frontal}
-\insertimage[\label{comparativa_anomalias_back}]{secciones/section_4/images/qmc5883l_back_analysis}{width=16cm}{Estacionamiento trasero}
+Existen diferentes tipos de magnetómetros, cada uno con sus propias características y
+principios de funcionamiento. Algunos de los tipos más comunes incluyen magnetómetros de
+efecto Hall, magnetómetros de flujo de inducción, magnetómetros de SQUID
+(Superconducting Quantum Interference Device) y magnetómetros de protones.
 
-\subsubsection{Hardware}
-A continuación se muestran las características técnicas de la placa WiFi LoRa 32 V2
-utilizada en este proyecto, junto con los parámetros principales de los sensores MC5883L
-y VL53L0X.
+En resumen, podemos utilizar estos dispositivos para medir cómo un vehículo distorsiona
+el campo magnético terrestre y así determinar si una plaza de estacionamiento está
+ocupada o no. En nuestro caso optamos por analizar el sensor comercial HMC5883L cuya imagen se muestra en la figura \ref{magnetometro}.
 
 \enabletablerowcolor[2] % Activa el color de celda
-\begin{table}[ht]
+\begin{table}[h!]
     \centering
-    \caption{Tabla de parámetros Heltect WiFi LoRa 32 v2}
-    \begin{tabular}{|p{2cm}|*{3}{>{\raggedright\arraybackslash}p{14cm}|}}
-        \hline
-        \textbf{Parámetro} & \textbf{Descripción} \\
-        \hline
-        Master Chip & ESP32 (240MHz Tensilica LX6 dual-core+1 ULP, 600 DMIPS) \\
-        LoRa Chipset & SX1276/SX1278 \\
-        Wi-Fi & 802.11 b/g/n (802.11n up to 150 Mbps) \\
-        Bluetooth &Bluetooth V4.2 BR/EDR and Bluetooth LE specification \\
-        Hardware Resource & UART x 3; SPI x 2; I2C x 2; I2S x 1; 12-bits ADC input x 18; 8\-bits DAC output x 2; GPIO x 22; GPI x 6 \\
-        Memory &8MB(64M-bits) SPI FLASH; 520 KB internal SRAM \\
-        Interface &Micro USB x 1; LoRa Antenna interface(IPEX) x 1 \\
-        Dimensions &51 x 25.5 x 10.6 mm \\
-        \hline
-        \end{tabular}
-    \label{tab:tabla_parametros_heltec}
-\end{table}
-\disabletablerowcolor % Desactiva el color de celda
-
-\enabletablerowcolor[2] % Activa el color de celda
-\begin{table}[ht]
-    \centering
-    \caption{Tabla de parámetros sensor magnético HMC5883L}
+    \caption{Tabla de especificaciones del sensor magnético HMC5883L}
     \begin{tabular}{|p{6cm}|*{2}{>{\raggedright\arraybackslash}p{5cm}|}}
         \hline
         \textbf{Parámetro} & \textbf{HMC5883L} \\
@@ -170,26 +126,155 @@ y VL53L0X.
     \label{tab:tabla_parametros_sensor_magnetico}
 \end{table}
 
+
+
+\subsubsection{Elección del sensor/es}
+En la sección anterior, se presentaron las características de tres sensores diferentes que podrían ser útiles para detectar la ocupación de un vehículo. Sin embargo, no se proporcionó un análisis detallado de las pruebas realizadas ni se especificó cuáles de estos sensores se seleccionarían para su implementación en este proyecto.
+
+En relación con el objetivo principal que debe cumplir el nodo sensor: detectar un vehiculo, se consideró inicialmente el uso de sensores ultrasónicos. Estos sensores son económicos, ampliamente disponibles y capaces de detectar vehículos de manera eficiente. Sin embargo, presentan desventajas significativas, como su tamaño y su principio de funcionamiento. En particular, si el sensor se encuentra parcialmente obstruido, no funcionará correctamente, lo que podría dejar el nodo sensor inoperable. Por esta razón, se descartó esta opción.
+
+Continuando con nuestro análisis, se llevaron a cabo pruebas con el sensor ToF VL53L0X, que comparte el mismo principio de funcionamiento que los sensores ultrasónicos. Este sensor ofrece características notables, como la capacidad de no proporcionar muestras cuando el objeto está fuera de su rango de lectura, una mayor velocidad de respuesta y un tamaño físico más reducido. Para ilustrar este punto, se presentan las figuras \ref{VL53L0X_PLOTS}, que muestran los resultados de un experimento realizado al estacionar un vehículo tanto en posición frontal como trasera sobre este dispositivo.
+
+Las figuras indican claramente que el sensor ToF no proporciona muestras cuando no hay un vehículo posicionado sobre él, lo que confirma que solo se obtienen datos cuando un objeto está presente. Además, se observa una variación evidente en las gráficas que representan la distancia en milímetros entre el sensor y el chasis del vehículo en función del tiempo.
+
+\begin{images}[\label{VL53L0X_PLOTS}]{Mediciones realizadas con el sensor VL53L0X}
+    \addimage[\label{VL53L0X_PLOTS_1}]{secciones/section_4/images/vl53l0x_forward}{width=8cm}{}
+    \addimage[\label{VL53L0X_PLOTS_2}]{secciones/section_4/images/vl53l0x_back}{width=8cm}{}
+\end{images}
+
+A pesar de las ventajas del sensor ToF, surge un problema relacionado con su alto consumo de energía, lo que agotaría rápidamente la batería si se utilizara para medir continuamente la ocupación del estacionamiento. Por lo tanto, no es una opción viable para una monitorización continua.
+
+En este punto, resta considerar el magnetómetro, que supera el problema del alto consumo de energía. Sin embargo, al observar las gráficas que representan la variación del campo magnético sobre el eje Z (altura) del magnetómetro, obtenidas al repetir el mismo experimento mencionado anteriormente, se observa que estas gráficas son mucho más ruidosas. A pesar de ello, muestran una variación clara cuando un vehículo pasa sobre el sensor.
+
+\begin{images}[\label{QMC5883L_PLOT}]{Mediciones realizadas con el sensor QMC5883L}
+    \addimage[\label{QMC5883L_PLOT_1}]{secciones/section_4/images/qmc5883l_forward}{width=8cm}{}
+    \addimage[\label{QMC5883L_PLOT_2}]{secciones/section_4/images/qmc5883l_back}{width=8cm}{}
+\end{images}
+
+En vista de las consideraciones anteriores, surge la pregunta de si es posible combinar el sensor ToF con un enfoque de bajo consumo de energía. Esto podría ser una opción viable si el sistema se implementa en un estacionamiento público o en la calle, donde simplemente se necesita proporcionar información a los usuarios sobre la disponibilidad de espacios de estacionamiento, sin la opción de reservas. Sin embargo, en nuestro caso, es fundamental poder reflejar la ocupación en tiempo real (o lo más cercano posible) para gestionar las reservas de manera efectiva. Por lo tanto, considerando lo mencionado anteriormente sobre los sensores, hemos decidido utilizar una combinación de dos sensores para detectar la presencia de un vehículo, aprovechando las ventajas del magnetómetro y el sensor ToF.
+
+El magnetómetro realizará lecturas de manera continua para detectar cambios en las proximidades del sistema debido a su bajo consumo de energía. Como el magnetómetro tiene una precisión limitada, habilitará al sensor ToF cuando detecte cambios, lo que permitirá al sistema confirmar si estos cambios se deben a la entrada o salida de un automóvil en el espacio de estacionamiento. 
+
+Por todo lo mencionado anteriormente y sumado a un análisis comparativo que se presenta en la tabla a continuación optamos por la combinación de ambos sensores para su implementación en este proyecto.
+
+\clearpage
+\enabletablerowcolor[2] % Activa el color de celda
+\begin{table}[ht]
+    \centering
+    \caption{Tabla comparativa entre sensores}
+    \begin{tabular}{|p{8cm}|*{2}{>{\raggedright\arraybackslash}p{3cm}|}}
+        \hline
+        \textbf{} & \textbf{ToF} & \textbf{Magnetómetro} \\
+        \hline
+        Fiabilidad frente al movimiento de vehículos cercanos & SI & NO \\
+        Fiabilidad frente a vehículos estacionados en las proximidades & SI & NO \\
+        Fiabilidad frente a interferencias electromagnéticas & SI &NO \\
+        Fiabilidad en cualquier escenario de iluminación &SI &SI \\
+        Estabilidad durante estancias prolongadas del vehículo &SI &NO \\
+        No necesita apertura en la caja &SI &SI \\
+        Inmunidad contra la suciedad o el polvo en la caja &SI &SI \\
+        Optimización en consumo de energía &NO &SI \\
+        \hline
+        \end{tabular}
+    \label{tab:tabla_comparativa_sensore}
+\end{table}
+\disabletablerowcolor % Desactiva el color de celda
+
+% SUB-SECCIÓN
+\subsubsection{Elección tecnología de comunicación - ¿Por qué LoRa?}
+Como se mencionó en la introducción de nuestro nodo sensor, uno de los requisitos clave de este dispositivo es su capacidad para transmitir información sobre la ocupación de un espacio de estacionamiento. La elección de la tecnología de comunicación adecuada es crucial para lograr este objetivo. En nuestro análisis, consideramos varios factores:
+
+\begin{itemize}
+    \item Costo del nodo
+    \item Costo de infraestructura de la red
+    \item Consumo energético
+    \item Ancho de banda
+    \item Cobertura
+    \item Disponibilidad de acceso a la tecnología
+    \item Latencia
+    \item Etc.
+\end{itemize}
+
+Dado la naturaleza del proyecto, la tasa de transferencia de datos y la latencia de la comunicación son factores menos relevantes, ya que solo necesitamos enviar una cantidad limitada de información al servidor. En cambio, nos preocupamos principalmente por maximizar la vida útil de la batería, reducir los costos del nodo y la infraestructura de la red, aumentar el rango de transmisión y la cobertura, y garantizar la disponibilidad de acceso a la tecnología en Argentina.
+
+Con estos criterios en mente, llegamos a la conclusión de que las tecnologías inalámbricas de bajo consumo, conocidas como LPWAN (Low Power Wide Area Network o Red de Bajo Consumo y Área Extensa), eran las más adecuadas para nuestro proyecto. Dentro de estas tecnologías, destacamos Sigfox y LoRa.
+
+Las redes LPWAN se caracterizan por su bajo consumo de energía, su baja potencia de transmisión y su capacidad limitada de datos. Esto permite que los dispositivos finales sean alimentados por baterías con una vida útil prolongada. Aunque existen varias tecnologías inalámbricas, como Wi-Fi y Bluetooth, que son más conocidas en la sociedad, estas no son adecuadas para soluciones IoT debido a su alto consumo de energía y su limitada cobertura.
+
+Siguiendo con lo mencionado anteriormente, Wi-Fi y Bluetooth se descartaron por su alto consumo de energía y su limitada cobertura. Además, la inmunidad al ruido en el canal de Bluetooth es baja, lo que podría afectar la comunicación del sensor con el servidor. Además, en entornos de estacionamiento con múltiples pisos o extensiones considerables, sería necesario implementar múltiples gateways o repetidores para utilizar estas tecnologías, lo que resultaría poco práctico e incrementaría además el costo de la red.
+
+En cuanto a Zigbee, su principal desventaja radica en su dependencia del factor humano, ya que la configuración y el mantenimiento de la red pueden ser complicados. Esto dificultaría la creación de un dispositivo final de fácil instalación. Además, el costo de Zigbee es más elevado que el de las tecnologías mencionadas anteriormente.
+
+Finalmente, nos centraremos en dos tecnologías ampliamente utilizadas en el ámbito del IoT: Sigfox y LoRa. Ambas comparten características como un amplio alcance, bajo consumo de energía y la capacidad de transmitir datos a larga distancia. Sin embargo, Sigfox presenta ciertas limitaciones, como la cantidad máxima de mensajes que se pueden enviar por día y la dependencia de la cobertura proporcionada por el proveedor de servicios.
+
+Por otro lado, LoRa ofrece un amplio alcance tanto en áreas urbanas como rurales, sin limitaciones en la cantidad de mensajes que pueden enviarse y utilizando un espectro gratuito. Además, en caso que el proyecto escale puede implementarse un gateway industrial a través de LoRaWAN, un protocolo basado en LoRa, que permitiría gestionar múltiples estacionamientos o redes de gran tamaño.
+
+Dada esta evaluación y después de considerar todas las opciones disponibles, pensamos que LoRa es la tecnología más prometedora para ser utilizada en este proyecto. Además, para brindar una visión más completa de nuestra decisión, presentamos una tabla comparativa de las características de las tecnologías de comunicación consideradas:
+
+% Tablas
 \enabletablerowcolor[2] % Activa el color de celda
 \begin{table}[H]
     \centering
-    \caption{Tabla de parámetros sensor laser VL53L0X}
-    \begin{tabular}{|p{6cm}|*{2}{>{\raggedright\arraybackslash}p{5cm}|}}
+    \caption{Tabla comparativa sobre tecnologías de comunicación}
+    \begin{tabular}{|l|*{5}{>{\raggedright\arraybackslash}p{1.8cm}|}}
         \hline
-        \textbf{Parámetro} & \textbf{VL53L0X} \\
+        \textbf{} & \textbf{BLE} & \textbf{WiFi} & \textbf{ZigBee} & \textbf{Sigfox} & \textbf{LoRa} \\
         \hline
-            Ranging chip &VL53L0X \\
-            Measuring distance & 2M (Max) \\
-            Measuring Mode & Default, High precision, Long Distance, High Speed \\
-            Infrared emission mechanish &940nm \\
-            FOV & 25º \\
-            Operating Voltage & 3 - 5V \\
-            Operating temperature & -20°C - 80°C \\
+        Frecuency               & Unlicensed ISM    & Unlicensed ISM bands & Unlicensed ISM & Unlicensed ISM bands & Unlicensed ISM bands \\
+        Bandwidth               & 2,4 GHz           & 2,4-5GHz             & 868MHz (Europe) and 2.4 GHz (World) & 100 Hz & 250kHz and 125 kHz \\
+        Maximum data rate       & 1Mbps             & 150-200 Mbps up to  600Mbps & 250 kbps & 100 bps &50 kbps \\
+        Bidirectional           & Yes               & Yes & Yes & Limited & Yes \\
+        Maximum messages/day    & Unlimited         & Unlimited & Unlimited & 140 (UL), 4(DL) &Unlimited \\
+        Range                   & 10m ~ 1 km        & 15m ~ 100m & 10 ~100m & 10 km (urban), 40 km (rural) & 5 km (urban), 20 km (rural) \\
+        Interference immunity   & Low               & Low & High & Very high & Very high \\
+        Allow private network   & Yes               & Yes & Yes & No &Yes \\
+        Spectrum cost           & Free              & Free & Free & Free & Free \\
+        Supported Topology      & P2P, Start, Mesh  & Start, Mesh & Mesh & Start & Start \\
+        Energy consumption      & Mid               & High & Mid & Low & Low \\
         \hline
         \end{tabular}
-    \label{tab:tabla_parametros_sensor_laser}
+    \label{tab:tabla_comparativa_tecnologia}
 \end{table}
+\disabletablerowcolor % Desactiva el color de celda
 
+% ================================================================================
+\subsubsection{Hardware}
+En el proceso de selección de un microcontrolador para implementar nuestro prototipo, considerando que hemos optado previamente por la tecnología LoRa como nuestro medio de comunicación, evaluamos la posibilidad de emplear un microcontrolador ampliamente utilizado en el ámbito del Internet de las Cosas (IoT), como es el caso del ESP32. Esta elección se basa en una de sus ventajas más destacadas: su bajo consumo de energía. Esta característica es fundamental para dispositivos alimentados por batería, ya que permite una mayor duración de la misma.
+
+Además de su eficiencia energética, el ESP32 ofrece una gama completa de periféricos, incluyendo I2C, SPI, UART y SDIO, que facilitan la comunicación con otros dispositivos y sensores. También integra conectividad Wi-Fi y Bluetooth, lo cual resulta valioso si se desea implementar una red local durante la inicialización del nodo sensor. Esta red podría utilizarse para configurar parámetros esenciales del nodo de manera sencilla y amigable para el usuario, como el ID del estacionamiento o el ID del concentrador al que deben enviar datos.
+
+Es relevante mencionar que, aunque la creación de una zona Wi-Fi y una configuración detallada de parámetros mediante un servidor web no se encuentra dentro del alcance de este proyecto, se proporciona una breve introducción sobre cómo la actualización por aire a través de Wi-Fi (OTA) podría ser beneficiosa en el Anexo ~\ref{configuracion_wifi}. Además, se plantea como una posible mejora futura en la sección ~\ref{potencial_mejora_wifiOTA}.
+
+Retomando el enfoque en el microcontrolador elegido, en nuestra búsqueda encontramos que el fabricante HELTEC ofrecía una placa de desarrollo denominada \quotes{WiFi LoRa 32 V2} que resultaba sumamente atractiva en términos de relación costo-beneficio. Esta placa integra el chip ESP32 y el módulo LoRa SX1278, lo que eliminaba la necesidad de adquirir una placa LoRa por separado para comunicarse mediante SPI con el ESP32. Además, la placa de desarrollo cuenta con una pantalla, que aunque no se utilizó en este proyecto, podría ser útil para aplicaciones futuras, como depuración o pruebas de conectividad entre dispositivos. A continuación puede verse la placa de desarrollo Heltec: 
+
+\insertimage[\label{heltec_lora}]{secciones/section_4/images/heltec}{width=13cm}{Placa de desarrollo Heltec Lora WiFi v2}
+
+Para proporcionar más detalles sobre el equipo Heltec WiFi LoRa 32, es importante destacar que esta placa se orienta hacia el IoT. Se basa en el microcontrolador ESP32 y utiliza el chip SX1278 integrado para las comunicaciones LoRa. Estos dos dispositivos interactúan a través de una interfaz de comunicación Serial Peripheral Interface (SPI). Es importante señalar que el chip SX1278 es el apropiado para su uso en Argentina debido a las bandas de frecuencia permitidas.
+
+Dicho esto, vamos a utilizar la placa de la figura \ref{heltec_lora} en nuestro nodo sensor. Además dejamos una tabla de de especificaciones tecnicas para mayor referencia a continuación.
+
+
+\enabletablerowcolor[2] % Activa el color de celda
+\begin{table}[ht]
+    \centering
+    \caption{Tabla de parámetros Heltect WiFi LoRa 32 v2}
+    \begin{tabular}{|p{2cm}|*{3}{>{\raggedright\arraybackslash}p{14cm}|}}
+        \hline
+        \textbf{Parámetro} & \textbf{Descripción} \\
+        \hline
+        Master Chip & ESP32 (240MHz Tensilica LX6 dual-core+1 ULP, 600 DMIPS) \\
+        LoRa Chipset & SX1278 \\
+        Wi-Fi & 802.11 b/g/n (802.11n up to 150 Mbps) \\
+        Bluetooth &Bluetooth V4.2 BR/EDR and Bluetooth LE specification \\
+        Hardware Resource & UART x 3; SPI x 2; I2C x 2; I2S x 1; 12-bits ADC input x 18; 8\-bits DAC output x 2; GPIO x 22; GPI x 6 \\
+        Memory &8MB(64M-bits) SPI FLASH; 520 KB internal SRAM \\
+        Interface &Micro USB x 1; LoRa Antenna interface(IPEX) x 1 \\
+        Dimensions &51 x 25.5 x 10.6 mm \\
+        \hline
+        \end{tabular}
+    \label{tab:tabla_parametros_heltec}
+\end{table}
+\disabletablerowcolor % Desactiva el color de celda
 
 \subsubsubsection{PinOut}
 A continuación se visualiza el pinout del kit de desarrollo. Más adelante incluiremos un
@@ -201,24 +286,6 @@ esquemático de la conexión entre el sensor y la misma.
 \subsubsubsection{Plano esquemático}
 A continuación se visualiza el plano esquematico del nodo sensor desarrollado para el proyecto.
 \insertimage[\label{plano_esquematico}]{secciones/section_4/images/Schematic_smartparking-sensor}{width=12.5cm}{Plano esquematico del nodo sensor}
-
-\subsubsection{Configuración del nodo sensor}
-Para poder explicar mejor el software implementado en el sensor, presentamos primero un
-pequeño diagrama inicial de eventos del sistema. Cabe aclarar que este es un diagrama
-simplificado y no incluye toda la interacción del sistema.
-
-\insertimage[\label{diagrama_de_eventos_del_sistem}]{secciones/section_4/images/sensor_concentrator_server_sequence}{width=13cm}{Diagrama de secuencia del sistema}
-
-Los datos a transmitirse desde el nodo sensor hacia el concentrador son recopilados por
-la tarjeta Heltec WiFi LoRa 32. Esta tarjeta permite la interacción con el magnetómetro
-y el sensor de tiempo de vuelo a través del protocolo I2C.
-
-El microprocesador ESP32 de la tarjeta Heltec, maneja el chip SX1278 (LoRa) y sus
-parámetros de transmisión (frecuencia, potencia, SF) así como las claves de seguridad de
-la red. La programación de este controlador se encuentran disponibles en el repositorio
-de GitHub del proyecto. Ver anexo ~\ref{codigo_sensor}
-
-\insertimage[\label{architectura_nodo_facil}]{secciones/section_4/images/architectura_nodo_facil}{width=13cm}{Diagrama de bloques nodo sensor}
 
 \subsubsection{Estimación tiempo de vida util - bateria del nodo sensor}{\label{sec:bateria_del_nodo_sensor}}
 Dada la naturaleza de nuestro proyecto, uno de los aspectos clave del mismo en la
@@ -254,41 +321,6 @@ que siguen activos durante el modo de funcionamiento Deep-Sleep.
 
 \insertimage[\label{diagrama_low_power_bloques}]{secciones/section_4/images/diagrama_low_power_bloques}{width=15cm}{Bloques activos en modo Deep-Sleep}
 
-\subsubsubsection{Funcionamiento del nodo (considerando los modos de energía)}
-En apartados anteriores, hemos explicado el principio de funcionamiento de nuestro nodo
-sensor y los distintos modos de consumo de energía que ofrece el microcontrolador ESP32.
-Ahora, detallaremos cómo funciona nuestro nodo en conjunto con los periféricos y el
-software diseñado.
-
-Antes de adentrarnos, asumiremos que el nodo ya está configurado, es decir, las
-variables necesarias para una comunicación exitosa con la etapa de comunicaciones LoRa
-han sido establecidas (frecuencia, canales de TX y RX, SF, etc.). Además, los pines para
-la comunicación mediante I2C han sido configurados previamente. En esta ocasión, nos
-centraremos en el funcionamiento del nodo para llevar a cabo la detección de vehículos.
-
-\insertimage[\label{power_modes_system}]{secciones/section_4/images/power_modes_system}{width=15cm}{Esquema simplificado de los modos de energia y su interacción.}
-
-Después de completar la configuración inicial, el microcontrolador entra en un estado
-Deep-Sleep y activa ULP para analizar las lecturas del magnetómetro. Este proceso
-permite determinar si la variación del campo magnético ha excedido el umbral predefinido.
-
-\insertimage[\label{esquema_energia}]{secciones/section_4/images/esquema_energia}{width=15cm}{Esquema de energía interno ESP32}
-
-Cuando se detecta que el valor límite ha sido superado, el coprocesador llama a una
-función previamente definida, indicando a la ESP que debe salir del modo Deep-Sleep y
-entrar en modo de funcionamiento activo.
-
-En el modo activo, el microcontrolador solicita la lectura del sensor láser VL53I0x y
-espera una interrupción que se produce cuando la lectura está lista. Una vez que se
-obtiene la lectura, se compara con la última registrada para determinar si ha habido
-algún cambio significativo. En caso afirmativo, se envía el valor a través de LoRa.
-Mientras se espera recibir una señal de ACK (acknowledgement) por parte del nodo de
-borde, el microcontrolador entra en un estado de sueño intermitente durante un segundo
-para evitar un gasto innecesario de energía.
-
-Finalmente, una vez que se recibe la señal de ACK, el microcontrolador vuelve a ingresar
-en el modo de Deep-Sleep, preparado para realizar nuevas detecciones.
-
 \subsubsubsection{Cálculo teórico - tiempo de vida batería}
 Para poder estimar de manera precisa el tiempo de vida de la batería que se requiere
 para nuestro equipo, se ha realizado una cuidadosa identificación de dos patrones de
@@ -305,35 +337,71 @@ Para comenzar con el cálculo teórico, vamos a tomar los niveles de consumo de 
 los datasheet de los fabricantes. En el sistema de bajo consumo tenemos los siguientes
 parámetros:
 
-\insertindexequation[\label{consumo_ulp_modo_activo}]{I_{ULP A} = 0.0004 mA}{consumo ULP en modo activo}
-\insertindexequation[\label{consumo_ulp_modo_off}]{I_{ULP Off} = 0.00001 mA}{consumo ULP en modo off}
-\insertindexequation[\label{tiempo_ulp_modo_activo}]{t_{ULP A} = 2 ms}{tiempo en modo activo}
-\insertindexequation[\label{tiempo_ulp_modo_off}]{t_{ULP Off} = 500 ms}{tiempo en modo off}
+\begin{equation}
+    I_{ULP A} = 0.0004 mA \quad\text{(consumo ULP en modo activo)} \label{consumo_ulp_modo_activo}
+\end{equation}
+\begin{equation}
+    I_{ULP Off} = 0.00001 mA \quad\text{(consumo ULP en modo off)} \label{consumo_ulp_modo_off}
+\end{equation}
+\begin{equation}
+    t_{ULP A} = 2 ms \quad\text{(tiempo en modo activo)} \label{tiempo_ulp_modo_activo}
+\end{equation}
+\begin{equation}
+    t_{ULP Off} = 500 ms \quad\text{(tiempo en modo off)} \label{tiempo_ulp_modo_off}
+\end{equation}
 
 Por lo tanto la corriente total queda definida como:
-\insertindexequation[\label{corriente_total}]{I_{ULP} = \frac{(I_{ULP A}* t_{ULP A} + I_{ULP Off} * t_{ULP Off})}{t_{ULP A} + t_{ULP Off}}}{Corriente total}{}
+\begin{equation}
+    I_{ULP} = \frac{(I_{ULP A}* t_{ULP A} + I_{ULP Off} * t_{ULP Off})}{t_{ULP A} + t_{ULP Off}} \quad\text{(Corriente total)} \label{corriente_total}
+\end{equation}
 
-\insertindexequation[\label{corriente_magnetometro}]{I_{Magnetometer}= 0.00002 mA}{Corriente total}{}
+
+\begin{equation}
+    I_{Magnetometer}= 0.00002 mA \quad\text{(Corriente total)} \label{corriente_magnetometro}
+\end{equation}
 
 Finalmente el valor de la corriente de bajo consumo queda definida como la suma del
 procesador ULP y la corriente consumida por el magnetómetro.
 
-\insertindexequation[\label{corriente_I_low_power}]{I_{Low Power}= I_{ULP} + I_{Magnetometer}}{Corriente total del sistema bajo consumo}{}
+\begin{equation}
+    I_{Low Power}= I_{ULP} + I_{Magnetometer} \quad\text{(Corriente total del sistema bajo consumo)} \label{corriente_I_low_power}
+\end{equation}
 
 En el sistema de alto consumo consideramos los siguientes valores:
 
-\insertindexequation[\label{corriente_I_low_power}]{t_a}{medido en ms}{representa el tiempo que permanece cada auto en un slot}
-\insertindexequation[\label{corriente_esp_modo_activo}]{I_{ESP A} = 25 mA}{consumo ESP en modo activo}{}
-\insertindexequation[\label{corriente_ulp_modo_off}]{I_{Laser ON} = 19 mA}{consumo ULP en modo off}{}
-\insertindexequation[\label{tiempo_esp_modo_activo}]{t_{ESP A} = 300 ms}{tiempo que la ESP permanece en modo activo}{}
-\insertindexequation[\label{tiempo_laser_activo}]{t_{Laser On} = 40 ms}{tiempo que el laser está activo}{}
+\begin{equation}
+    t_a medido en ms \quad\text{(representa el tiempo que permanece cada auto en un slot)} \label{corriente_I_low_power}
+\end{equation}
+\begin{equation}
+    I_{ESP A} = 25 mA \quad\text{(consumo ESP en modo activo)} \label{corriente_esp_modo_activo}
+\end{equation}
+\begin{equation}
+    I_{Laser ON} = 19 mA \quad\text{(consumo ULP en modo off)} \label{corriente_ulp_modo_off}
+\end{equation}
+\begin{equation}
+    t_{ESP A} = 300 ms \quad\text{(tiempo que la ESP permanece en modo activo)} \label{tiempo_esp_modo_activo}
+\end{equation}
+\begin{equation}
+    t_{Laser On} = 40 ms \quad\text{(tiempo que el laser está activo)} \label{tiempo_laser_activo}
+\end{equation}
 
 Con las variables anteriores queda definido el tiempo en la que el nodo sensor se
 encuentra recolectando la información sobre la ocupación de un slot de estacionamiento.
 
-\insertindexequation[\label{corriente_esp_collecting}]{I_{ESP Collecting} = \frac{I_{ESP A} * t_{ESP A}}{t_{ESP A} + t_a}}{corriente de la ESP mientras collecta información}{}
-\insertindexequation[\label{tiempo_laser_activo}]{I_{Laser Collecting} = \frac{I_{Laser ON} * t_{Laser ON}}{t_{Laser ON} + t_a}}{corriente total mientras el laser collecta información}{}
-\insertindexequation[\label{tiempo_laser_activo}]{I_{Collecting} = I_{ESP Collecting} + I_{Laser Collecting} }{corriente total consumida mientras se collecta información}{}
+\begin{equation}
+    I_{ESP Collecting} = \frac{I_{ESP A} * t_{ESP A}}{t_{ESP A} + t_a} 
+    \quad\text{(corriente de la ESP mientras collecta información)} \label{corriente_esp_collecting}
+\end{equation}
+\begin{equation}
+    I_{Laser Collecting} = \frac{I_{Laser ON} * t_{Laser ON}}{t_{Laser ON} + t_a} 
+    \quad\text{(corriente total mientras el laser collecta información)} \label{tiempo_laser_activo}
+\end{equation}
+\begin{gather}
+\begin{aligned}
+    I_{Collecting} &= I_{ESP Collecting} + I_{Laser Collecting} \\
+    &\text{(corriente total consumida mientras se collecta información)} \label{tiempo_laser_activo}
+\end{aligned}
+\end{gather}
 
 Por último, una vez recolectada la información, tenemos la etapa de envío y recepción de información.
 
@@ -368,3 +436,58 @@ permanencia de vehículos en una plaza del estacionamiento.
 
 En la sección de anexos, puede encontrarse el código para el cálculo y generación de la
 gráfica anterior. Ver anexo ~\ref{codigo_estimacion_bateria}
+
+
+\subsubsection{Firmware}
+
+En esta sección se describe el software implementado en el nodo sensor del proyecto, como así tambien la detección de anomalías en los datos del magnetómetro, utilizando la técnica de la "media móvil" para identificar valores atípicos en comparación con el historial de datos.
+
+
+\subsubsubsection{Funcionamiento del nodo sensor}
+Para una comprensión detallada del funcionamiento del software implementado en el nodo sensor, se presenta un diagrama de secuencia inicial del sistema, como se ilustra en la Figura \ref{diagrama_de_eventos_del_sistem}. Este diagrama, aunque simplificado, proporciona una visión fundamental de cómo opera el sistema.
+
+\insertimage[\label{diagrama_de_eventos_del_sistem}]{secciones/section_4/images/sensor_concentrator_server_sequence}{width=13cm}{Diagrama de secuencia del sistema}
+
+En secciones anteriores, hemos discutido los principios de funcionamiento del nodo sensor y los diversos modos de consumo de energía que ofrece el microcontrolador ESP32. En esta sección, nos adentraremos en el funcionamiento del nodo cuando está equipado con el firmware que hemos desarrollado y en combinación con los periféricos seleccionados.
+
+El proceso comienza con una fase de configuración previa, que asumimos que ha sido completada con éxito, lo que incluye la adecuada configuración de variables para una comunicación LoRa efectiva (frecuencia, canales de TX y RX, SF, etc.) y la correcta configuración de pines para la comunicación mediante I2C. En esta descripción, nos enfocaremos en el proceso de detección de vehículos.
+
+\insertimage[\label{power_modes_system}]{secciones/section_4/images/power_modes_system}{width=15cm}{Esquema simplificado de los modos de energia y su interacción.}
+
+Una vez que la configuración inicial ha sido realizada, el microcontrolador entra en un estado de Deep-Sleep y activa el coprocesador ULP (Ultra-Low-Power) para analizar las lecturas del magnetómetro. Este análisis tiene como objetivo determinar si ha ocurrido una variación significativa en el campo magnético que supere un umbral predefinido. Esto se logra gracias a la implementación de un detector de anomalías detallado en la sección \ref{detector_anomalias}.
+
+\insertimage[\label{esquema_energia}]{secciones/section_4/images/esquema_energia}{width=15cm}{Esquema de energía interno ESP32}
+
+Cuando se detecta que el valor límite del campo magnético ha sido superado, el coprocesador ULP activa una función previamente definida que indica a la ESP32 que debe salir del modo Deep-Sleep y entrar en modo de funcionamiento activo.
+
+En el modo activo, el microcontrolador solicita una lectura del sensor láser VL53L0x y espera una interrupción que se produce cuando la lectura está lista. Una vez que se obtiene la lectura, se compara con la última registrada para determinar si ha habido algún cambio significativo en la distancia detectada. En caso afirmativo, se envía el valor a través de la comunicación LoRa para su posterior procesamiento. Mientras se espera recibir una señal de ACK (acknowledgement) por parte del nodo de borde, el microcontrolador entra en un estado de sueño intermitente durante un segundo para minimizar el consumo de energía cuando no se está realizando una transmisión.
+
+Finalmente, una vez que se recibe la señal de ACK, el microcontrolador regresa al modo de Deep-Sleep, preparado para realizar nuevas detecciones de vehículos.
+
+Es importante destacar que el código fuente completo para la detección de vehículos, así como la implementación del detector de anomalías, se encuentra disponible en el repositorio de GitHub del proyecto, detallado en el anexo ~\ref{codigo_sensor}. Esto proporciona un recurso valioso para comprender en detalle el funcionamiento del nodo sensor y facilita cualquier futura modificación o mejora del firmware.
+
+Este firmware desempeña un papel esencial en la operación del nodo sensor, ya que sin este la adquisición, procesamiento y transmisión de datos para la detección de la disponibilidad de una plaza de estacionamiento no podría realizarse.
+
+%\insertimage[\label{architectura_nodo_facil}]{secciones/section_4/images/architectura_nodo_facil}{width=13cm}{Diagrama de bloques nodo sensor}
+
+\subsubsubsection{Detección de anomalías}\label{detector_anomalias}
+El detector de anomalías desempeña un papel fundamental en la operación del nodo sensor, particularmente en la detección de vehículos en un entorno de estacionamiento. En el contexto del análisis de datos, esta herramienta esencial se utiliza para identificar patrones inusuales o atípicos dentro de un conjunto de datos específico, en este caso, las magnitudes registradas por el magnetómetro.
+
+Para establecer una referencia sobre lo que se considera un valor típico en estas magnitudes, se utiliza una técnica conocida como "media móvil". Esta técnica calcula el promedio de las mediciones anteriores y proporciona una base para evaluar las mediciones actuales en relación con el comportamiento histórico de los datos. La detección de anomalías se lleva a cabo al comparar la última medición registrada con el valor más reciente calculado a partir de la media móvil. Cuando la diferencia entre la medición actual y la media móvil excede un umbral predeterminado, se identifica como una anomalía.
+
+En el contexto del proyecto, se aplicó este detector de anomalías a las muestras obtenidas de las magnitudes registradas por el magnetómetro. Los resultados se presentan en las figuras \ref{comparativa_anomalias_forw} y \ref{comparativa_anomalias_back}, que corresponden a los momentos en que un vehículo se estaciona de frente y en reversa sobre el magnetómetro, respectivamente.
+
+\insertimage[\label{comparativa_anomalias_forw}]{secciones/section_4/images/qmc5883l_forward_analysis}{width=16cm}{Estacionamiento frontal}
+\insertimage[\label{comparativa_anomalias_back}]{secciones/section_4/images/qmc5883l_back_analysis}{width=16cm}{Estacionamiento trasero}
+
+Las gráficas muestran cómo, cuando un vehículo pasa sobre el magnetómetro, se producen picos significativos en la variación en función del tiempo, que son detectados como anomalías. Esto desencadena la activación del microcontrolador desde el modo ULP (Ultra-Low-Power) para iniciar la medición con el sensor ToF, como se describe en la sección anterior. Además, en momentos de inactividad, cuando el vehículo ha completado su maniobra de estacionamiento y no se está moviendo, la variación tiende a ser cercana a cero. Esto permite configurar un umbral más alto y evita la activación del microcontrolador por valores bajos, lo que mejora la eficiencia energética.
+
+En resumen, el detector de anomalías es una pieza esencial en el firmware del nodo sensor. Su capacidad para identificar patrones inusuales en las magnitudes registradas por el magnetómetro es fundamental para evitar falsos positivos y garantizar el correcto funcionamiento del nodo sensor en un entorno de estacionamiento.
+
+
+
+
+
+
+
+
