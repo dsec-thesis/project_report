@@ -1,24 +1,19 @@
 \clearpage
-
 \subsection{Nodo Concentrador}
 Este nodo desempeña el papel de intermediario entre los nodos sensores y el servidor. En una de sus funciones, recopila datos de los nodos sensores utilizando la tecnología LoRa y, en la otra, los transmite al servidor a través del protocolo HTTP. Su funcionamiento puede verse resumido en la figura a continuación.
 
-\insertimage[\label{nodo_concentrador_funcionamiento}]{secciones/section_4/images/nodo_concentrador_overview}{width=16cm}{Diagrama simplificado de funcionamiento nodo concentrador}
+\insertimage[\label{nodo_concentrador_funcionamiento}]{secciones/section_4/images/nodo_concentrador_overview}{width=14cm}{Diagrama simplificado de funcionamiento nodo concentrador}
+
+
 
 \subsubsection{Hardware}
+El concentrador debe estar habilitado para recibir mensajes a través de la tecnología LoRa, lo cual implica la incorporación de un transceptor SX1278 en su diseño. Asimismo, es esencial que el dispositivo sea capaz de efectuar solicitudes HTTP, lo que implica que debe contar con acceso a la red de Internet. En cuanto a la modalidad de conexión, se ha optado por la conectividad inalámbrica mediante Wi-Fi, aunque cabe señalar que también se podría implementar una conexión cableada si se considera más apropiada en circunstancias específicas.
 
-Desde la introducción, podemos derivar algunos de los requisitos de hardware fundamentales. Esto incluye la necesidad de disponer de una conexión LoRa y la capacidad de establecer una conexión HTTP con un servidor. A pesar de que podríamos haber optado por utilizar el mismo dispositivo que se emplea para el nodo sensor, en este caso el Heltec WiFi LoRa 32, decidimos utilizar una Raspberry Pi.
+Dadas las limitaciones previamente mencionadas, a pesar de que es técnicamente factible construir el concentrador utilizando la misma placa de desarrollo que se emplea en el nodo sensor, se ha optado por utilizar una Raspberry Pi. Esta elección se fundamenta en su capacidad para cumplir con los requisitos establecidos, la ausencia de restricciones energéticas, la simplificación que aporta al proceso de desarrollo del software, y la conveniencia de contar con una unidad disponible para ser usada.
 
-La elección se basó en la abundante cantidad de memoria que ofrece, lo que nos permite almacenar temporalmente mensajes en momentos de alta demanda. Sumado a lo mencionado, cabe aclarar también que contabamos de una unidad Raspberry Pi disponible para su implementación.
+\insertimage[\label{raspberry_pi}]{secciones/section_4/images/raspberry_pi}{width=12cm}{Raspberry Pi 3 Model B+}
 
-\insertimage[\label{raspberry_pi}]{secciones/section_4/images/raspberry_pi}{width=18cm}{Raspberry Pi 3 Model B+}
-
-Como se puede apreciar en la figura anterior, Raspberry Pi es un mini ordenador, cuyo diseño de hardware es libre y cuenta con el sistema operativo GNU/Linux como Raspbian (aunque pueden utilizarse otros sistemas operativos basados en Linux como el caso de Ubuntu Server como ejemplo). 
-
-
-Este mini ordenador utiliza una arquitectura de procesador ARM distinta a la que estamos acostumbrados a utilizar en nuestros ordenadores. Esta arquitectura es de tipo RISC (Reduced Instruction Set Computer), es decir, utiliza un sistema set de instrucciones realmente simple lo que le permite ejecutar tareas con un mínimo consumo de energía y cuenta con salidas GPIO (General Purpose Input/Output - Entrada/Salida de Propósito General) lo que nos permite a través de la implementación del protocolo SPI poder dotar a la placa de comunicación LoRa.
-
-Además cuenta con un chipset de WiFi integrado, por lo que resuelve el manejo y conexión a internet lo que nos habilita la integración con el servidor de una forma sencilla.
+La Raspberry Pi es una computadora de placa unica (SBC por las siglas en ingles Single Board Computer), utiliza una arquitectura de procesador ARM distinta a la que estamos acostumbrados a utilizar en nuestros ordenadores. Esta arquitectura es de tipo RISC (Reduced Instruction Set Computer), es decir, utiliza un sistema set de instrucciones realmente simple lo que le permite ejecutar tareas con un mínimo consumo de energía y cuenta con salidas GPIO (General Purpose Input/Output - Entrada/Salida de Propósito General) lo que nos permite a través de la implementación del protocolo SPI poder dotar a la placa de comunicación LoRa.
 
 Teniendo en cuenta lo mencionado anteriormente, en el diagrama de bloques a continuación se visualizan los módulos actuantes para el nodo concentrador.
 
@@ -28,57 +23,62 @@ Teniendo en cuenta lo mencionado anteriormente, en el diagrama de bloques a cont
 \subsubsubsection{PinOut}
 A continuación se visualiza el pinout de la placa Raspberry Pi 3 Model B+:
 
-\insertimage[\label{raspberry_pi_pinout}]{secciones/section_4/images/raspberry_pi_pinout}{width=18cm}{Pin Out - Raspberry Pi 3 Model B+}
+\insertimage[\label{raspberry_pi_pinout}]{secciones/section_4/images/raspberry_pi_pinout}{width=16cm}{Pin Out - Raspberry Pi 3 Model B+}
+
 
 \subsubsubsection{Plano esquemático}
-Como habíamos mencionado anteriormente, la placa Raspberry Pi 3 debe poder recibir y enviar mensajes a través de LoRa. Es por ello que se presenta a continuación el diagrama esquemático entre la Raspberry Pi y la placa Heltec para dotar al ordenar de comunicación LoRa. Esta comunicación se utilizará implementando el protocolo SPI (Interfaz Periférica en Serie) entre ambas placas:
+En el diagrama subsecuente se presentan de manera detallada las interconexiones que existen entre el módulo LoRa SX1278 y la Raspberry Pi, establecidas a través de los pines que componen la interfaz de comunicación serial SPI. 
 
 \insertimage[\label{concentrator_schematic}]{secciones/section_4/images/concentrator_schematic}{width=17cm}{Conexión entre la Raspberry Pi y el módulo LoRa}
 
+
+
 \subsubsection{Software}
-Como se expuso en la introducción de esta sección, el nodo concentrador desempeña dos funciones fundamentales: la recopilación de datos provenientes de sensores a través de la tecnología LoRa y la posterior transmisión de estos datos mediante el protocolo HTTP.
+El nodo concentrador desempeña dos funciones primordiales: la adquisición de información procedente de sensores mediante la tecnología de comunicación LoRa, seguida de la transmisión subsiguiente de estos datos utilizando el protocolo HTTP.
+La idea es desarrollar un sistema que, al ser activado inicialmente, tenga la capacidad de autoconfigurarse o de iniciar un proceso que le permita obtener los parámetros necesarios del usuario. Una vez que se haya llevado a cabo la configuración, el sistema procederá a iniciar la ejecución del programa principal (Figura \ref{concentrador_flujo_general}).
 
-Para llevar a cabo estas tareas, se ha desarrollado un software específico utilizando el lenguaje de programación Python. La elección de Python se basa en su versatilidad, ligereza y facilidad de implementación, además de contar con experiencia laboral previa en este lenguaje por parte del equipo de desarrollo. Un factor adicional que influyó en esta decisión es la compatibilidad del mismo con el sistema operativo nativo de Raspberry Pi.
+\insertimage[\label{concentrador_flujo_general}]{secciones/section_4/images/concentrador_flujo_general}{width=7cm}{Flujo del concentrador}
 
-\subsubsubsection{Sistema Operativo}
-Raspberry Pi OS, previamente conocido como Raspbian, es el sistema operativo oficial diseñado específicamente para el microordenador Raspberry Pi. Esta distribución de Linux se basa en Debian y proporciona todo lo necesario para aprovechar al máximo esta placa. Está optimizado para funcionar en equipos ARM y viene con una amplia variedad de paquetes y programas preinstalados. Raspberry Pi OS utiliza el entorno de escritorio PIXEL (Pi Improved X-Window Environment, Lightweight), basado en LXDE, que es ligero y fácil de usar.
 
-Existen tres ediciones diferentes de esta distribución:
+\subsubsubsection{Pila de tecnologías}
+El software del concentrador esta contruidro sobre la base de una pila de tecnologias que puede resumirse a las que conforman la figura \ref{concentrador_capas}
 
-\begin{itemize}
-    \item Edición Completa: Incluye el escritorio PIXEL y una amplia selección de programas recomendados para comenzar a usar la distribución desde el primer momento.
-    \item Edición Estándar: Incluye el escritorio y los programas básicos, sin ningún software recomendado adicional.
-    \item Edición Lite: Es una imagen mínima basada en Debian que ocupa tan solo 400 MB. Esta edición incluye solo lo necesario para arrancar el dispositivo, dejando al usuario la responsabilidad de instalar los programas que necesite.
-\end{itemize}
+\insertimage[\label{concentrador_capas}]{secciones/section_4/images/concentrador_capas}{width=10cm}{Capas del concentrador}
 
-En nuestro caso dado que estamos implementando código a medida la versión Lite ya es suficiente para nosotros, ya que nos permite poder centrarnos unicamente en nuestro código.
+Empezando desde abajo hacia arriba el primer elemento es Raspberry Pi OS, anteriormente conocido como Raspbian, representa una distribución del sistema operativo GNU/Linux, construida sobre la base de Debian y especialmente diseñada para la utilización en la placa computadora de bajo costo Raspberry Pi. Esta plataforma vio la luz por primera vez en junio de 2012 y desde el año 2015 ha sido oficialmente respaldada por la Raspberry Pi Foundation como el sistema operativo predeterminado para su gama de placas SBC (Single Board Computer).
+Es importante destacar que Raspbian, un proyecto concebido de manera independiente por Mike Thompson y Peter Green, sigue evolucionando activamente. Se caracteriza por su notable optimización para el hardware de Raspberry Pi. Desde una perspectiva técnica, este sistema operativo constituye una adaptación no oficial de Debian armhf, adaptada para el procesador (CPU) de Raspberry Pi. Además, incorpora un soporte altamente optimizado para operaciones de coma flotante por hardware, lo que resulta en un rendimiento mejorado en determinados escenarios. Esta adaptación fue esencial debido a la inexistencia de una versión oficial de Debian armhf compatible con la arquitectura ARMv6, presente en la Raspberry Pi.
+Raspberry Pi OS se elige como el sistema operativo para las Raspberry Pi debido a su eficiencia en el hardware y amplia compatibilidad con periféricos, lo que lo convierte en la opción ideal para nuestra aplicacion.
+
+El segundo elemento, Python, es un lenguaje de programación de alto nivel, multipropósito e interpretado, que se destaca por su sintaxis clara y legible. Fue creado por Guido van Rossum y lanzado por primera vez en 1991, y desde entonces ha ganado una amplia aceptación en la comunidad de desarrollo de software debido a su facilidad de uso y versatilidad. Python ofrece una amplia biblioteca estándar que abarca una variedad de áreas, lo que facilita la implementación de una amplia gama de aplicaciones y proyectos. Su enfoque en la legibilidad del código y la filosofía del "Zen de Python" fomenta la escritura de programas limpios y mantenibles, lo que lo convierte en una elección popular tanto para principiantes como para desarrolladores experimentados en diversas disciplinas, desde la ciencia de datos hasta el desarrollo web.
+La elección de Python como lenguaje de programación para el desarrollo del concentradorse justifica por varias razones fundamentales. En primer lugar, Python es altamente compatible con Raspberry Pi OS. Esto garantiza una integración fluida y una experiencia de desarrollo sin problemas.
+Además, contamos con experiencia de desarrollo con el lenguaje Python. La familiaridad con la sintaxis y las bibliotecas de Python permite un desarrollo eficiente y una resolución efectiva de problemas.
 
 
 \subsubsubsection{Configuración Inicial}
 Durante la inicialización de este dispositivo, y con el objetivo de simplificar su configuración, hemos desarrollado una aplicación que se ejecuta en el proceso de arranque del nodo concentrador.
 
-La placa sirve una interfaz web, como se muestra en la secuencia de la Figura \ref{bootstrap_process}, que permite llevar a cabo la configuración de la red WiFi utilizada para la comunicación con el servidor. Configurar la conexión WiFi es de suma importancia, ya que sin esta configuración, no se puede proporcionar información sobre la disponibilidad del estacionamiento.
+La placa sirve una interfaz web (Figura \ref{wifi_conf}), que permite llevar a cabo la configuración de la red WiFi utilizada para la comunicación con el servidor. Configurar la conexión WiFi es de suma importancia, ya que sin esta configuración, no se puede proporcionar información sobre la disponibilidad del estacionamiento.
 
-\begin{images}[\label{bootstrap_process}]{Configuración y Arranque Inicial}
-\addimage[\label{bootstrap_1}]{secciones/section_4/images/bootstrap_1}{width=5.1cm}{}
-\addimage[\label{bootstrap_2}]{secciones/section_4/images/bootstrap_2}{width=5.1cm}{}
-\addimage[\label{bootstrap_3}]{secciones/section_4/images/bootstrap_3}{width=5.1cm}{}
+\begin{images}[\label{wifi_conf}]{Configuración del WiFi}
+    \addimage[\label{wifi_conf:bootstrap_1}]{secciones/section_4/images/bootstrap_1}{width=5.1cm}{}
+    \addimage[\label{wifi_conf:bootstrap_2}]{secciones/section_4/images/bootstrap_2}{width=5.1cm}{}
+    \addimage[\label{wifi_conf:bootstrap_3}]{secciones/section_4/images/bootstrap_3}{width=5.1cm}{}
+    \end{images}
+
+Una vez que se ha establecido la conexión WiFi, se realiza una consulta HTTP para descargar automáticamente las credenciales de identificación desde el servidor (Figura \ref{credentials_conf:identificacion_estacionamiento}). Estas credenciales validan al nodo concentrador y al estacionamiento dentro del sistema.
+
+Luego, debemos guardar los cambios, y la aplicación indicará que el nodo está listo para operar (Figuras \ref{credentials_conf:nodo_concentrador_listo_1} y \ref{credentials_conf:nodo_concentrador_listo_2}). En este punto, el nodo está preparado para recibir y procesar los datos obtenidos por los sensores.
+
+
+\begin{images}[\label{credentials_conf}]{Configuración de las credenciales}
+\addimage[\label{credentials_conf:identificacion_estacionamiento}]{secciones/section_4/images/bootstrap_4}{width=5.1cm}{} 
+\addimage[\label{credentials_conf:nodo_concentrador_listo_1}]{secciones/section_4/images/bootstrap_5}{width=5.1cm}{}
+\addimage[\label{credentials_conf:nodo_concentrador_listo_2}]{secciones/section_4/images/bootstrap_6}{width=5.1cm}{}
 \end{images}
 
-Una vez que se ha establecido la conexión WiFi, se realiza una consulta HTTP para descargar automáticamente las credenciales de identificación desde el servidor (ver Figura \ref{identificacion_estacionamiento}). Estas credenciales validan al nodo concentrador y al estacionamiento dentro del sistema.
 
-\insertimage[\label{identificacion_estacionamiento}]{secciones/section_4/images/bootstrap_4}{width=7cm}{Credenciales de identificación del estacionamiento} 
+\subsubsubsection{Concentrador}
+El bucle principal del concentrador se compone de dos elementos fundamentales. En primer lugar, encontramos la fase encargada de recibir los mensajes provenientes de los sensores a través de la tecnología LoRa. Esta fase implica la deserialización de los datos, su validación y la confirmación de su recepción mediante el envío de un acuse de recibo (ACK) de vuelta al nodo sensor correspondiente. Por otro lado, existe un módulo específico encargado de procesar estos mensajes y transmitirlos al servidor central.
+La interconexión de estos dos sistemas se realiza mediante una cola, lo que habilita al concentrador para gestionar una mayor cantidad de mensajes entrantes en momentos de alta demanda. Esto posibilita la postergación de la retransmisión de los datos al servidor para un momento más oportuno. Es importante destacar que, si bien esta estrategia puede resultar en notificaciones con cierto retraso para los usuarios, se evita la pérdida de mensajes enviados por los sensores. Este enfoque, en última instancia, contribuye a prolongar la vida útil de la batería de los dispositivos al reducir la necesidad de retransmitir los datos. 
 
-Luego, debemos guardar los cambios, y la aplicación indicará que el nodo está listo para operar (Figura \ref{nodo_concentrador_listo}). En este punto, el nodo está preparado para recibir y procesar los datos obtenidos por los sensores.
-
-
-\begin{images}[\label{nodo_concentrador_listo}]{Proceso de configuración - nodo concentrador}
-    \addimage[\label{bootstrap_5}]{secciones/section_4/images/bootstrap_5}{width=6cm}{}
-    \addimage[\label{bootstrap_6}]{secciones/section_4/images/bootstrap_6}{width=6cm}{}
-\end{images}
-
-\subsubsubsection{Funcionamiento Nodo Concentrador}
-
-En el siguiente diagrama de flujos, se puede apreciar como es el funcionamiento del nodo concentrador.
-
-\insertimage[\label{nodo_colector_diagrama_flujos}]{secciones/section_4/images/nodo_colector_diagrama_flujos}{width=16cm}{Diagrama de flujos código concentrador}
+\insertimage[\label{concentrador_flujo}]{secciones/section_4/images/concentrador_flujo}{width=14cm}{Flujo del concentrador}
