@@ -337,95 +337,113 @@ Para comenzar con el cálculo teórico, vamos a tomar los niveles de consumo de 
 los datasheet de los fabricantes. En el sistema de bajo consumo tenemos los siguientes
 parámetros:
 
-\begin{equation}
-    I_{ULP A} = 0.0004 mA \quad\text{(consumo ULP en modo activo)} \label{consumo_ulp_modo_activo}
-\end{equation}
-\begin{equation}
-    I_{ULP Off} = 0.00001 mA \quad\text{(consumo ULP en modo off)} \label{consumo_ulp_modo_off}
-\end{equation}
-\begin{equation}
-    t_{ULP A} = 2 ms \quad\text{(tiempo en modo activo)} \label{tiempo_ulp_modo_activo}
-\end{equation}
-\begin{equation}
-    t_{ULP Off} = 500 ms \quad\text{(tiempo en modo off)} \label{tiempo_ulp_modo_off}
-\end{equation}
+\begin{flalign}
+    I_{\text{ULP on}} &= 400 \, \mu\text{A} &&\text{Corriente ULP encendido}
+\end{flalign}
+\begin{flalign}
+    t_{\text{ULP on}} &= 2 \, ms &&\text{Tiempo ULP encendido}
+\end{flalign}
+\begin{flalign}
+    I_{\text{ULP off}} &= 10 \, \mu\text{A} &&\text{Corriente ULP apagado}
+\end{flalign}
+\begin{flalign}
+    t_{\text{ULP off}} &= 500 \, ms &&\text{Tiempo ULP apagado}
+\end{flalign}
+\begin{flalign}
+    I_{\text{ULP}} &= \frac{I_{\text{ULP on}} \, t_{\text{ULP on}} + I_{\text{ULP off}} \, t_{\text{ULP off}}}{t_{\text{ULP on}} + t_{\text{ULP off}}} = 11,55 \, \mu\text{A} &&\text{Corriente ULP}
+\end{flalign}
+\begin{flalign}
+    I_{\text{MAG}} &= 20 \, \mu\text{A} &&\text{Corriente magnetómetro}
+\end{flalign}
+\begin{flalign}
+    I_{\text{LP}} &= I_{\text{ULP}} + I_{\text{MAG}} = 0,0316 \, m\text{A} &&\text{Corriente total bajo consumo}
+\end{flalign}
 
-Por lo tanto la corriente total queda definida como:
-\begin{equation}
-    I_{ULP} = \frac{(I_{ULP A}* t_{ULP A} + I_{ULP Off} * t_{ULP Off})}{t_{ULP A} + t_{ULP Off}} \quad\text{(Corriente total)} \label{corriente_total}
-\end{equation}
 
+Modo alto consumo:
 
-\begin{equation}
-    I_{Magnetometer}= 0.00002 mA \quad\text{(Corriente total)} \label{corriente_magnetometro}
-\end{equation}
-
-Finalmente el valor de la corriente de bajo consumo queda definida como la suma del
-procesador ULP y la corriente consumida por el magnetómetro.
-
-\begin{equation}
-    I_{Low Power}= I_{ULP} + I_{Magnetometer} \quad\text{(Corriente total del sistema bajo consumo)} \label{corriente_I_low_power}
-\end{equation}
-
-En el sistema de alto consumo consideramos los siguientes valores:
+Antes de adentrarnos en este tema, resulta fundamental abordar la estrecha relación que existe entre el consumo en cuestión y la frecuencia con la que los vehículos entran y salen de una zona de estacionamiento. Es durante estos intervalos precisos cuando el sistema se activa, y, por consiguiente, es importante destacar que a medida que la frecuencia de entrada y salida de vehículos aumenta, también se incrementa el consumo correspondiente. En el contexto de nuestros cálculos, expresaremos esta relación utilizando su inversa, es decir, el periodo.
 
 \begin{equation}
-    t_a medido en ms \quad\text{(representa el tiempo que permanece cada auto en un slot)} \label{corriente_I_low_power}
-\end{equation}
-\begin{equation}
-    I_{ESP A} = 25 mA \quad\text{(consumo ESP en modo activo)} \label{corriente_esp_modo_activo}
-\end{equation}
-\begin{equation}
-    I_{Laser ON} = 19 mA \quad\text{(consumo ULP en modo off)} \label{corriente_ulp_modo_off}
-\end{equation}
-\begin{equation}
-    t_{ESP A} = 300 ms \quad\text{(tiempo que la ESP permanece en modo activo)} \label{tiempo_esp_modo_activo}
-\end{equation}
-\begin{equation}
-    t_{Laser On} = 40 ms \quad\text{(tiempo que el laser está activo)} \label{tiempo_laser_activo}
+    T_A [ms]
+    \quad\text{(Tiempo entre que un auto entra y sale de un espacio de estacionamiento)}
 \end{equation}
 
-Con las variables anteriores queda definido el tiempo en la que el nodo sensor se
-encuentra recolectando la información sobre la ocupación de un slot de estacionamiento.
 
-\begin{equation}
-    I_{ESP Collecting} = \frac{I_{ESP A} * t_{ESP A}}{t_{ESP A} + t_a} 
-    \quad\text{(corriente de la ESP mientras collecta información)} \label{corriente_esp_collecting}
-\end{equation}
-\begin{equation}
-    I_{Laser Collecting} = \frac{I_{Laser ON} * t_{Laser ON}}{t_{Laser ON} + t_a} 
-    \quad\text{(corriente total mientras el laser collecta información)} \label{tiempo_laser_activo}
-\end{equation}
-\begin{gather}
-\begin{aligned}
-    I_{Collecting} &= I_{ESP Collecting} + I_{Laser Collecting} \\
-    &\text{(corriente total consumida mientras se collecta información)} \label{tiempo_laser_activo}
-\end{aligned}
-\end{gather}
+Corriente consumida durante la etapa de sensado ($I_{\text{S}}$):
+\begin{flalign}
+    I_{\text{ESP on}} &= 25 \, m\text{A} &&\text{Corriente ESP en modo activo}
+\end{flalign}
+\begin{flalign}
+    t_{\text{ESP on}} &= 300 \, ms &&\text{Tiempo ESP en modo activo}
+\end{flalign}
+\begin{flalign}
+    I_{\text{ESP}} &= \frac{I_{\text{ESP on}} \, t_{\text{ESP on}}}{t_{\text{ESP on}} + T_A} = \frac{7.500}{300 + T_A} \, m\text{A} &&\text{Corriente ESP total}
+\end{flalign}
+\begin{flalign}
+    I_{\text{LASER on}} &= 19 \, m\text{A} &&\text{Corriente Laser encendido}
+\end{flalign}
+\begin{flalign}
+    t_{\text{LASER on}} &= 40 \, ms &&\text{Tiempo Laser encendido}
+\end{flalign}
+\begin{flalign}
+    I_{\text{LASER}} &= \frac{I_{\text{LASER on}} \, t_{\text{LASER on}}}{t_{\text{LASER on}} + T_A} = \frac{760}{40 + T_A} \, m\text{A} &&\text{Corriente Laser total}
+\end{flalign}
+\begin{flalign}
+    I_{\text{S}} &= I_{\text{ESP}} + I_{\text{LASER}} = \frac{7.500}{300 + T_A} + \frac{760}{40 + T_A} \, m\text{A} &&\text{Corriente total sensando}
+\end{flalign}
 
-Por último, una vez recolectada la información, tenemos la etapa de envío y recepción de información.
 
-\insertequation{I_{ESP Light Sleep} =0.8 mA}
-\insertequation{I_{sx stby}=0.0000015 mA}
-\insertequation{I_{sx tx} = 100 mA}
-\insertequation{I_{sx rx} = 12 mA}
+Por último, corriente consumida durante la etapa de transmisión ($I_{T}$):
+\begin{flalign}
+    I_{\text{SX stby}} &= 0.0015 \, \mu\text{A} &&\text{Corriente SX standby}
+\end{flalign}
+\begin{flalign}
+    t_{\text{SX stby}} &= 27 \, ms &&\text{Tiempo SX standby}
+\end{flalign}
+\begin{flalign}
+    I_{\text{SX tx}} &= 100 \, m\text{A} &&\text{Corriente SX transmitiendo}
+\end{flalign}
+\begin{flalign}
+    t_{\text{SX tx}} &= 175 \, ms &&\text{Tiempo SX transmitiendo}
+\end{flalign}
+\begin{flalign}
+    I_{\text{SX rx}} &= 12 \, m\text{A} &&\text{Corriente SX recibiendo}
+\end{flalign}
+\begin{flalign}
+    t_{\text{SX rx}} &= 1000 \, ms &&\text{Tiempo SX recibiendo}
+\end{flalign}
+\begin{flalign}
+    I_{\text{SX}} &= \frac{I_{\text{SX stby}} \, T_A +  I_{\text{SX stby}} \, t_{\text{SX stby}} + I_{\text{SX rx}} \,t_{\text{SX rx}} + I_{\text{SX tx}} \, t_{\text{SX tx}}}{T_A + t_{\text{SX stby}} +  t_{\text{SX rx}} + t_{\text{SX tx}}} && \\
+    I_{\text{SX}} &= \frac{29500 + 1.5 \times 10^{-6} \, T_A}{1202 + T_A} \, m\text{A} &&\text{Corriente SX1278 total}
+\end{flalign}
+\begin{flalign}
+    I_{\text{ESP ls}} &= 0.8 \, m\text{A} &&\text{Corriente ESP light sleep}
+\end{flalign}
+\begin{flalign}
+    t_{\text{ESP ls}} &= t_{\text{SX tx}} + t_{\text{SX rx}} &&\text{Tiempo ESP light sleep}
+\end{flalign}
+\begin{flalign}
+    t_{\text{ESP on}} &= t_{\text{SX stby}} &&\text{Tiempo ESP light sleep}
+\end{flalign}
+\begin{flalign}
+    I_{\text{ESP}} &= \frac{I_{\text{ESP on}} \, t_{\text{ESP on}} + I_{\text{ESP ls}} \, t_{\text{ESP ls}}}{t_{\text{ESP on}}+ t_{\text{ESP ls}} + T_A} = \frac{1615}{1202 + T_A} \, m\text{A} &&\text{Corriente ESP total}
+\end{flalign}
+\begin{flalign}
+    I_{\text{T}} &= I_{\text{ESP}} + I_{\text{SX}} = \frac{31115 + 1.5 \times 10^{-6} \, T_A}{1202 + T_A} \, m\text{A} &&\text{Corriente total transmitiendo}
+\end{flalign}
 
-\insertequation{t_{sx tx} = 175 ms}
-\insertequation{t_{sx rx} = 1000 ms}
-\insertequation{t_{sx stby} = 27 ms}
-\insertequation{t_{ESP A} = t_{sx stby}}
-\insertequation{t_{ESP_Light_Sleep} = t_{sx tx} + t_{sx rx}}
+La corriente total consumida en el modo de alto consumo:
+\begin{flalign}
+    I_{\text{HP}} &= I_{\text{S}} + I_{\text{T}} = \frac{31115 + 1.5 \times 10^{-6} \, T_A}{1202 + T_A}  + \frac{7500}{300 + T_A} + \frac{760}{40 + T_A} \, m\text{A} &&
+\end{flalign}
 
-La etapa de comunicación queda definida entonces por la suma entre la corriente que
-consume el nodo mientras transmite y mientras recibe como se puede ver en las fórmulas
-a continuación.
+Finalmente la corriente total consumida por el sitema:
+\begin{flalign}
+    I &= I_{\text{LP}} + I_{\text{HP}} = \frac{31115 + 1.5 \times 10^{-6} \, T_A}{1202 + T_A}  + \frac{7500}{300 + T_A} + \frac{760}{40 + T_A} + 0,0316 \, m\text{A} &&
+\end{flalign}
 
-\insertequation{I_{Transmitting\ ESP} = \frac{I_{ESP\ A} * t_{ESP\ A} + I_{ESP\ Light\ Sleep} * t_{ESP\ Light\ Sleep}}{t_a+ t_{ESP\ A}+ t_{ESP\ Light\ Sleep}}}
 
-\insertequation{I_{Transmitting\ SX} = \frac{t_a *I_{sx\ stby} + t_{sx\ stby} * I_{sx\ stby} +  t_{sx\ rx} * I_{sx\ rx} + t_{sx\ tx} * I_{sx\ tx}}{t_a+ t_{sx\ stby} +  t_{sx\ rx} + t_{sx\ tx}}}
-
-\insertequation{I_{Transmitting} = I_{Transmitting\ ESP} + I_{Transmitting\ SX}}
-\insertequation{I_{High\ Power} = I_{Collecting} + I_{Transmitting}}
 
 En este punto ya tenemos todos los valores de intensidad expresados y podemos estimar el
 tiempo de vida útil de una batería. Asumiendo que tenemos una batería de 5000 mAh, en la
