@@ -302,7 +302,7 @@ El proceso comienza con una fase de configuración previa, que asumimos que ha s
 
 Una vez que la configuración inicial ha sido realizada, el microcontrolador entra en un estado de Deep-Sleep y activa el coprocesador ULP (Ultra-Low-Power) para analizar las lecturas del magnetómetro. Este análisis tiene como objetivo determinar si ha ocurrido una variación significativa en el campo magnético que supere un umbral predefinido. Esto se logra gracias a la implementación de un detector de anomalías detallado en la sección \ref{detector_anomalias}.
 
-\insertimage[\label{esquema_energia}]{secciones/section_4/images/esquema_energia}{width=17cm}{Esquema de energía interno ESP32}
+
 
 
 Cuando se detecta que el valor límite del campo magnético ha sido superado, el coprocesador ULP activa una función previamente definida que indica a la ESP32 que debe salir del modo Deep-Sleep y entrar en modo de funcionamiento activo.
@@ -331,6 +331,8 @@ Las gráficas muestran cómo, cuando un vehículo pasa sobre el magnetómetro, s
 
 En resumen, el detector de anomalías es una pieza esencial en el firmware del nodo sensor. Su capacidad para identificar patrones inusuales en las magnitudes registradas por el magnetómetro es fundamental para evitar falsos positivos y garantizar el correcto funcionamiento del nodo sensor en un entorno de estacionamiento.
 
+
+\insertimage[\label{esquema_energia}]{secciones/section_4/images/esquema_energia}{width=17cm}{Diagrama de flujo del nodo sensor}
 
 
 \subsubsection{Estimación tiempo de vida util - bateria del nodo sensor}{\label{sec:bateria_del_nodo_sensor}}
