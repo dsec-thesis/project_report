@@ -290,6 +290,22 @@ El firmware fue dividido en dos subsistemas con la finalidad de optimizar la efi
 
 \insertimage[\label{power_modes_system}]{secciones/section_4/images/power_modes_system}{width=17cm}{Subsistemas}
 
+
+\subsubsubsection{Detección de anomalías}\label{detector_anomalias}
+El detector de anomalías desempeña un papel fundamental en la operación del nodo sensor, particularmente en la detección de vehículos en un entorno de estacionamiento. En el contexto del análisis de datos, esta herramienta esencial se utiliza para identificar patrones inusuales o atípicos dentro de un conjunto de datos específico, en este caso, las magnitudes registradas por el magnetómetro.
+
+Para establecer una referencia sobre lo que se considera un valor típico en estas magnitudes, se utiliza una técnica conocida como "media móvil". Esta técnica calcula el promedio de las mediciones anteriores y proporciona una base para evaluar las mediciones actuales en relación con el comportamiento histórico de los datos. La detección de anomalías se lleva a cabo al comparar la última medición registrada con el valor más reciente calculado a partir de la media móvil. Cuando la diferencia entre la medición actual y la media móvil excede un umbral predeterminado, se identifica como una anomalía.
+
+En el contexto del proyecto, se aplicó este detector de anomalías a las muestras obtenidas de las magnitudes registradas por el magnetómetro. Los resultados se presentan en las figuras \ref{comparativa_anomalias_forw} y \ref{comparativa_anomalias_back}, que corresponden a los momentos en que un vehículo se estaciona de frente y en reversa sobre el magnetómetro, respectivamente.
+
+\insertimage[\label{comparativa_anomalias_forw}]{secciones/section_4/images/qmc5883l_forward_analysis}{width=16cm}{Estacionamiento frontal}
+\insertimage[\label{comparativa_anomalias_back}]{secciones/section_4/images/qmc5883l_back_analysis}{width=16cm}{Estacionamiento trasero}
+
+Las gráficas muestran cómo, cuando un vehículo pasa sobre el magnetómetro, se producen picos significativos en la variación en función del tiempo, que son detectados como anomalías. Esto desencadena la activación del microcontrolador desde el modo ULP (Ultra-Low-Power) para iniciar la medición con el sensor ToF, como se describe en la sección anterior. Además, en momentos de inactividad, cuando el vehículo ha completado su maniobra de estacionamiento y no se está moviendo, la variación tiende a ser cercana a cero. Esto permite configurar un umbral más alto y evita la activación del microcontrolador por valores bajos, lo que mejora la eficiencia energética.
+
+En resumen, el detector de anomalías es una pieza esencial en el firmware del nodo sensor. Su capacidad para identificar patrones inusuales en las magnitudes registradas por el magnetómetro es fundamental para evitar falsos positivos y garantizar el correcto funcionamiento del nodo sensor en un entorno de estacionamiento.
+
+
 \subsubsubsection{Confirmación de ocupación}
 
 
@@ -317,19 +333,6 @@ Este firmware desempeña un papel esencial en la operación del nodo sensor, ya 
 
 %\insertimage[\label{architectura_nodo_facil}]{secciones/section_4/images/architectura_nodo_facil}{width=13cm}{Diagrama de bloques nodo sensor}
 
-\subsubsubsection{Detección de anomalías}\label{detector_anomalias}
-El detector de anomalías desempeña un papel fundamental en la operación del nodo sensor, particularmente en la detección de vehículos en un entorno de estacionamiento. En el contexto del análisis de datos, esta herramienta esencial se utiliza para identificar patrones inusuales o atípicos dentro de un conjunto de datos específico, en este caso, las magnitudes registradas por el magnetómetro.
-
-Para establecer una referencia sobre lo que se considera un valor típico en estas magnitudes, se utiliza una técnica conocida como "media móvil". Esta técnica calcula el promedio de las mediciones anteriores y proporciona una base para evaluar las mediciones actuales en relación con el comportamiento histórico de los datos. La detección de anomalías se lleva a cabo al comparar la última medición registrada con el valor más reciente calculado a partir de la media móvil. Cuando la diferencia entre la medición actual y la media móvil excede un umbral predeterminado, se identifica como una anomalía.
-
-En el contexto del proyecto, se aplicó este detector de anomalías a las muestras obtenidas de las magnitudes registradas por el magnetómetro. Los resultados se presentan en las figuras \ref{comparativa_anomalias_forw} y \ref{comparativa_anomalias_back}, que corresponden a los momentos en que un vehículo se estaciona de frente y en reversa sobre el magnetómetro, respectivamente.
-
-\insertimage[\label{comparativa_anomalias_forw}]{secciones/section_4/images/qmc5883l_forward_analysis}{width=16cm}{Estacionamiento frontal}
-\insertimage[\label{comparativa_anomalias_back}]{secciones/section_4/images/qmc5883l_back_analysis}{width=16cm}{Estacionamiento trasero}
-
-Las gráficas muestran cómo, cuando un vehículo pasa sobre el magnetómetro, se producen picos significativos en la variación en función del tiempo, que son detectados como anomalías. Esto desencadena la activación del microcontrolador desde el modo ULP (Ultra-Low-Power) para iniciar la medición con el sensor ToF, como se describe en la sección anterior. Además, en momentos de inactividad, cuando el vehículo ha completado su maniobra de estacionamiento y no se está moviendo, la variación tiende a ser cercana a cero. Esto permite configurar un umbral más alto y evita la activación del microcontrolador por valores bajos, lo que mejora la eficiencia energética.
-
-En resumen, el detector de anomalías es una pieza esencial en el firmware del nodo sensor. Su capacidad para identificar patrones inusuales en las magnitudes registradas por el magnetómetro es fundamental para evitar falsos positivos y garantizar el correcto funcionamiento del nodo sensor en un entorno de estacionamiento.
 
 
 \insertimage[\label{esquema_energia}]{secciones/section_4/images/esquema_energia}{width=17cm}{Diagrama de flujo del nodo sensor}
