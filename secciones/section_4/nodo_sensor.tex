@@ -322,20 +322,11 @@ que siguen activos durante el modo de funcionamiento Deep-Sleep.
 \insertimage[\label{diagrama_low_power_bloques}]{secciones/section_4/images/diagrama_low_power_bloques}{width=15cm}{Bloques activos en modo Deep-Sleep}
 
 \subsubsubsection{Cálculo teórico - tiempo de vida batería}
-Para poder estimar de manera precisa el tiempo de vida de la batería que se requiere
-para nuestro equipo, se ha realizado una cuidadosa identificación de dos patrones de
-consumo claramente definidos, a los cuales hemos denominado \textit{Alto Consumo} y
-\textit{Bajo Consumo}, cada uno con sus respectivos periodos de funcionamiento "ON" y de
-inactividad "OFF". Este desglose minucioso nos proporcionará una estimación más
-detallada y precisa del tiempo de vida esperado para la batería, permitiéndonos tomar
-decisiones informadas acerca de la capacidad y durabilidad óptimas para el sistema
-electrónico en cuestión. Este análisis está basado en que muchos de los sistemas IoT
-pasan una pequeña parte de su tiempo en un modo activo (o de funcionamiento) y el resto
-en modo de inactividad.
+Antes de adentrarnos en esta sección, es importante aclarar que, dado que estamos trabajando con una placa de desarrollo, el consumo de energía real puede ser mayor que el indicado en las hojas de datos de los fabricantes. Además, la placa está siendo alimentada de manera continua, lo que significa que cualquier estimación de consumo de energía en una futura aplicación carecería de fundamentos sólidos. Para futuros desarrollos, planeamos utilizar el chipset ESP32 junto con los sensores mencionados previamente. En ese caso, podremos basarnos en los valores proporcionados en las hojas de datos de los fabricantes para realizar cálculos más precisos sobre la vida útil de la batería.
 
-Para comenzar con el cálculo teórico, vamos a tomar los niveles de consumo de acuerdo a
-los datasheet de los fabricantes. En el sistema de bajo consumo tenemos los siguientes
-parámetros:
+Ahora, para estimar con precisión el tiempo de vida de la batería necesario para nuestro equipo, hemos llevado a cabo una identificación meticulosa de dos patrones de consumo claramente definidos: \textit{Alto Consumo} y \textit{Bajo Consumo}. Cada uno de estos patrones tiene sus propios períodos de funcionamiento \quotes{ON} y de inactividad \quotes{OFF}. Este análisis detallado nos permitirá obtener una estimación más precisa y detallada del tiempo de vida esperado de la batería. De esta manera, podremos tomar decisiones informadas acerca de la capacidad y durabilidad óptimas para el sistema electrónico en cuestión. Es importante destacar que este enfoque se basa en la observación de que muchos sistemas IoT pasan la mayor parte de su tiempo en modo de bajo consumo, alternando con breves períodos de funcionamiento activo.
+
+Comenzaremos realizando los cálculos para el sistema de \textbf{bajo consumo}, que presenta los siguientes parámetros:
 
 \begin{flalign}
     I_{\text{ULP on}} &= 400 \, \mu\text{A} &&\text{Corriente ULP encendido}
@@ -360,13 +351,11 @@ parámetros:
 \end{flalign}
 
 
-Modo alto consumo:
-
-Antes de adentrarnos en este tema, resulta fundamental abordar la estrecha relación que existe entre el consumo en cuestión y la frecuencia con la que los vehículos entran y salen de una zona de estacionamiento. Es durante estos intervalos precisos cuando el sistema se activa, y, por consiguiente, es importante destacar que a medida que la frecuencia de entrada y salida de vehículos aumenta, también se incrementa el consumo correspondiente. En el contexto de nuestros cálculos, expresaremos esta relación utilizando su inversa, es decir, el periodo.
+Por otro lado y antes de adentrarnos en los calculos para el modo de \textbf{alto consumo}, resulta fundamental abordar la estrecha relación que existe entre el consumo en cuestión y la frecuencia con la que los vehículos entran y salen de una zona de estacionamiento. Es durante estos intervalos precisos cuando el sistema se activa, y, por consiguiente, es importante destacar que a medida que la frecuencia de entrada y salida de vehículos aumenta, también se incrementa el consumo correspondiente. En el contexto de nuestros cálculos, expresaremos esta relación utilizando su inversa, es decir, el periodo.
 
 \begin{equation}
     T_A [ms]
-    \quad\text{(Tiempo entre que un auto entra y sale de un espacio de estacionamiento)}
+    \quad\text{(Tiempo entre que un auto ingresa y sale de un espacio de estacionamiento)}
 \end{equation}
 
 
@@ -414,8 +403,10 @@ Por último, corriente consumida durante la etapa de transmisión ($I_{T}$):
     t_{\text{SX rx}} &= 1000 \, ms &&\text{Tiempo SX recibiendo}
 \end{flalign}
 \begin{flalign}
-    I_{\text{SX}} &= \frac{I_{\text{SX stby}} \, T_A +  I_{\text{SX stby}} \, t_{\text{SX stby}} + I_{\text{SX rx}} \,t_{\text{SX rx}} + I_{\text{SX tx}} \, t_{\text{SX tx}}}{T_A + t_{\text{SX stby}} +  t_{\text{SX rx}} + t_{\text{SX tx}}} && \\
-    I_{\text{SX}} &= \frac{29500 + 1.5 \times 10^{-6} \, T_A}{1202 + T_A} \, m\text{A} &&\text{Corriente SX1278 total}
+    I_{\text{SX}} &= \frac{I_{\text{SX stby}} \, T_A +  I_{\text{SX stby}} \, t_{\text{SX stby}} + I_{\text{SX rx}} \,t_{\text{SX rx}} + I_{\text{SX tx}} \, t_{\text{SX tx}}}{T_A + t_{\text{SX stby}} +  t_{\text{SX rx}} + t_{\text{SX tx}}}  &&\text{Corriente SX1278} \label{corriente_total_sx1278_formula}
+\end{flalign}
+\begin{flalign}
+    I_{\text{SX}} &= \frac{29500 + 1.5 \times 10^{-6} \, T_A}{1202 + T_A} \, m\text{A} &&\text{Corriente SX1278 total con valores reemplazados}
 \end{flalign}
 \begin{flalign}
     I_{\text{ESP ls}} &= 0.8 \, m\text{A} &&\text{Corriente ESP light sleep}
@@ -434,14 +425,14 @@ Por último, corriente consumida durante la etapa de transmisión ($I_{T}$):
 \end{flalign}
 
 La corriente total consumida en el modo de alto consumo:
-\begin{flalign}
+\begin{empheq}[box=\fbox]{flalign}
     I_{\text{HP}} &= I_{\text{S}} + I_{\text{T}} = \frac{31115 + 1.5 \times 10^{-6} \, T_A}{1202 + T_A}  + \frac{7500}{300 + T_A} + \frac{760}{40 + T_A} \, m\text{A} &&
-\end{flalign}
+\end{empheq}
 
-Finalmente la corriente total consumida por el sitema:
-\begin{flalign}
+Finalmente la corriente total consumida por el sistema:
+\begin{empheq}[box=\fbox]{flalign}
     I &= I_{\text{LP}} + I_{\text{HP}} = \frac{31115 + 1.5 \times 10^{-6} \, T_A}{1202 + T_A}  + \frac{7500}{300 + T_A} + \frac{760}{40 + T_A} + 0,0316 \, m\text{A} &&
-\end{flalign}
+\end{empheq}
 
 
 
