@@ -286,8 +286,8 @@ Dicho esto, vamos a utilizar la placa de la figura \ref{heltec_lora} en nuestro 
 
 
 \subsubsection{Firmware}
+El firmware fue dividido en dos subsistemas con la finalidad de optimizar la eficiencia de la batería. El primer subsistema, denominado "subsistema de bajo consumo," se encarga de realizar un monitoreo continuo con el propósito de detectar anomalías y, en caso de detección, activar el subsistema siguiente. Por su parte, el segundo subsistema, denominado "subsistema de alto consumo," verifica si las anomalías detectadas corresponden a un cambio en el estado de ocupación de la plaza. Posteriormente, este subsistema transmite los resultados a través del canal LoRa hacia el concentrador.
 
-En esta sección se describe el firmware implementado en el nodo sensor del proyecto, como así tambien la detección de anomalías en los datos del magnetómetro, utilizando la técnica de la \quotes{media móvil} para identificar valores atípicos en comparación con el histórico de datos.
 
 
 \subsubsubsection{Funcionamiento del nodo sensor}
