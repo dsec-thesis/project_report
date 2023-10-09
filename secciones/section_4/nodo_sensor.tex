@@ -238,7 +238,7 @@ Dada esta evaluación y después de considerar todas las opciones disponibles, p
 \disabletablerowcolor % Desactiva el color de celda
 
 % ================================================================================
-\subsubsection{Hardware}
+\subsubsection{Microcontrolador}
 En el proceso de selección de un microcontrolador para implementar nuestro prototipo, considerando que hemos optado previamente por la tecnología LoRa como nuestro medio de comunicación, evaluamos la posibilidad de emplear un microcontrolador ampliamente utilizado en el ámbito del Internet de las Cosas (IoT), como es el caso del ESP32. Esta elección se basa en una de sus ventajas más destacadas: su bajo consumo de energía. Esta característica es fundamental para dispositivos alimentados por batería, ya que permite una mayor duración de la misma.
 
 Además de su eficiencia energética, el ESP32 ofrece una gama completa de periféricos, incluyendo I2C, SPI, UART y SDIO, que facilitan la comunicación con otros dispositivos y sensores. También integra conectividad Wi-Fi y Bluetooth, lo cual resulta valioso si se desea implementar una red local durante la inicialización del nodo sensor. Esta red podría utilizarse para configurar parámetros esenciales del nodo de manera sencilla y amigable para el usuario, como el ID del estacionamiento o el ID del concentrador al que deben enviar datos.
@@ -277,170 +277,17 @@ Dicho esto, vamos a utilizar la placa de la figura \ref{heltec_lora} en nuestro 
 \disabletablerowcolor % Desactiva el color de celda
 
 \subsubsubsection{PinOut}
-A continuación se visualiza el pinout del kit de desarrollo. Más adelante incluiremos un
-esquemático de la conexión entre el sensor y la misma.
-
 \insertimage[\label{heltec_pinout}]{secciones/section_4/images/pinout_heltec}{width=14cm}{Pinout placa de desarrollo Heltec Lora WiFi v2}
 
-
-\subsubsubsection{Plano esquemático}
-A continuación se visualiza el plano esquematico del nodo sensor desarrollado para el proyecto.
+\newpage
+\subsubsection{Plano esquemático}
 \insertimage[\label{plano_esquematico}]{secciones/section_4/images/Schematic_smartparking-sensor}{width=12.5cm}{Plano esquematico del nodo sensor}
 
-\subsubsection{Estimación tiempo de vida util - bateria del nodo sensor}{\label{sec:bateria_del_nodo_sensor}}
-Dada la naturaleza de nuestro proyecto, uno de los aspectos clave del mismo en la
-implementación del nodo sensor es el diseño de este para que consuma muy poca energía y
-además acompañar esta implementación junto con la estimación en el tiempo de vida útil
-del nodo.
-Al lograr estimar la vida útil de la batería, se pueden tomar mejores decisiones para
-realizar una planificación del mantenimiento y la sustitución anticipada de la batería,
-lo que contribuye a evitar interrupciones en el funcionamiento del sistema.
-
-A continuación introduciremos los conceptos claves junto con los cálculos necesarios
-para lograr la implementación y la estimación del tiempo de vida.
-
-\subsubsubsection{ESP32 - Low-Power Management}
-Conforme se destacó en la introducción de esta sección, resulta crucial considerar el
-consumo de energía durante el desarrollo del nodo sensor. Nuestra investigación revela
-que el microcontrolador a emplear ofrece cuatro (4) perfiles de energía distintos, como
-se muestra en la imagen adjunta.
-
-\insertimage[\label{esp_low_power}]{secciones/section_4/images/esp_low_power}{width=17cm}{Modos de consumo de energía ESP32}
-
-Durante el modo de suspensión profunda (deep sleep), la CPU principal se apaga, mientras
-que el Coprocesador Ultra-Bajo Consumo (ULP) puede tomar lecturas de sensores y
-despertar a la CPU según sea necesario. Este tipo de perfil de energía es útil para
-diseñar aplicaciones en las que la CPU debe despertarse por un evento externo, un
-temporizador o una combinación de estos eventos, manteniendo un consumo mínimo de
-energía.
-
-Debido a que la memoria RTC se mantiene activa, su contenido se conserva incluso durante
-el modo de suspensión profunda y se puede recuperar una vez que el chip se despierta.
-Para una mejor ejemplificación adjuntamos el diagrama de bloques con aquellos bloques
-que siguen activos durante el modo de funcionamiento Deep-Sleep.
-
-\insertimage[\label{diagrama_low_power_bloques}]{secciones/section_4/images/diagrama_low_power_bloques}{width=15cm}{Bloques activos en modo Deep-Sleep}
-
-\subsubsubsection{Cálculo teórico - tiempo de vida batería}
-Para poder estimar de manera precisa el tiempo de vida de la batería que se requiere
-para nuestro equipo, se ha realizado una cuidadosa identificación de dos patrones de
-consumo claramente definidos, a los cuales hemos denominado \textit{Alto Consumo} y
-\textit{Bajo Consumo}, cada uno con sus respectivos periodos de funcionamiento "ON" y de
-inactividad "OFF". Este desglose minucioso nos proporcionará una estimación más
-detallada y precisa del tiempo de vida esperado para la batería, permitiéndonos tomar
-decisiones informadas acerca de la capacidad y durabilidad óptimas para el sistema
-electrónico en cuestión. Este análisis está basado en que muchos de los sistemas IoT
-pasan una pequeña parte de su tiempo en un modo activo (o de funcionamiento) y el resto
-en modo de inactividad.
-
-Para comenzar con el cálculo teórico, vamos a tomar los niveles de consumo de acuerdo a
-los datasheet de los fabricantes. En el sistema de bajo consumo tenemos los siguientes
-parámetros:
-
-\begin{equation}
-    I_{ULP A} = 0.0004 mA \quad\text{(consumo ULP en modo activo)} \label{consumo_ulp_modo_activo}
-\end{equation}
-\begin{equation}
-    I_{ULP Off} = 0.00001 mA \quad\text{(consumo ULP en modo off)} \label{consumo_ulp_modo_off}
-\end{equation}
-\begin{equation}
-    t_{ULP A} = 2 ms \quad\text{(tiempo en modo activo)} \label{tiempo_ulp_modo_activo}
-\end{equation}
-\begin{equation}
-    t_{ULP Off} = 500 ms \quad\text{(tiempo en modo off)} \label{tiempo_ulp_modo_off}
-\end{equation}
-
-Por lo tanto la corriente total queda definida como:
-\begin{equation}
-    I_{ULP} = \frac{(I_{ULP A}* t_{ULP A} + I_{ULP Off} * t_{ULP Off})}{t_{ULP A} + t_{ULP Off}} \quad\text{(Corriente total)} \label{corriente_total}
-\end{equation}
-
-
-\begin{equation}
-    I_{Magnetometer}= 0.00002 mA \quad\text{(Corriente total)} \label{corriente_magnetometro}
-\end{equation}
-
-Finalmente el valor de la corriente de bajo consumo queda definida como la suma del
-procesador ULP y la corriente consumida por el magnetómetro.
-
-\begin{equation}
-    I_{Low Power}= I_{ULP} + I_{Magnetometer} \quad\text{(Corriente total del sistema bajo consumo)} \label{corriente_I_low_power}
-\end{equation}
-
-En el sistema de alto consumo consideramos los siguientes valores:
-
-\begin{equation}
-    t_a medido en ms \quad\text{(representa el tiempo que permanece cada auto en un slot)} \label{corriente_I_low_power}
-\end{equation}
-\begin{equation}
-    I_{ESP A} = 25 mA \quad\text{(consumo ESP en modo activo)} \label{corriente_esp_modo_activo}
-\end{equation}
-\begin{equation}
-    I_{Laser ON} = 19 mA \quad\text{(consumo ULP en modo off)} \label{corriente_ulp_modo_off}
-\end{equation}
-\begin{equation}
-    t_{ESP A} = 300 ms \quad\text{(tiempo que la ESP permanece en modo activo)} \label{tiempo_esp_modo_activo}
-\end{equation}
-\begin{equation}
-    t_{Laser On} = 40 ms \quad\text{(tiempo que el laser está activo)} \label{tiempo_laser_activo}
-\end{equation}
-
-Con las variables anteriores queda definido el tiempo en la que el nodo sensor se
-encuentra recolectando la información sobre la ocupación de un slot de estacionamiento.
-
-\begin{equation}
-    I_{ESP Collecting} = \frac{I_{ESP A} * t_{ESP A}}{t_{ESP A} + t_a} 
-    \quad\text{(corriente de la ESP mientras collecta información)} \label{corriente_esp_collecting}
-\end{equation}
-\begin{equation}
-    I_{Laser Collecting} = \frac{I_{Laser ON} * t_{Laser ON}}{t_{Laser ON} + t_a} 
-    \quad\text{(corriente total mientras el laser collecta información)} \label{tiempo_laser_activo}
-\end{equation}
-\begin{gather}
-\begin{aligned}
-    I_{Collecting} &= I_{ESP Collecting} + I_{Laser Collecting} \\
-    &\text{(corriente total consumida mientras se collecta información)} \label{tiempo_laser_activo}
-\end{aligned}
-\end{gather}
-
-Por último, una vez recolectada la información, tenemos la etapa de envío y recepción de información.
-
-\insertequation{I_{ESP Light Sleep} =0.8 mA}
-\insertequation{I_{sx stby}=0.0000015 mA}
-\insertequation{I_{sx tx} = 100 mA}
-\insertequation{I_{sx rx} = 12 mA}
-
-\insertequation{t_{sx tx} = 175 ms}
-\insertequation{t_{sx rx} = 1000 ms}
-\insertequation{t_{sx stby} = 27 ms}
-\insertequation{t_{ESP A} = t_{sx stby}}
-\insertequation{t_{ESP_Light_Sleep} = t_{sx tx} + t_{sx rx}}
-
-La etapa de comunicación queda definida entonces por la suma entre la corriente que
-consume el nodo mientras transmite y mientras recibe como se puede ver en las fórmulas
-a continuación.
-
-\insertequation{I_{Transmitting\ ESP} = \frac{I_{ESP\ A} * t_{ESP\ A} + I_{ESP\ Light\ Sleep} * t_{ESP\ Light\ Sleep}}{t_a+ t_{ESP\ A}+ t_{ESP\ Light\ Sleep}}}
-
-\insertequation{I_{Transmitting\ SX} = \frac{t_a *I_{sx\ stby} + t_{sx\ stby} * I_{sx\ stby} +  t_{sx\ rx} * I_{sx\ rx} + t_{sx\ tx} * I_{sx\ tx}}{t_a+ t_{sx\ stby} +  t_{sx\ rx} + t_{sx\ tx}}}
-
-\insertequation{I_{Transmitting} = I_{Transmitting\ ESP} + I_{Transmitting\ SX}}
-\insertequation{I_{High\ Power} = I_{Collecting} + I_{Transmitting}}
-
-En este punto ya tenemos todos los valores de intensidad expresados y podemos estimar el
-tiempo de vida útil de una batería. Asumiendo que tenemos una batería de 5000 mAh, en la
-gráfica a continuación se puede visualizar el tiempo de vida estimado en función de la
-permanencia de vehículos en una plaza del estacionamiento.
-
-\insertimage[\label{calculo_bateria}]{secciones/section_4/images/battery_calculation_new}{width=17cm}{Calculo teórico tiempo de vida de la batería}
-
-En la sección de anexos, puede encontrarse el código para el cálculo y generación de la
-gráfica anterior. Ver anexo ~\ref{codigo_estimacion_bateria}
 
 
 \subsubsection{Firmware}
 
-En esta sección se describe el software implementado en el nodo sensor del proyecto, como así tambien la detección de anomalías en los datos del magnetómetro, utilizando la técnica de la "media móvil" para identificar valores atípicos en comparación con el historial de datos.
+En esta sección se describe el firmware implementado en el nodo sensor del proyecto, como así tambien la detección de anomalías en los datos del magnetómetro, utilizando la técnica de la \quotes{media móvil} para identificar valores atípicos en comparación con el histórico de datos.
 
 
 \subsubsubsection{Funcionamiento del nodo sensor}
@@ -448,7 +295,6 @@ Para una comprensión detallada del funcionamiento del software implementado en 
 
 \insertimage[\label{diagrama_de_eventos_del_sistem}]{secciones/section_4/images/sensor_concentrator_server_sequence}{width=13cm}{Diagrama de secuencia del sistema}
 
-En secciones anteriores, hemos discutido los principios de funcionamiento del nodo sensor y los diversos modos de consumo de energía que ofrece el microcontrolador ESP32. En esta sección, nos adentraremos en el funcionamiento del nodo cuando está equipado con el firmware que hemos desarrollado y en combinación con los periféricos seleccionados.
 
 El proceso comienza con una fase de configuración previa, que asumimos que ha sido completada con éxito, lo que incluye la adecuada configuración de variables para una comunicación LoRa efectiva (frecuencia, canales de TX y RX, SF, etc.) y la correcta configuración de pines para la comunicación mediante I2C. En esta descripción, nos enfocaremos en el proceso de detección de vehículos.
 
@@ -487,8 +333,161 @@ En resumen, el detector de anomalías es una pieza esencial en el firmware del n
 
 
 
+\subsubsection{Estimación tiempo de vida util - bateria del nodo sensor}{\label{sec:bateria_del_nodo_sensor}}
+Dada la naturaleza de nuestro proyecto, uno de los aspectos clave del mismo en la
+implementación del nodo sensor es el diseño de este para que consuma muy poca energía y
+además acompañar esta implementación junto con la estimación en el tiempo de vida útil
+del nodo.
+Al lograr estimar la vida útil de la batería, se pueden tomar mejores decisiones para
+realizar una planificación del mantenimiento y la sustitución anticipada de la batería,
+lo que contribuye a evitar interrupciones en el funcionamiento del sistema.
+
+A continuación introduciremos los conceptos claves junto con los cálculos necesarios
+para lograr la implementación y la estimación del tiempo de vida.
+
+\subsubsubsection{ESP32 - Low-Power Management}
+Conforme se destacó en la introducción de esta sección, resulta crucial considerar el
+consumo de energía durante el desarrollo del nodo sensor. Nuestra investigación revela
+que el microcontrolador a emplear ofrece cuatro (4) perfiles de energía distintos, como
+se muestra en la imagen adjunta.
+
+\insertimage[\label{esp_low_power}]{secciones/section_4/images/esp_low_power}{width=17cm}{Modos de consumo de energía ESP32}
+
+Durante el modo de suspensión profunda (deep sleep), la CPU principal se apaga, mientras
+que el Coprocesador Ultra-Bajo Consumo (ULP) puede tomar lecturas de sensores y
+despertar a la CPU según sea necesario. Este tipo de perfil de energía es útil para
+diseñar aplicaciones en las que la CPU debe despertarse por un evento externo, un
+temporizador o una combinación de estos eventos, manteniendo un consumo mínimo de
+energía.
+
+Debido a que la memoria RTC se mantiene activa, su contenido se conserva incluso durante
+el modo de suspensión profunda y se puede recuperar una vez que el chip se despierta.
+Para una mejor ejemplificación adjuntamos el diagrama de bloques con aquellos bloques
+que siguen activos durante el modo de funcionamiento Deep-Sleep.
+
+\insertimage[\label{diagrama_low_power_bloques}]{secciones/section_4/images/diagrama_low_power_bloques}{width=15cm}{Bloques activos en modo Deep-Sleep}
+
+\subsubsubsection{Cálculo teórico - tiempo de vida batería}
+Antes de adentrarnos en esta sección, es importante aclarar que, dado que estamos trabajando con una placa de desarrollo, el consumo de energía real puede ser mayor que el indicado en las hojas de datos de los fabricantes. Además, la placa está siendo alimentada de manera continua, lo que significa que cualquier estimación de consumo de energía en una futura aplicación carecería de fundamentos sólidos. Para futuros desarrollos, planeamos utilizar el chipset ESP32 junto con los sensores mencionados previamente. En ese caso, podremos basarnos en los valores proporcionados en las hojas de datos de los fabricantes para realizar cálculos más precisos sobre la vida útil de la batería.
+
+Ahora, para estimar con precisión el tiempo de vida de la batería necesario para nuestro equipo, hemos llevado a cabo una identificación meticulosa de dos patrones de consumo claramente definidos: \textit{Alto Consumo} y \textit{Bajo Consumo}. Cada uno de estos patrones tiene sus propios períodos de funcionamiento \quotes{ON} y de inactividad \quotes{OFF}. Este análisis detallado nos permitirá obtener una estimación más precisa y detallada del tiempo de vida esperado de la batería. De esta manera, podremos tomar decisiones informadas acerca de la capacidad y durabilidad óptimas para el sistema electrónico en cuestión. Es importante destacar que este enfoque se basa en la observación de que muchos sistemas IoT pasan la mayor parte de su tiempo en modo de bajo consumo, alternando con breves períodos de funcionamiento activo.
+
+Comenzaremos realizando los cálculos para el sistema de \textbf{bajo consumo}, que presenta los siguientes parámetros:
+
+\begin{flalign}
+    I_{\text{ULP on}} &= 400 \, \mu\text{A} &&\text{Corriente ULP encendido}
+\end{flalign}
+\begin{flalign}
+    t_{\text{ULP on}} &= 2 \, ms &&\text{Tiempo ULP encendido}
+\end{flalign}
+\begin{flalign}
+    I_{\text{ULP off}} &= 10 \, \mu\text{A} &&\text{Corriente ULP apagado}
+\end{flalign}
+\begin{flalign}
+    t_{\text{ULP off}} &= 500 \, ms &&\text{Tiempo ULP apagado}
+\end{flalign}
+\begin{flalign}
+    I_{\text{ULP}} &= \frac{I_{\text{ULP on}} \, t_{\text{ULP on}} + I_{\text{ULP off}} \, t_{\text{ULP off}}}{t_{\text{ULP on}} + t_{\text{ULP off}}} = 11,55 \, \mu\text{A} &&\text{Corriente ULP}
+\end{flalign}
+\begin{flalign}
+    I_{\text{MAG}} &= 20 \, \mu\text{A} &&\text{Corriente magnetómetro}
+\end{flalign}
+\begin{flalign}
+    I_{\text{LP}} &= I_{\text{ULP}} + I_{\text{MAG}} = 0,0316 \, m\text{A} &&\text{Corriente total bajo consumo}
+\end{flalign}
+
+
+Por otro lado y antes de adentrarnos en los calculos para el modo de \textbf{alto consumo}, resulta fundamental abordar la estrecha relación que existe entre el consumo en cuestión y la frecuencia con la que los vehículos entran y salen de una zona de estacionamiento. Es durante estos intervalos precisos cuando el sistema se activa, y, por consiguiente, es importante destacar que a medida que la frecuencia de entrada y salida de vehículos aumenta, también se incrementa el consumo correspondiente. En el contexto de nuestros cálculos, expresaremos esta relación utilizando su inversa, es decir, el periodo.
+
+\begin{equation}
+    T_A [ms]
+    \quad\text{(Tiempo entre que un auto ingresa y sale de un espacio de estacionamiento)}
+\end{equation}
+
+
+Corriente consumida durante la etapa de sensado ($I_{\text{S}}$):
+\begin{flalign}
+    I_{\text{ESP on}} &= 25 \, m\text{A} &&\text{Corriente ESP en modo activo}
+\end{flalign}
+\begin{flalign}
+    t_{\text{ESP on}} &= 300 \, ms &&\text{Tiempo ESP en modo activo}
+\end{flalign}
+\begin{flalign}
+    I_{\text{ESP}} &= \frac{I_{\text{ESP on}} \, t_{\text{ESP on}}}{t_{\text{ESP on}} + T_A} = \frac{7.500}{300 + T_A} \, m\text{A} &&\text{Corriente ESP total}
+\end{flalign}
+\begin{flalign}
+    I_{\text{LASER on}} &= 19 \, m\text{A} &&\text{Corriente Laser encendido}
+\end{flalign}
+\begin{flalign}
+    t_{\text{LASER on}} &= 40 \, ms &&\text{Tiempo Laser encendido}
+\end{flalign}
+\begin{flalign}
+    I_{\text{LASER}} &= \frac{I_{\text{LASER on}} \, t_{\text{LASER on}}}{t_{\text{LASER on}} + T_A} = \frac{760}{40 + T_A} \, m\text{A} &&\text{Corriente Laser total}
+\end{flalign}
+\begin{flalign}
+    I_{\text{S}} &= I_{\text{ESP}} + I_{\text{LASER}} = \frac{7.500}{300 + T_A} + \frac{760}{40 + T_A} \, m\text{A} &&\text{Corriente total sensando}
+\end{flalign}
+
+
+Por último, corriente consumida durante la etapa de transmisión ($I_{T}$):
+\begin{flalign}
+    I_{\text{SX stby}} &= 0.0015 \, \mu\text{A} &&\text{Corriente SX standby}
+\end{flalign}
+\begin{flalign}
+    t_{\text{SX stby}} &= 27 \, ms &&\text{Tiempo SX standby}
+\end{flalign}
+\begin{flalign}
+    I_{\text{SX tx}} &= 100 \, m\text{A} &&\text{Corriente SX transmitiendo}
+\end{flalign}
+\begin{flalign}
+    t_{\text{SX tx}} &= 175 \, ms &&\text{Tiempo SX transmitiendo}
+\end{flalign}
+\begin{flalign}
+    I_{\text{SX rx}} &= 12 \, m\text{A} &&\text{Corriente SX recibiendo}
+\end{flalign}
+\begin{flalign}
+    t_{\text{SX rx}} &= 1000 \, ms &&\text{Tiempo SX recibiendo}
+\end{flalign}
+\begin{flalign}
+    I_{\text{SX}} &= \frac{I_{\text{SX stby}} \, T_A +  I_{\text{SX stby}} \, t_{\text{SX stby}} + I_{\text{SX rx}} \,t_{\text{SX rx}} + I_{\text{SX tx}} \, t_{\text{SX tx}}}{T_A + t_{\text{SX stby}} +  t_{\text{SX rx}} + t_{\text{SX tx}}}  &&\text{Corriente SX1278} \label{corriente_total_sx1278_formula}
+\end{flalign}
+\begin{flalign}
+    I_{\text{SX}} &= \frac{29500 + 1.5 \times 10^{-6} \, T_A}{1202 + T_A} \, m\text{A} &&\text{Corriente SX1278 total con valores reemplazados}
+\end{flalign}
+\begin{flalign}
+    I_{\text{ESP ls}} &= 0.8 \, m\text{A} &&\text{Corriente ESP light sleep}
+\end{flalign}
+\begin{flalign}
+    t_{\text{ESP ls}} &= t_{\text{SX tx}} + t_{\text{SX rx}} &&\text{Tiempo ESP light sleep}
+\end{flalign}
+\begin{flalign}
+    t_{\text{ESP on}} &= t_{\text{SX stby}} &&\text{Tiempo ESP light sleep}
+\end{flalign}
+\begin{flalign}
+    I_{\text{ESP}} &= \frac{I_{\text{ESP on}} \, t_{\text{ESP on}} + I_{\text{ESP ls}} \, t_{\text{ESP ls}}}{t_{\text{ESP on}}+ t_{\text{ESP ls}} + T_A} = \frac{1615}{1202 + T_A} \, m\text{A} &&\text{Corriente ESP total}
+\end{flalign}
+\begin{flalign}
+    I_{\text{T}} &= I_{\text{ESP}} + I_{\text{SX}} = \frac{31115 + 1.5 \times 10^{-6} \, T_A}{1202 + T_A} \, m\text{A} &&\text{Corriente total transmitiendo}
+\end{flalign}
+
+La corriente total consumida en el modo de alto consumo:
+\begin{empheq}[box=\fbox]{flalign}
+    I_{\text{HP}} &= I_{\text{S}} + I_{\text{T}} = \frac{31115 + 1.5 \times 10^{-6} \, T_A}{1202 + T_A}  + \frac{7500}{300 + T_A} + \frac{760}{40 + T_A} \, m\text{A} &&
+\end{empheq}
+
+Finalmente la corriente total consumida por el sistema:
+\begin{empheq}[box=\fbox]{flalign}
+    I &= I_{\text{LP}} + I_{\text{HP}} = \frac{31115 + 1.5 \times 10^{-6} \, T_A}{1202 + T_A}  + \frac{7500}{300 + T_A} + \frac{760}{40 + T_A} + 0,0316 \, m\text{A} &&
+\end{empheq}
 
 
 
+En este punto ya tenemos todos los valores de intensidad expresados y podemos estimar el
+tiempo de vida útil de una batería. Asumiendo que tenemos una batería de 5000 mAh, en la
+gráfica a continuación se puede visualizar el tiempo de vida estimado en función de la
+permanencia de vehículos en una plaza del estacionamiento.
 
+\insertimage[\label{calculo_bateria}]{secciones/section_4/images/battery_calculation_new}{width=17cm}{Calculo teórico tiempo de vida de la batería}
 
+En la sección de anexos, puede encontrarse el código para el cálculo y generación de la
+gráfica anterior. Ver anexo ~\ref{codigo_estimacion_bateria}
