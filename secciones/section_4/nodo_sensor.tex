@@ -288,6 +288,7 @@ Dicho esto, vamos a utilizar la placa de la figura \ref{heltec_lora} en nuestro 
 \subsubsection{Firmware}
 El firmware fue dividido en dos subsistemas con la finalidad de optimizar la eficiencia de la batería. El primer subsistema, denominado \quotes{subsistema de bajo consumo}, se encarga de realizar un monitoreo continuo con el propósito de detectar anomalías y, en caso de detección, activar el subsistema siguiente. Por su parte, el segundo subsistema, denominado \quotes{subsistema de alto consumo}, verifica si las anomalías detectadas corresponden a un cambio en el estado de ocupación de la plaza. Posteriormente, este subsistema transmite los resultados a través del canal LoRa hacia el concentrador.
 
+\insertimage[\label{power_modes_system}]{secciones/section_4/images/power_modes_system}{width=17cm}{Subsistemas}
 
 \subsubsubsection{Confirmación de ocupación}
 
@@ -300,7 +301,6 @@ El firmware fue dividido en dos subsistemas con la finalidad de optimizar la efi
 
 El proceso comienza con una fase de configuración previa, que asumimos que ha sido completada con éxito, lo que incluye la adecuada configuración de variables para una comunicación LoRa efectiva (frecuencia, canales de TX y RX, SF, etc.) y la correcta configuración de pines para la comunicación mediante I2C. En esta descripción, nos enfocaremos en el proceso de detección de vehículos.
 
-\insertimage[\label{power_modes_system}]{secciones/section_4/images/power_modes_system}{width=17cm}{Esquema simplificado de los modos de energia y su interacción.}
 
 Una vez que la configuración inicial ha sido realizada, el microcontrolador entra en un estado de Deep-Sleep y activa el coprocesador ULP (Ultra-Low-Power) para analizar las lecturas del magnetómetro. Este análisis tiene como objetivo determinar si ha ocurrido una variación significativa en el campo magnético que supere un umbral predefinido. Esto se logra gracias a la implementación de un detector de anomalías detallado en la sección \ref{detector_anomalias}.
 
