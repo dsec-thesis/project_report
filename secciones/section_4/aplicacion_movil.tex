@@ -1,5 +1,80 @@
 \clearpage
 
 \subsection{Aplicación movil}
-Esta sección presenta una visión general de la arquitectura propuesta para el sistema de Smart Parking, contextualizando brevemente el sistema multiagente a integrar y las razones detrás de la utilización de tecnologías en la nube. También se describe la estructura, detallando el papel de los componentes principales del sistema.
 
+La aplicacion movil juega un papel de intermediario entre los conductores y el servidor. Permite a estos acceder a la informacion sobre la disponibilidad de las plazas de estacionamiento previamentes reportadas por el nodo concentrador a traves de los sensores al servidor. Y alli lograr crear una reserva en el mismo que le garantizara un lugar en el estacionmeinto elegido. El funcionamiento de la aplicación puede verse resumida en la figura a continuación.
+
+\insertimage[\label{aplicacion_simplificada}]{secciones/section_4/images/aplicacion_simplificada}{width=16cm}{Diagrama simplificado de funcionamiento de la aplicación mobile}
+
+Teniendo en cuanta lo mencionado en el parrafo anterior, en esta sección trataremos el diseño de la aplicación movil creada que permitira al usuario final interactuar con todo el sistema de \textit{Smart Parking}.
+
+\subsubsection{Stack de tecnologías}
+La industria de las aplicaciones móviles se ve influenciada por las fuerzas interconectadas de la demanda del consumidor y una infraestructura tecnológica en constante evolución, utilizada para el desarrollo de aplicaciones móviles. Mientras que el primer elemento es de comprensión sencilla, el segundo requiere una explicación más detallada. La \quotes{pila tecnológica} se refiere a un conjunto integrado de APIs, lenguajes de programación y herramientas que desempeñan un papel fundamental en la configuración de la arquitectura, el rendimiento y los costos asociados al desarrollo de cada aplicación.
+
+Antes de adentrarnos en el diseño de la aplicación móvil, es crucial comprender la elección de la tecnología con la que se construyó la misma. Esto parte de la premisa de los tres tipos de desarrollo de aplicaciones móviles más relevantes, que se resumen en la figura \ref{mobile_stack}.
+
+\insertimage[\label{mobile_stack}]{secciones/section_4/images/mobile_app_stack}{width=17cm}{Stack de tecnologías mobiles disponibles para la construcción de aplicaciones}
+
+A partir de la imagen anterior, vamos a describir los diferentes stacks disponibles, comenzando por el stack destinado a aplicaciones nativas.
+
+El desarrollo de aplicaciones nativas implica la creación de aplicaciones diseñadas específicamente para ejecutarse en un sistema operativo particular, como iOS o Android. Este enfoque brinda un alto grado de personalización y control sobre la experiencia del usuario, pero también puede ser un proceso que requiera mucho tiempo y recursos financieros.
+
+Esta sección ofrece una visión general de la arquitectura propuesta para el sistema de Smart Parking, contextualizando brevemente el sistema multiagente a integrar y las razones detrás de la utilización de tecnologías en la nube. Además, se describe la estructura, detallando el papel de los componentes principales del sistema. En el desarrollo de aplicaciones nativas de iOS, se utilizan comúnmente tecnologías como Objective-C y Swift, mientras que en el desarrollo de aplicaciones para Android, los lenguajes de programación más comunes son Java o Kotlin.
+
+Ahora, al abordar el bloque de la derecha en la imagen, nos encontramos con las denominadas aplicaciones web. Esta opción es la más sencilla y económica para crear aplicaciones, ya que el desarrollo de una sola aplicación reduce al máximo los costos. Sin embargo, presenta la desventaja de ofrecer una seguridad limitada y una experiencia de usuario menos robusta, además de restricciones en el acceso a hardware del dispositivo.
+
+Por último, están las aplicaciones híbridas, que combinan lo mejor de ambos mundos: el desarrollo de aplicaciones nativas y web. Las aplicaciones híbridas son, en esencia, aplicaciones web empaquetadas dentro de un contenedor nativo. Esto permite que la aplicación se instale y ejecute en dispositivos móviles como una aplicación nativa, mejorando así la experiencia del usuario y otorgándole acceso a todas las funcionalidades del hardware que podrían estar limitadas en el caso de una aplicación web. Además, en la actualidad, los principales frameworks de desarrollo para aplicaciones híbridas incluyen Flutter, React Native y Ionic.
+
+
+\subsubsection{Framework de desarrollo elegido}
+La aplicación móvil que hemos construido se basa en el framework de desarrollo Flutter, que se encuentra dentro del ámbito de las aplicaciones híbridas. La elección de este framework se fundamenta en varios aspectos. En primer lugar, nuestra experiencia como equipo de desarrollo respalda su selección. Además, en comparación con sus competidores mencionados en la sección anterior (React Native e Ionic), Flutter ha ganado notable popularidad y está emergiendo como un referente en el mundo de las aplicaciones móviles con una mirada hacia el futuro. Por lo tanto, decidimos utilizar Flutter en el desarrollo de nuestra aplicación.
+
+Para contextualizar al lector, Flutter es un sistema en capas que comprende el marco, el motor y los incrustadores específicos de la plataforma. Las aplicaciones en Flutter se crean utilizando el lenguaje de programación orientado a objetos Dart, desarrollado por Google. El motor central de Flutter está escrito principalmente en C/C++, y la biblioteca Skia es fundamental para las capacidades gráficas de Flutter. La estructura de capas de Flutter se presenta en la Figura \ref{flutter_structure}.
+
+\insertimage[\label{flutter_structure}]{secciones/section_4/images/flutter_estructura}{width=16cm}{Estructura de capas de Flutter}
+
+Dart es la base de muchas de las ventajas de rendimiento de Flutter. Ofrece soporte tanto para la compilación anticipada (AOT) como para la compilación en tiempo de ejecución (JIT). La compilación AOT traduce el código en código nativo de bajo nivel, lo que resulta en un inicio más rápido de las aplicaciones y un rendimiento mejorado. La compilación JIT, por otro lado, facilita la capacidad de recargar en caliente de Flutter, lo que reduce significativamente el tiempo de desarrollo. Dart también se compila directamente en código nativo ARM o Intel x64, minimizando las diferencias de rendimiento entre las aplicaciones de Flutter y las aplicaciones nativas que utilizan interpretaciones de código intermedio en tiempo de ejecución.
+
+En consecuencia, Flutter es altamente extensible y escalable, lo que lo convierte en una elección sólida para nuestro proyecto.
+
+\subsubsection{Estructura y Funcionalidades}
+A continuación vamos a abordar la estructura de la aplicación desarrollada, junto con sus principales funcionalidades y una breve descripción del rol que tienen.
+
+% SUB-SECCIÓN
+\subsubsubsection{Onboarding}
+La interfaz inicial de la aplicación guía al usuario a través de un proceso de onboarding diseñado para familiarizarlo con la plataforma. Durante este proceso, se presentan al usuario varias opciones, entre las que se incluye la aceptación de los términos y condiciones necesarios para permitir que el hardware del teléfono móvil interactúe de manera efectiva con el software, como, por ejemplo, el acceso al GPS. Además, se proporciona una breve descripción del propósito de la aplicación.
+
+% CAMBIAR POR FOTOS DEL ONBOARDING EN UNA FOTO DE 3 ELEMENTOS
+\begin{images}[\label{onboarding_process}]{Proceso de onboarding}
+    \addimage[\label{onboarding_1}]{secciones/section_5/images/onboarding_1}{width=5cm}{}
+    \addimage[\label{onboarding_2}]{secciones/section_5/images/onboarding_2}{width=5cm}{}
+    \addimage[\label{onboarding_3}]{secciones/section_5/images/onboarding_3}{width=5cm}{}
+\end{images}
+
+\subsubsubsection{Registro y Login}
+Primero, para permitir que los usuarios utilicen la aplicación y puedan interactuar con el sistema, es necesario que se registren. Como se ilustra en la Figura \ref{fig:login_process}, los usuarios tendrán la opción de utilizar un método de inicio de sesión social, como el proporcionado por Google, para registrarse e ingresar a la aplicación. La integración con Google es especialmente sencilla, ya que la cuenta de Google proporciona una amplia gama de datos del usuario, incluyendo nombre, apellido, número de teléfono, entre otros. Además, en el mercado argentino, donde Android es el sistema operativo predominante, la autenticación con Google está disponible de forma nativa.
+
+\begin{images}[\label{fig:login_process}]{Proceso de inicio de sesión}
+    \addimage[\label{login_1}]{secciones/section_5/images/login_1}{width=5cm}{}
+    \addimage[\label{login_2}]{secciones/section_5/images/login_2}{width=5cm}{}
+    \addimage[\label{login_3}]{secciones/section_5/images/main_screen}{width=5cm}{}
+\end{images}
+
+Es importante mencionar que, aunque nuestra solución adopta Google como método de autenticación, existen otras alternativas viables, como Auth0, Firebase, Cognito, Apple ID, entre otras. Esta elección no representa un desafío técnico ni limita ninguna funcionalidad en la integración con el servidor. En este caso, hemos implementado una de estas soluciones (Google) para demostrar su uso.
+
+\subsubsubsection{Búsqueda y Reserva de Estacionamiento}
+La funcionalidad esencial de nuestra aplicación es la capacidad de buscar y reservar una plaza de estacionamiento de manera eficiente. En esta sección, presentaremos una visión general de cómo se implementa este proceso. Y en la sección \ref{title:resultados}, se muestraran las pantallas de la aplicación en interacción con el sistema completo.
+
+Para entender como funciona el proceso de búsqueda, veamos la imagen \ref{busqueda_parking_software}: 
+
+\insertimage[\label{busqueda_parking_software}]{secciones/section_4/images/busqueda_parking_software}{width=5cm}{Diagrama de flujos con representación de la búsqueda de destinos} % TODO: we need to change this image for an excalidraw example
+
+El proceso comienza con la búsqueda de estacionamientos. Los usuarios pueden iniciar este proceso dos maneras: explorando el mapa de la aplicación o utilizando la barra de búsqueda para especificar su destino deseado. Una vez que el destino está seleccionado, la aplicación realiza una consulta en el backend para determinar qué estacionamientos están disponibles en esa área. El objetivo de esta consulta es mostrar al usuario en el mapa marcadores que representan estacionamientos con plazas disponibles.
+
+Algo a destacar aquí es que estamos haciendo uso de la información brindada por la API de Google para poder obtener las direcciones como así también ubicaciones de estacionamientos.
+
+Una vez que el usuario ha examinado las opciones disponibles, puede seleccionar el estacionamiento que mejor se adapte a sus necesidades. En esta etapa, el usuario también elige el tipo de reserva que prefiere: una reserva fija según un esquema de tiempo definido o una reserva libre.
+
+Finalmente, una vez que el usuario ha realizado su selección, la información se envía al sistema de reservas (servidor) para su validación. Este, verifica la disponibilidad en tiempo real y, si es posible, confirma la reserva. Luego, se informa al usuario sobre el estado de la reserva, confirmando si la reserva se ha realizado con éxito o no.
+
+Cabe aclarar que, en esta descripción, no hemos adjuntado imágenes de la aplicación, como anticipábamos. Estas imágenes se presentarán en el capítulo \ref{title:resultados} (\quotes{Despliegue y Resultados}).

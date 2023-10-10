@@ -1,5 +1,5 @@
 \clearpage
-\section{Despliegue y resultados}
+\section{Despliegue y resultados}{\label{title:resultados}}
 En este proyecto se abordó la propuesta, diseño y desarrollo de un prototipo de aplicación funcional con el objetivo de ayudar a los usuarios finales a conseguir estacionamiento por medio de un sistema de reservas en las cercanías de su destino deseado.
 Para llevar esto a cabo en el capítulo 4, se explicó el desarrollo principal de tres “Nodos” (o módulos) del sistema:
 
@@ -10,31 +10,6 @@ Para llevar esto a cabo en el capítulo 4, se explicó el desarrollo principal d
 \end{itemize}
 
 Con base a esto y para la integración entre los diferentes módulos se utiliza la aplicación móvil desarrollada en Flutter. Por lo tanto esta sección demuestra y adjunta el ciclo completo del proyecto, desde el onboarding de la aplicación, la búsqueda de un estacionamiento disponible, pasando por su reserva, detección del estacionamiento y checkout del vehículo.
-
-% SUB-SECCIÓN
-\subsection{Onboarding}
-La interfaz inicial de la aplicación lleva a usuario al usuario a través de un menú de opciones en las cuales se le solicita aceptar los términos necesarios para que el hardware del teléfono móvil pueda interactuar con el software (como es el caso del GPS) y también muestra el marketplace digital de aplicación, como una pequeña descripción del objetivo de la app.
-
-% CAMBIAR POR FOTOS DEL ONBOARDING EN UNA FOTO DE 3 ELEMENTOS
-\begin{images}[\label{onboarding_process}]{Proceso de onboarding}
-    \addimage[\label{onboarding_1}]{secciones/section_5/images/onboarding_1}{width=5cm}{}
-    \addimage[\label{onboarding_2}]{secciones/section_5/images/onboarding_2}{width=5cm}{}
-    \addimage[\label{onboarding_3}]{secciones/section_5/images/onboarding_3}{width=5cm}{}
-\end{images}
-
-% SUB-SECCIÓN
-\subsection{Login}
-Como se explicó anteriormente, primero para que el usuario pueda utilizar el software deberá registrarse en el mismo. Para lograr esto, se ha adoptado el uso de un Social Login como Google dado su extenso uso e integración en la mayoría de teléfonos actuales. Una vez que el usuario ingresa a la aplicación ya está listo para comenzar a buscar estacionamientos disponibles.
-
-Si bien para nuestra solución adoptó utilizar Google como un mecanismo de autenticación, cabe destacar que existen otras alternativas como Auth0, Firebase, Cognito, etc.
-
-% CAMBIAR POR FOTOS DEL LOGIN EN FOTO DE 3 SECCIONES TAMBIEN
-\begin{images}[\label{login_process}]{Proceso de login}
-    \addimage[\label{login_1}]{secciones/section_5/images/login_1}{width=5cm}{}
-    \addimage[\label{login_2}]{secciones/section_5/images/login_2}{width=5cm}{}
-    \addimage[\label{login_3}]{secciones/section_5/images/main_screen}{width=5cm}{}
-\end{images}
-
 % SUB-SECCIÓN
 \subsection{Búsqueda y reserva de una plaza}
 Para hacer una reserva el usuario puede navegar en el mapa, o bien utilizar la barra de búsqueda para introducir su destino. Una vez que el mismo esté seleccionado, se realiza una consulta en el backend para poder verificar cuales estacionamientos cuentan aún con disponibilidad y mostrarselos al usuario. Como puede verse en la Figura ~\ref{busqueda_process}.
