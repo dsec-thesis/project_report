@@ -348,7 +348,7 @@ Segun la hoja de datos, la ESP32 ofrece seis modos de energía distintos (Ver fi
 
 \insertimage[\label{esp_low_power}]{secciones/section_4/images/esp_low_power}{width=17cm}{Modos de consumo de energía ESP32}
 
-Para la construccion del nodo sensor haremos uso de tres de ellos:
+Para la construcción del nodo sensor haremos uso de tres de ellos:
 \begin{itemize}
     \item Modem-sleep: La CPU está operativa aunque la radio Wi-Fi/Bluetooth están desactivadas. El subsistema de alto consumo se ejecuta en este modo.
     \item Deep-sleep: En este estado, únicamente se mantiene activa la memoria RTC, que constituye una variante particular de la memoria RAM concebida para preservar los valores de las variables al ingresar en este modo de operación. De igual manera, se encuentra operativo el ULP (Ultra Low Power coprocesador), un dispositivo que adopta la forma de una máquina de estados finitos (FSM) de sencilla configuración, diseñado específicamente para llevar a cabo mediciones utilizando el conversor analógico-digital (ADC), el sensor de temperatura y los sensores I2C externos, mientras que las unidades de procesamiento principales se encuentran en el estado de suspensión profunda. Este coprecesador sera el encargado de ejecutar el detector de anomalias utilizando el magnetómetro.
