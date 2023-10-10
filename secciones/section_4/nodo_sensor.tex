@@ -286,51 +286,49 @@ Dicho esto, vamos a utilizar la placa de la figura \ref{heltec_lora} en nuestro 
 
 
 \subsubsection{Firmware}
+El firmware fue dividido en dos subsistemas con la finalidad de optimizar la eficiencia de la batería. El primer subsistema, denominado \quotes{subsistema de bajo consumo}, se encarga de realizar un monitoreo continuo con el propósito de detectar anomalías y, en caso de detección, activar el subsistema siguiente. Por su parte, el segundo subsistema, denominado \quotes{subsistema de alto consumo}, verifica si las anomalías detectadas corresponden a un cambio en el estado de ocupación de la plaza. Posteriormente, este subsistema transmite los resultados a través del canal LoRa hacia el concentrador.
 
-En esta sección se describe el firmware implementado en el nodo sensor del proyecto, como así tambien la detección de anomalías en los datos del magnetómetro, utilizando la técnica de la \quotes{media móvil} para identificar valores atípicos en comparación con el histórico de datos.
-
-
-\subsubsubsection{Funcionamiento del nodo sensor}
-Para una comprensión detallada del funcionamiento del software implementado en el nodo sensor, se presenta un diagrama de secuencia inicial del sistema, como se ilustra en la Figura \ref{diagrama_de_eventos_del_sistem}. Este diagrama, aunque simplificado, proporciona una visión fundamental de cómo opera el sistema.
-
-\insertimage[\label{diagrama_de_eventos_del_sistem}]{secciones/section_4/images/sensor_concentrator_server_sequence}{width=13cm}{Diagrama de secuencia del sistema}
+\insertimage[\label{power_modes_system}]{secciones/section_4/images/power_modes_system}{width=17cm}{Subsistemas}
 
 
-El proceso comienza con una fase de configuración previa, que asumimos que ha sido completada con éxito, lo que incluye la adecuada configuración de variables para una comunicación LoRa efectiva (frecuencia, canales de TX y RX, SF, etc.) y la correcta configuración de pines para la comunicación mediante I2C. En esta descripción, nos enfocaremos en el proceso de detección de vehículos.
+\subsubsubsection{Detección de anomalías (DA)}\label{detector_anomalias}
+La detección de anomalías, a veces denominada identificación de valores atípicos u outliers en inglés, se refiere a la tarea de identificar elementos, eventos u observaciones que son poco comunes y se desvían significativamente de la mayoría de los datos, no conformando así un patrón claramente definido de comportamiento normal.
 
-\insertimage[\label{power_modes_system}]{secciones/section_4/images/power_modes_system}{width=17cm}{Esquema simplificado de los modos de energia y su interacción.}
+En el contexto del nodo sensor, nuestro objetivo principal radica en la identificación de anomalías en los valores del campo magnético que son registrados por el magnetómetro. Estas anomalías pueden estar vinculadas al desplazamiento de objetos que se encuentran en proximidad al sensor. Es relevante destacar que, aunque reconocemos que el campo magnético terrestre experimenta fluctuaciones, es razonable tratarlo como una constante en cortos intervalos de tiempo, en nuestro caso, en el orden de segundos.
 
-Una vez que la configuración inicial ha sido realizada, el microcontrolador entra en un estado de Deep-Sleep y activa el coprocesador ULP (Ultra-Low-Power) para analizar las lecturas del magnetómetro. Este análisis tiene como objetivo determinar si ha ocurrido una variación significativa en el campo magnético que supere un umbral predefinido. Esto se logra gracias a la implementación de un detector de anomalías detallado en la sección \ref{detector_anomalias}.
+Para establecer una referencia en cuanto a lo que se considera un valor típico en estas magnitudes, empleamos una técnica conocida como \quotes{media móvil}. Este algoritmo considera como valor normal el resultado obtenido al calcular el promedio de las últimas $n$ mediciones. La detección de anomalías se lleva a cabo al comparar la última medición registrada con el valor más reciente calculado por la media móvil. Cuando la diferencia supera un umbral previamente definido, se identifica como una anomalía.
 
-\insertimage[\label{esquema_energia}]{secciones/section_4/images/esquema_energia}{width=17cm}{Esquema de energía interno ESP32}
-
-
-Cuando se detecta que el valor límite del campo magnético ha sido superado, el coprocesador ULP activa una función previamente definida que indica a la ESP32 que debe salir del modo Deep-Sleep y entrar en modo de funcionamiento activo.
-
-En el modo activo, el microcontrolador solicita una lectura del sensor láser VL53L0x y espera una interrupción que se produce cuando la lectura está lista. Una vez que se obtiene la lectura, se compara con la última registrada para determinar si ha habido algún cambio significativo en la distancia detectada. En caso afirmativo, se envía el valor a través de la comunicación LoRa para su posterior procesamiento. Mientras se espera recibir una señal de ACK (acknowledgement) por parte del nodo de borde, el microcontrolador entra en un estado de sueño intermitente durante un segundo para minimizar el consumo de energía cuando no se está realizando una transmisión.
-
-Finalmente, una vez que se recibe la señal de ACK, el microcontrolador regresa al modo de Deep-Sleep, preparado para realizar nuevas detecciones de vehículos.
-
-Es importante destacar que el código fuente completo para la detección de vehículos, así como la implementación del detector de anomalías, se encuentra disponible en el repositorio de GitHub del proyecto, detallado en el anexo ~\ref{codigo_sensor}. Esto proporciona un recurso valioso para comprender en detalle el funcionamiento del nodo sensor y facilita cualquier futura modificación o mejora del firmware.
-
-Este firmware desempeña un papel esencial en la operación del nodo sensor, ya que sin este la adquisición, procesamiento y transmisión de datos para la detección de la disponibilidad de una plaza de estacionamiento no podría realizarse.
-
-%\insertimage[\label{architectura_nodo_facil}]{secciones/section_4/images/architectura_nodo_facil}{width=13cm}{Diagrama de bloques nodo sensor}
-
-\subsubsubsection{Detección de anomalías}\label{detector_anomalias}
-El detector de anomalías desempeña un papel fundamental en la operación del nodo sensor, particularmente en la detección de vehículos en un entorno de estacionamiento. En el contexto del análisis de datos, esta herramienta esencial se utiliza para identificar patrones inusuales o atípicos dentro de un conjunto de datos específico, en este caso, las magnitudes registradas por el magnetómetro.
-
-Para establecer una referencia sobre lo que se considera un valor típico en estas magnitudes, se utiliza una técnica conocida como "media móvil". Esta técnica calcula el promedio de las mediciones anteriores y proporciona una base para evaluar las mediciones actuales en relación con el comportamiento histórico de los datos. La detección de anomalías se lleva a cabo al comparar la última medición registrada con el valor más reciente calculado a partir de la media móvil. Cuando la diferencia entre la medición actual y la media móvil excede un umbral predeterminado, se identifica como una anomalía.
-
-En el contexto del proyecto, se aplicó este detector de anomalías a las muestras obtenidas de las magnitudes registradas por el magnetómetro. Los resultados se presentan en las figuras \ref{comparativa_anomalias_forw} y \ref{comparativa_anomalias_back}, que corresponden a los momentos en que un vehículo se estaciona de frente y en reversa sobre el magnetómetro, respectivamente.
+En la Figura \ref{comparativa_anomalias_forw} ilustramos el proceso en cuestión. En la primera gráfica, de arriba a abajo, se muestran los datos del campo magnético capturados por el magnetómetro cuando un vehículo se aproxima de manera frontal al sensor. La segunda gráfica muestra los resultados obtenidos al aplicar una media móvil de veinte periodos a los datos previamente mencionados. Finalmente, la tercera gráfica presenta la magnitud en valor absoluto de la diferencia entre el valor del campo magnético en el instante $n$ de la primer gráfica y la media móvil en el instante $n-1$ de la segunda.
+Si nos desplazamos de derecha a izquierda, observamos que inicialmente, en ausencia de cualquier objeto que pueda influir en el campo magnético, los valores permanecen constantes en torno a los 520 miliGauss (mG), lo que conlleva a una variación prácticamente insignificante. Sin embargo, al acercarnos a la muestra doscientos, comenzamos a presenciar una variación en el campo magnético debido a la aproximación del vehículo, lo que resulta en un notable aumento en la variabilidad. Posteriormente, cuando el automóvil se detiene, el campo magnético se estabiliza y la variación vuelve a ser nula. Este patrón persiste hasta que el automóvil inicia su retroceso, aproximadamente en la muestra quinientos, lo que provoca una alteración en el campo significativa como para generar un incremento sustancial en la variación.
 
 \insertimage[\label{comparativa_anomalias_forw}]{secciones/section_4/images/qmc5883l_forward_analysis}{width=16cm}{Estacionamiento frontal}
-\insertimage[\label{comparativa_anomalias_back}]{secciones/section_4/images/qmc5883l_back_analysis}{width=16cm}{Estacionamiento trasero}
 
-Las gráficas muestran cómo, cuando un vehículo pasa sobre el magnetómetro, se producen picos significativos en la variación en función del tiempo, que son detectados como anomalías. Esto desencadena la activación del microcontrolador desde el modo ULP (Ultra-Low-Power) para iniciar la medición con el sensor ToF, como se describe en la sección anterior. Además, en momentos de inactividad, cuando el vehículo ha completado su maniobra de estacionamiento y no se está moviendo, la variación tiende a ser cercana a cero. Esto permite configurar un umbral más alto y evita la activación del microcontrolador por valores bajos, lo que mejora la eficiencia energética.
+Sobre el lado derecho de la figura \ref{esquema_energia} se detalla como opera el detector en el subsistema de bajo consumo, el paso \quotes{Compute delta} es el encargado de actualizar la media móvil y calcular la diferencia. Posteriormente, si esta última excede un umbral predefinido, procede a activar el subsistema de alto consumo.
 
-En resumen, el detector de anomalías es una pieza esencial en el firmware del nodo sensor. Su capacidad para identificar patrones inusuales en las magnitudes registradas por el magnetómetro es fundamental para evitar falsos positivos y garantizar el correcto funcionamiento del nodo sensor en un entorno de estacionamiento.
 
+\subsubsubsection{Confirmación de ocupación}
+Este paso consiste en utilizar un segundo sensor, en nuestro caso el sensor ToF VL53L0X, para confirmar que los eventos detectados por el DA se corresponden a cambios en el estado de ocupación del espacio de estacionamiento. El sensor opera entregando la distancia en milímetros, si se detecta un objeto en el rango de medición, o \quotes{error} en caso contrario. De esta manera, hemos definido un rango de quinientos milímetros (aproximadamente la altura promedio de los automóviles es de 220 milímetros), en el cual cualquier objeto detectado a esta distancia o menos se considera un vehículo, lo que resulta en que la plaza de estacionamiento se considere ocupada. En caso contrario, es decir, si el sensor no detecta ningún objeto o si el objeto se encuentra fuera del rango predefinido, se infiere que la plaza de estacionamiento se encuentra libre.
+En el caso de que la ocupación haya cambiado, ya sea porque estaba libre y paso a ser considerada ocupada o viceversa, la información pasa al siguiente módulo, para ser reportada al concentrador.
+En el sector izquierdo de la figura \ref{esquema_energia}, dentro del subsistema de algo consumo, puede verse el funcionamiento de este módulo.
+
+\subsubsubsection{Transmisión de la información}
+Al detectase una variación en el estado de ocupacion del lugar de estacionamiento el sensor transmitir este evento al concentrador por medio de LoRa y para ello lo primero es seleccionar los datos a ser enviados, en nuetro caso el identificador del sensor y si esta libre o ocupado.
+
+\begin{sourcecode}{json}{}
+{
+    "id": number,
+    "taken": bool
+}
+\end{sourcecode}
+
+
+Luego los datos para poder ser modulados deben ser serializados, para esto empleamos el estándar denominado CBOR. Este protocolo nos posibilita la transmisión de información en un formato de clave-valor. A diferencia del formato JSON, CBOR almacena los datos en una representación binaria más compacta. Esta característica tiene un impacto significativo en la cantidad de datos que deben ser transmitidos, lo cual es de suma importancia en entornos que hacen uso de la tecnología LoRa. Además de su eficiencia en la reducción del uso de ancho de banda, CBOR destaca por su capacidad de procesamiento más veloz lo que conlleva a una disminución del tiempo durante el cual el microcontrolador permanece en un estado de alto consumo de energía y por lo tanto se incrementa el tiempo de vida de la batería.
+Dado que los datos se encuentran representados en forma de una matriz binaria, podemos proceder con el proceso de transmisión. Este procedimiento implica la copia de la matriz en la memoria del módulo SX1278, la modificación del modo de operación del mismo para habilitar la transmisión, la configuración de la Unidad de Procesamiento de Interrupciones (UPI) de la ESP de manera que pueda gestionar la interrupción generada por el SX1278 una vez que concluye la transmisión, y finalmente, la activación del modo de reposo ligero (light sleep) de la ESP. Una vez que este conjunto de operaciones se completa, se procede a configurar el transceptor en modo de recepción durante un intervalo de tiempo predeterminado. Es en este intervalo en el cual se aguarda la recepción de un \quotes{acuse de recibo} por parte del concentrador, confirmando así la correcta recepción del mensaje transmitido.
+En caso de que este proceso no se complete adecuadamente debido a la falta de confirmación de la recepción del mensaje, se activa un mecanismo de retransmisión. En este proceso, primero se espera un período de tiempo aleatorio y luego se verifica la disponibilidad del canal antes de proceder con la retransmisión.
+Una vez enviado el mensaje el microcontrolador regresa al modo de Deep-Sleep, preparado para realizar nuevas detecciones de vehículos.
+
+
+\insertimage[\label{esquema_energia}]{secciones/section_4/images/esquema_energia}{width=17cm}{Diagrama de flujo del nodo sensor}
 
 
 \subsubsection{Estimación tiempo de vida util - bateria del nodo sensor}{\label{sec:bateria_del_nodo_sensor}}
