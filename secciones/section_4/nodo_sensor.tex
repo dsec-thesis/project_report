@@ -312,14 +312,15 @@ En el caso de que la ocupación haya cambiado, ya sea porque estaba libre y paso
 En el sector izquierdo de la figura \ref{esquema_energia}, dentro del subsistema de algo consumo, puede verse el funcionamiento de este módulo.
 
 \subsubsubsection{Transmisión de la información}
-Al detectase una variación en el estado de ocupacion del lugar de estacionamiento el sensor transmitir este evento al concentrador por medio de LoRa y para ello lo primero es seleccionar los datos a ser enviados, en nuetro caso el identificador del sensor (\quotes{id}) y si esta libre o ocupado (\quotes{taken}).
+Al detectase una variación en el estado de ocupacion del lugar de estacionamiento el sensor transmitir este evento al concentrador por medio de LoRa y para ello lo primero es seleccionar los datos a ser enviados, en nuetro caso el identificador del sensor y si esta libre o ocupado.
 
-\begin{lstlisting}[style=json]
-    {
-        "id": number,
-        "taken": bool
-    }
-\end{lstlisting}
+\begin{sourcecode}{json}{}
+{
+    "id": number,
+    "taken": bool
+}
+\end{sourcecode}
+
 
 Luego los datos para poder ser modulados deben ser serializados, para esto empleamos el estándar denominado CBOR. Este protocolo nos posibilita la transmisión de información en un formato de clave-valor. A diferencia del formato JSON, CBOR almacena los datos en una representación binaria más compacta. Esta característica tiene un impacto significativo en la cantidad de datos que deben ser transmitidos, lo cual es de suma importancia en entornos que hacen uso de la tecnología LoRa. Además de su eficiencia en la reducción del uso de ancho de banda, CBOR destaca por su capacidad de procesamiento más veloz lo que conlleva a una disminución del tiempo durante el cual el microcontrolador permanece en un estado de alto consumo de energía y por lo tanto se incrementa el tiempo de vida de la batería.
 Dado que los datos se encuentran representados en forma de una matriz binaria, podemos proceder con el proceso de transmisión. Este procedimiento implica la copia de la matriz en la memoria del módulo SX1278, la modificación del modo de operación del mismo para habilitar la transmisión, la configuración de la Unidad de Procesamiento de Interrupciones (UPI) de la ESP de manera que pueda gestionar la interrupción generada por el SX1278 una vez que concluye la transmisión, y finalmente, la activación del modo de reposo ligero (light sleep) de la ESP. Una vez que este conjunto de operaciones se completa, se procede a configurar el transceptor en modo de recepción durante un intervalo de tiempo predeterminado. Es en este intervalo en el cual se aguarda la recepción de un \quotes{acuse de recibo} por parte del concentrador, confirmando así la correcta recepción del mensaje transmitido.
