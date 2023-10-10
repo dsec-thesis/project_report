@@ -2,9 +2,11 @@
 
 \subsection{Aplicación movil}
 
-La aplicacion movil juega un papel de intermediario entre los conductores y el servidor. Permite a estos acceder a la informacion sobre la disponibilidad de las plazas de estacionamiento previamentes reportadas por el nodo concentrador a traves de los sensores al serividor. Y alli lograr crear una reserva en el servidor que le garantizara un lugar en el estacionmeinto elegido. Su funcionamiento puede verse resumido en la figura a continuación.
+La aplicacion movil juega un papel de intermediario entre los conductores y el servidor. Permite a estos acceder a la informacion sobre la disponibilidad de las plazas de estacionamiento previamentes reportadas por el nodo concentrador a traves de los sensores al servidor. Y alli lograr crear una reserva en el mismo que le garantizara un lugar en el estacionmeinto elegido. El funcionamiento de la aplicación puede verse resumida en la figura a continuación.
 
 \insertimage[\label{aplicacion_simplificada}]{secciones/section_4/images/aplicacion_simplificada}{width=16cm}{Diagrama simplificado de funcionamiento de la aplicación mobile}
+
+Teniendo en cuanta lo mencionado en el parrafo anterior, en esta sección trataremos el diseño de la aplicación movil creada que permitira al usuario final interactuar con todo el sistema de \textit{Smart Parking}.
 
 \subsubsection{Stack de tecnologías}
 La industria de las aplicaciones móviles se ve influenciada por las fuerzas interconectadas de la demanda del consumidor y una infraestructura tecnológica en constante evolución, utilizada para el desarrollo de aplicaciones móviles. Mientras que el primer elemento es de comprensión sencilla, el segundo requiere una explicación más detallada. La \quotes{pila tecnológica} se refiere a un conjunto integrado de APIs, lenguajes de programación y herramientas que desempeñan un papel fundamental en la configuración de la arquitectura, el rendimiento y los costos asociados al desarrollo de cada aplicación.
@@ -35,4 +37,44 @@ Dart es la base de muchas de las ventajas de rendimiento de Flutter. Ofrece sopo
 
 En consecuencia, Flutter es altamente extensible y escalable, lo que lo convierte en una elección sólida para nuestro proyecto.
 
+\subsubsection{Estructura y Funcionalidades}
+A continuación vamos a abordar la estructura de la aplicación desarrollada, junto con sus principales funcionalidades y una breve descripción del rol que tienen.
 
+% SUB-SECCIÓN
+\subsubsubsection{Onboarding}
+La interfaz inicial de la aplicación guía al usuario a través de un proceso de onboarding diseñado para familiarizarlo con la plataforma. Durante este proceso, se presentan al usuario varias opciones, entre las que se incluye la aceptación de los términos y condiciones necesarios para permitir que el hardware del teléfono móvil interactúe de manera efectiva con el software, como, por ejemplo, el acceso al GPS. Además, se proporciona una breve descripción del propósito de la aplicación.
+
+% CAMBIAR POR FOTOS DEL ONBOARDING EN UNA FOTO DE 3 ELEMENTOS
+\begin{images}[\label{onboarding_process}]{Proceso de onboarding}
+    \addimage[\label{onboarding_1}]{secciones/section_5/images/onboarding_1}{width=5cm}{}
+    \addimage[\label{onboarding_2}]{secciones/section_5/images/onboarding_2}{width=5cm}{}
+    \addimage[\label{onboarding_3}]{secciones/section_5/images/onboarding_3}{width=5cm}{}
+\end{images}
+
+\subsubsubsection{Registro y Login}
+Primero, para permitir que los usuarios utilicen la aplicación y puedan interactuar con el sistema, es necesario que se registren. Como se ilustra en la Figura \ref{fig:login_process}, los usuarios tendrán la opción de utilizar un método de inicio de sesión social, como el proporcionado por Google, para registrarse e ingresar a la aplicación. La integración con Google es especialmente sencilla, ya que la cuenta de Google proporciona una amplia gama de datos del usuario, incluyendo nombre, apellido, número de teléfono, entre otros. Además, en el mercado argentino, donde Android es el sistema operativo predominante, la autenticación con Google está disponible de forma nativa.
+
+\begin{images}[\label{fig:login_process}]{Proceso de inicio de sesión}
+    \addimage[\label{login_1}]{secciones/section_5/images/login_1}{width=5cm}{}
+    \addimage[\label{login_2}]{secciones/section_5/images/login_2}{width=5cm}{}
+    \addimage[\label{login_3}]{secciones/section_5/images/main_screen}{width=5cm}{}
+\end{images}
+
+Es importante mencionar que, aunque nuestra solución adopta Google como método de autenticación, existen otras alternativas viables, como Auth0, Firebase, Cognito, Apple ID, entre otras. Esta elección no representa un desafío técnico ni limita ninguna funcionalidad en la integración con el servidor. En este caso, hemos implementado una de estas soluciones (Google) para demostrar su uso.
+
+\subsubsubsection{Búsqueda y Reserva de Estacionamiento}
+La funcionalidad esencial de nuestra aplicación es la capacidad de buscar y reservar una plaza de estacionamiento de manera eficiente. En esta sección, presentaremos una visión general de cómo se implementa este proceso. Y en la sección \ref{title:resultados}, se muestraran las pantallas de la aplicación en interacción con el sistema completo.
+
+Para entender como funciona el proceso de búsqueda, veamos la imagen \ref{busqueda_parking_software}: 
+
+\insertimage[\label{busqueda_parking_software}]{secciones/section_4/images/busqueda_parking_software}{width=5cm}{Diagrama de flujos con representación de la búsqueda de destinos} % TODO: we need to change this image for an excalidraw example
+
+El proceso comienza con la búsqueda de estacionamientos. Los usuarios pueden iniciar este proceso dos maneras: explorando el mapa de la aplicación o utilizando la barra de búsqueda para especificar su destino deseado. Una vez que el destino está seleccionado, la aplicación realiza una consulta en el backend para determinar qué estacionamientos están disponibles en esa área. El objetivo de esta consulta es mostrar al usuario en el mapa marcadores que representan estacionamientos con plazas disponibles.
+
+Algo a destacar aquí es que estamos haciendo uso de la información brindada por la API de Google para poder obtener las direcciones como así también ubicaciones de estacionamientos.
+
+Una vez que el usuario ha examinado las opciones disponibles, puede seleccionar el estacionamiento que mejor se adapte a sus necesidades. En esta etapa, el usuario también elige el tipo de reserva que prefiere: una reserva fija según un esquema de tiempo definido o una reserva libre.
+
+Finalmente, una vez que el usuario ha realizado su selección, la información se envía al sistema de reservas (servidor) para su validación. Este, verifica la disponibilidad en tiempo real y, si es posible, confirma la reserva. Luego, se informa al usuario sobre el estado de la reserva, confirmando si la reserva se ha realizado con éxito o no.
+
+Cabe aclarar que, en esta descripción, no hemos adjuntado imágenes de la aplicación, como anticipábamos. Estas imágenes se presentarán en el capítulo \ref{title:resultados} (\quotes{Despliegue y Resultados}).
