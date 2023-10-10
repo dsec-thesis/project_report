@@ -344,24 +344,18 @@ A continuación introduciremos los conceptos claves junto con los cálculos nece
 para lograr la implementación y la estimación del tiempo de vida.
 
 \subsubsubsection{ESP32 - Modos de energía}
-Conforme se destacó en la introducción de esta sección, resulta crucial considerar el
-consumo de energía durante el desarrollo del nodo sensor. Nuestra investigación revela
-que el microcontrolador a emplear ofrece cuatro (4) perfiles de energía distintos, como
-se muestra en la imagen adjunta.
+Segun la hoja de datos, la ESP32 ofrece seis modos de energía distintos (Ver figura \ref{esp_low_power})
 
 \insertimage[\label{esp_low_power}]{secciones/section_4/images/esp_low_power}{width=17cm}{Modos de consumo de energía ESP32}
 
-Durante el modo de suspensión profunda (deep sleep), la CPU principal se apaga, mientras
-que el Coprocesador Ultra-Bajo Consumo (ULP) puede tomar lecturas de sensores y
-despertar a la CPU según sea necesario. Este tipo de perfil de energía es útil para
-diseñar aplicaciones en las que la CPU debe despertarse por un evento externo, un
-temporizador o una combinación de estos eventos, manteniendo un consumo mínimo de
-energía.
+Para la construccion del nodo sensor haremos uso de tres de ellos:
+\begin{itemize}
+    \item Modem-sleep: La CPU está operativa aunque la radio Wi-Fi/Bluetooth están desactivadas. El subsistema de alto consumo se ejecuta en este modo.
+    \item Deep-sleep: En este estado, únicamente se mantiene activa la memoria RTC, que constituye una variante particular de la memoria RAM concebida para preservar los valores de las variables al ingresar en este modo de operación. De igual manera, se encuentra operativo el ULP (Ultra Low Power coprocesador), un dispositivo que adopta la forma de una máquina de estados finitos (FSM) de sencilla configuración, diseñado específicamente para llevar a cabo mediciones utilizando el conversor analógico-digital (ADC), el sensor de temperatura y los sensores I2C externos, mientras que las unidades de procesamiento principales se encuentran en el estado de suspensión profunda. Este coprecesador sera el encargado de ejecutar el detector de anomalias utilizando el magnetómetro.
+    \item Light-sleep: La CPU está en pausa. El chip puede ser activado mediante cualquier evento de activación. Si bien el consumo en este modo es bastante elevado es util para conservar el estado del sistema mientras se ejcutan tareas como esperar que el modulo LoRa complete el envio de un mensaje.
+\end{itemize}
 
-Debido a que la memoria RTC se mantiene activa, su contenido se conserva incluso durante
-el modo de suspensión profunda y se puede recuperar una vez que el chip se despierta.
-Para una mejor ejemplificación adjuntamos el diagrama de bloques con aquellos bloques
-que siguen activos durante el modo de funcionamiento Deep-Sleep.
+
 
 \insertimage[\label{diagrama_low_power_bloques}]{secciones/section_4/images/diagrama_low_power_bloques}{width=15cm}{Bloques activos en modo Deep-Sleep}
 
