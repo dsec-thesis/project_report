@@ -343,141 +343,129 @@ lo que contribuye a evitar interrupciones en el funcionamiento del sistema.
 A continuación introduciremos los conceptos claves junto con los cálculos necesarios
 para lograr la implementación y la estimación del tiempo de vida.
 
-\subsubsubsection{ESP32 - Low-Power Management}
-Conforme se destacó en la introducción de esta sección, resulta crucial considerar el
-consumo de energía durante el desarrollo del nodo sensor. Nuestra investigación revela
-que el microcontrolador a emplear ofrece cuatro (4) perfiles de energía distintos, como
-se muestra en la imagen adjunta.
+\subsubsubsection{ESP32 - Modos de energía}
+Segun la hoja de datos, la ESP32 ofrece seis modos de energía distintos (Ver figura \ref{esp_low_power})
 
 \insertimage[\label{esp_low_power}]{secciones/section_4/images/esp_low_power}{width=17cm}{Modos de consumo de energía ESP32}
 
-Durante el modo de suspensión profunda (deep sleep), la CPU principal se apaga, mientras
-que el Coprocesador Ultra-Bajo Consumo (ULP) puede tomar lecturas de sensores y
-despertar a la CPU según sea necesario. Este tipo de perfil de energía es útil para
-diseñar aplicaciones en las que la CPU debe despertarse por un evento externo, un
-temporizador o una combinación de estos eventos, manteniendo un consumo mínimo de
-energía.
+Para la construcción del nodo sensor haremos uso de tres de ellos:
+\begin{itemize}
+    \item Modem-sleep: La CPU está operativa aunque la radio Wi-Fi/Bluetooth están desactivadas. El subsistema de alto consumo se ejecuta en este modo.
+    \item Deep-sleep: En este estado, únicamente se mantiene activa la memoria RTC, que constituye una variante particular de la memoria RAM concebida para preservar los valores de las variables al ingresar en este modo de operación. De igual manera, se encuentra operativo el ULP (Ultra Low Power coprocesador), un dispositivo que adopta la forma de una máquina de estados finitos (FSM) de sencilla configuración, diseñado específicamente para llevar a cabo mediciones utilizando el conversor analógico-digital (ADC), el sensor de temperatura y los sensores I2C externos, mientras que las unidades de procesamiento principales se encuentran en el estado de suspensión profunda. Este coprecesador sera el encargado de ejecutar el detector de anomalias utilizando el magnetómetro.
+    \item Light-sleep: La CPU está en pausa. El chip puede ser activado mediante cualquier evento de activación. Si bien el consumo en este modo es bastante elevado es util para conservar el estado del sistema mientras se ejcutan tareas como esperar que el modulo LoRa complete el envio de un mensaje.
+\end{itemize}
 
-Debido a que la memoria RTC se mantiene activa, su contenido se conserva incluso durante
-el modo de suspensión profunda y se puede recuperar una vez que el chip se despierta.
-Para una mejor ejemplificación adjuntamos el diagrama de bloques con aquellos bloques
-que siguen activos durante el modo de funcionamiento Deep-Sleep.
 
-\insertimage[\label{diagrama_low_power_bloques}]{secciones/section_4/images/diagrama_low_power_bloques}{width=15cm}{Bloques activos en modo Deep-Sleep}
 
 \subsubsubsection{Cálculo teórico - tiempo de vida batería}
-Antes de adentrarnos en esta sección, es importante aclarar que, dado que estamos trabajando con una placa de desarrollo, el consumo de energía real puede ser mayor que el indicado en las hojas de datos de los fabricantes. Además, la placa está siendo alimentada de manera continua, lo que significa que cualquier estimación de consumo de energía en una futura aplicación carecería de fundamentos sólidos. Para futuros desarrollos, planeamos utilizar el chipset ESP32 junto con los sensores mencionados previamente. En ese caso, podremos basarnos en los valores proporcionados en las hojas de datos de los fabricantes para realizar cálculos más precisos sobre la vida útil de la batería.
+Antes de adentrarnos en esta sección, es importante aclarar que, dado que estamos trabajando con una placa de desarrollo, por lo que el consumo de energía real es mayor que el indicado en las hojas de datos de los fabricantes. Además, la placa está siendo alimentada de manera continua, lo que significa que cualquier estimación de consumo de energía en una futura aplicación carecería de fundamentos sólidos. Para futuros desarrollos, planeamos utilizar el SoC ESP32 junto con los sensores mencionados previamente. En ese caso, podremos basarnos en los valores proporcionados en las hojas de datos de los fabricantes para realizar cálculos más precisos sobre la vida útil de la batería.
 
-Ahora, para estimar con precisión el tiempo de vida de la batería necesario para nuestro equipo, hemos llevado a cabo una identificación meticulosa de dos patrones de consumo claramente definidos: \textit{Alto Consumo} y \textit{Bajo Consumo}. Cada uno de estos patrones tiene sus propios períodos de funcionamiento \quotes{ON} y de inactividad \quotes{OFF}. Este análisis detallado nos permitirá obtener una estimación más precisa y detallada del tiempo de vida esperado de la batería. De esta manera, podremos tomar decisiones informadas acerca de la capacidad y durabilidad óptimas para el sistema electrónico en cuestión. Es importante destacar que este enfoque se basa en la observación de que muchos sistemas IoT pasan la mayor parte de su tiempo en modo de bajo consumo, alternando con breves períodos de funcionamiento activo.
-
-Comenzaremos realizando los cálculos para el sistema de \textbf{bajo consumo}, que presenta los siguientes parámetros:
-
-\begin{flalign}
-    I_{\text{ULP on}} &= 400 \, \mu\text{A} &&\text{Corriente ULP encendido}
-\end{flalign}
-\begin{flalign}
-    t_{\text{ULP on}} &= 2 \, ms &&\text{Tiempo ULP encendido}
-\end{flalign}
-\begin{flalign}
-    I_{\text{ULP off}} &= 10 \, \mu\text{A} &&\text{Corriente ULP apagado}
-\end{flalign}
-\begin{flalign}
-    t_{\text{ULP off}} &= 500 \, ms &&\text{Tiempo ULP apagado}
-\end{flalign}
-\begin{flalign}
-    I_{\text{ULP}} &= \frac{I_{\text{ULP on}} \, t_{\text{ULP on}} + I_{\text{ULP off}} \, t_{\text{ULP off}}}{t_{\text{ULP on}} + t_{\text{ULP off}}} = 11,55 \, \mu\text{A} &&\text{Corriente ULP}
-\end{flalign}
-\begin{flalign}
-    I_{\text{MAG}} &= 20 \, \mu\text{A} &&\text{Corriente magnetómetro}
-\end{flalign}
-\begin{flalign}
-    I_{\text{LP}} &= I_{\text{ULP}} + I_{\text{MAG}} = 0,0316 \, m\text{A} &&\text{Corriente total bajo consumo}
-\end{flalign}
-
-
-Por otro lado y antes de adentrarnos en los calculos para el modo de \textbf{alto consumo}, resulta fundamental abordar la estrecha relación que existe entre el consumo en cuestión y la frecuencia con la que los vehículos entran y salen de una zona de estacionamiento. Es durante estos intervalos precisos cuando el sistema se activa, y, por consiguiente, es importante destacar que a medida que la frecuencia de entrada y salida de vehículos aumenta, también se incrementa el consumo correspondiente. En el contexto de nuestros cálculos, expresaremos esta relación utilizando su inversa, es decir, el periodo.
-
-\begin{equation}
-    T_A [ms]
-    \quad\text{(Tiempo entre que un auto ingresa y sale de un espacio de estacionamiento)}
-\end{equation}
-
-
-Corriente consumida durante la etapa de sensado ($I_{\text{S}}$):
-\begin{flalign}
-    I_{\text{ESP on}} &= 25 \, m\text{A} &&\text{Corriente ESP en modo activo}
-\end{flalign}
-\begin{flalign}
-    t_{\text{ESP on}} &= 300 \, ms &&\text{Tiempo ESP en modo activo}
-\end{flalign}
-\begin{flalign}
-    I_{\text{ESP}} &= \frac{I_{\text{ESP on}} \, t_{\text{ESP on}}}{t_{\text{ESP on}} + T_A} = \frac{7.500}{300 + T_A} \, m\text{A} &&\text{Corriente ESP total}
-\end{flalign}
-\begin{flalign}
-    I_{\text{LASER on}} &= 19 \, m\text{A} &&\text{Corriente Laser encendido}
-\end{flalign}
-\begin{flalign}
-    t_{\text{LASER on}} &= 40 \, ms &&\text{Tiempo Laser encendido}
-\end{flalign}
-\begin{flalign}
-    I_{\text{LASER}} &= \frac{I_{\text{LASER on}} \, t_{\text{LASER on}}}{t_{\text{LASER on}} + T_A} = \frac{760}{40 + T_A} \, m\text{A} &&\text{Corriente Laser total}
-\end{flalign}
-\begin{flalign}
-    I_{\text{S}} &= I_{\text{ESP}} + I_{\text{LASER}} = \frac{7.500}{300 + T_A} + \frac{760}{40 + T_A} \, m\text{A} &&\text{Corriente total sensando}
-\end{flalign}
-
-
-Por último, corriente consumida durante la etapa de transmisión ($I_{T}$):
-\begin{flalign}
-    I_{\text{SX stby}} &= 0.0015 \, \mu\text{A} &&\text{Corriente SX standby}
-\end{flalign}
-\begin{flalign}
-    t_{\text{SX stby}} &= 27 \, ms &&\text{Tiempo SX standby}
-\end{flalign}
-\begin{flalign}
-    I_{\text{SX tx}} &= 100 \, m\text{A} &&\text{Corriente SX transmitiendo}
-\end{flalign}
-\begin{flalign}
-    t_{\text{SX tx}} &= 175 \, ms &&\text{Tiempo SX transmitiendo}
-\end{flalign}
-\begin{flalign}
-    I_{\text{SX rx}} &= 12 \, m\text{A} &&\text{Corriente SX recibiendo}
-\end{flalign}
-\begin{flalign}
-    t_{\text{SX rx}} &= 1000 \, ms &&\text{Tiempo SX recibiendo}
-\end{flalign}
-\begin{flalign}
-    I_{\text{SX}} &= \frac{I_{\text{SX stby}} \, T_A +  I_{\text{SX stby}} \, t_{\text{SX stby}} + I_{\text{SX rx}} \,t_{\text{SX rx}} + I_{\text{SX tx}} \, t_{\text{SX tx}}}{T_A + t_{\text{SX stby}} +  t_{\text{SX rx}} + t_{\text{SX tx}}}  &&\text{Corriente SX1278} \label{corriente_total_sx1278_formula}
-\end{flalign}
-\begin{flalign}
-    I_{\text{SX}} &= \frac{29500 + 1.5 \times 10^{-6} \, T_A}{1202 + T_A} \, m\text{A} &&\text{Corriente SX1278 total con valores reemplazados}
-\end{flalign}
-\begin{flalign}
-    I_{\text{ESP ls}} &= 0.8 \, m\text{A} &&\text{Corriente ESP light sleep}
-\end{flalign}
-\begin{flalign}
-    t_{\text{ESP ls}} &= t_{\text{SX tx}} + t_{\text{SX rx}} &&\text{Tiempo ESP light sleep}
-\end{flalign}
-\begin{flalign}
-    t_{\text{ESP on}} &= t_{\text{SX stby}} &&\text{Tiempo ESP light sleep}
-\end{flalign}
-\begin{flalign}
-    I_{\text{ESP}} &= \frac{I_{\text{ESP on}} \, t_{\text{ESP on}} + I_{\text{ESP ls}} \, t_{\text{ESP ls}}}{t_{\text{ESP on}}+ t_{\text{ESP ls}} + T_A} = \frac{1615}{1202 + T_A} \, m\text{A} &&\text{Corriente ESP total}
-\end{flalign}
-\begin{flalign}
-    I_{\text{T}} &= I_{\text{ESP}} + I_{\text{SX}} = \frac{31115 + 1.5 \times 10^{-6} \, T_A}{1202 + T_A} \, m\text{A} &&\text{Corriente total transmitiendo}
-\end{flalign}
-
-La corriente total consumida en el modo de alto consumo:
-\begin{empheq}[box=\fbox]{flalign}
-    I_{\text{HP}} &= I_{\text{S}} + I_{\text{T}} = \frac{31115 + 1.5 \times 10^{-6} \, T_A}{1202 + T_A}  + \frac{7500}{300 + T_A} + \frac{760}{40 + T_A} \, m\text{A} &&
-\end{empheq}
-
-Finalmente la corriente total consumida por el sistema:
-\begin{empheq}[box=\fbox]{flalign}
-    I &= I_{\text{LP}} + I_{\text{HP}} = \frac{31115 + 1.5 \times 10^{-6} \, T_A}{1202 + T_A}  + \frac{7500}{300 + T_A} + \frac{760}{40 + T_A} + 0,0316 \, m\text{A} &&
-\end{empheq}
-
+\begin{itemize}
+    \item \textbf{Subsistema de bajo consumo:} el coprocesador de bajo consumo se activa cada $500 \, ms$, realiza una lectura con el magnetómetro, actualiza el detector y activa el procesador principal si una anomalía es detectada, por lo que los consumo estan asociados al ULP y al magnetómetro.
+    \begin{itemize}
+        \item Consumo coprocesador (ULP):
+        \begin{flalign}
+            I_{\text{ULP on}} &= 400 \, \mu\text{A} &&\text{Corriente ULP encendido}
+        \end{flalign}
+        \begin{flalign}
+            t_{\text{ULP on}} &= 2 \, ms &&\text{Tiempo ULP encendido}
+        \end{flalign}
+        \begin{flalign}
+            I_{\text{ULP off}} &= 10 \, \mu\text{A} &&\text{Corriente ULP apagado}
+        \end{flalign}
+        \begin{flalign}
+            t_{\text{ULP off}} &= 500 \, ms &&\text{Tiempo ULP apagado}
+        \end{flalign}
+        \begin{flalign}
+            I_{\text{ULP}} &= \frac{I_{\text{ULP on}} \, t_{\text{ULP on}} + I_{\text{ULP off}} \, t_{\text{ULP off}}}{t_{\text{ULP on}} + t_{\text{ULP off}}} = 11,55 \, \mu\text{A} &&\text{Corriente ULP}
+        \end{flalign}
+        \item Consumo magnetómetro:
+        \begin{flalign}
+            I_{\text{MAG}} &= 20 \, \mu\text{A} &&\text{Corriente magnetómetro}
+        \end{flalign}
+        \item Consumo total:
+        \begin{flalign}
+            I_{\text{LP}} &= I_{\text{ULP}} + I_{\text{MAG}} = 0,0316 \, m\text{A} &&\text{Corriente total bajo consumo}
+        \end{flalign}
+    \end{itemize}
+    \item \textbf{Subsistema de alto consumo}: el microcontrolador ejecuta mediciones con el sensor laser y envia la información con el modulador LoRa, es por esto que dividimos los calculos en las etapas de sensado y transmisión.
+    \begin{itemize}
+        \item Periodo de permanencia de los automóviles: representa el tiempo transcurrido entre que un auto ingresa y sale de un espacio de estacionamiento
+        \begin{equation}
+            T_A [ms]
+        \end{equation}
+        \item Consumo etapa sensado:
+        \begin{flalign}
+            I_{\text{ESP on}} &= 25 \, m\text{A} &&\text{Corriente ESP en modo activo}
+        \end{flalign}
+        \begin{flalign}
+            t_{\text{ESP on}} &= 300 \, ms &&\text{Tiempo ESP en modo activo}
+        \end{flalign}
+        \begin{flalign}
+            I_{\text{ESP}} &= \frac{I_{\text{ESP on}} \, t_{\text{ESP on}}}{t_{\text{ESP on}} + T_A} = \frac{7.500}{300 + T_A} \, m\text{A} &&\text{Corriente ESP total}
+        \end{flalign}
+        \begin{flalign}
+            I_{\text{LASER on}} &= 19 \, m\text{A} &&\text{Corriente Laser encendido}
+        \end{flalign}
+        \begin{flalign}
+            t_{\text{LASER on}} &= 40 \, ms &&\text{Tiempo Laser encendido}
+        \end{flalign}
+        \begin{flalign}
+            I_{\text{LASER}} &= \frac{I_{\text{LASER on}} \, t_{\text{LASER on}}}{t_{\text{LASER on}} + T_A} = \frac{760}{40 + T_A} \, m\text{A} &&\text{Corriente Laser total}
+        \end{flalign}
+        \begin{flalign}
+            I_{\text{S}} &= I_{\text{ESP}} + I_{\text{LASER}} = \frac{7.500}{300 + T_A} + \frac{760}{40 + T_A} \, m\text{A} &&\text{Corriente total sensando}
+        \end{flalign}
+        \item Consumo etapa transmisión:
+        \begin{flalign}
+            I_{\text{SX stby}} &= 0.0015 \, \mu\text{A} &&\text{Corriente SX standby}
+        \end{flalign}
+        \begin{flalign}
+            t_{\text{SX stby}} &= 27 \, ms &&\text{Tiempo SX standby}
+        \end{flalign}
+        \begin{flalign}
+            I_{\text{SX tx}} &= 100 \, m\text{A} &&\text{Corriente SX transmitiendo}
+        \end{flalign}
+        \begin{flalign}
+            t_{\text{SX tx}} &= 175 \, ms &&\text{Tiempo SX transmitiendo}
+        \end{flalign}
+        \begin{flalign}
+            I_{\text{SX rx}} &= 12 \, m\text{A} &&\text{Corriente SX recibiendo}
+        \end{flalign}
+        \begin{flalign}
+            t_{\text{SX rx}} &= 1000 \, ms &&\text{Tiempo SX recibiendo}
+        \end{flalign}
+        \begin{flalign}
+            I_{\text{SX}} &= \frac{I_{\text{SX stby}} \, T_A +  I_{\text{SX stby}} \, t_{\text{SX stby}} + I_{\text{SX rx}} \,t_{\text{SX rx}} + I_{\text{SX tx}} \, t_{\text{SX tx}}}{T_A + t_{\text{SX stby}} +  t_{\text{SX rx}} + t_{\text{SX tx}}}  &&\text{Corriente SX1278} \label{corriente_total_sx1278_formula}
+        \end{flalign}
+        \begin{flalign}
+            I_{\text{SX}} &= \frac{29500 + 1.5 \times 10^{-6} \, T_A}{1202 + T_A} \, m\text{A} &&\text{Corriente SX1278 total con valores reemplazados}
+        \end{flalign}
+        \begin{flalign}
+            I_{\text{ESP ls}} &= 0.8 \, m\text{A} &&\text{Corriente ESP light sleep}
+        \end{flalign}
+        \begin{flalign}
+            t_{\text{ESP ls}} &= t_{\text{SX tx}} + t_{\text{SX rx}} &&\text{Tiempo ESP light sleep}
+        \end{flalign}
+        \begin{flalign}
+            t_{\text{ESP on}} &= t_{\text{SX stby}} &&\text{Tiempo ESP light sleep}
+        \end{flalign}
+        \begin{flalign}
+            I_{\text{ESP}} &= \frac{I_{\text{ESP on}} \, t_{\text{ESP on}} + I_{\text{ESP ls}} \, t_{\text{ESP ls}}}{t_{\text{ESP on}}+ t_{\text{ESP ls}} + T_A} = \frac{1615}{1202 + T_A} \, m\text{A} &&\text{Corriente ESP total}
+        \end{flalign}
+        \begin{flalign}
+            I_{\text{T}} &= I_{\text{ESP}} + I_{\text{SX}} = \frac{31115 + 1.5 \times 10^{-6} \, T_A}{1202 + T_A} \, m\text{A} &&\text{Corriente total transmitiendo}
+        \end{flalign}
+        \item Consumo total:
+        \begin{flalign}
+            I_{\text{HP}} &= I_{\text{S}} + I_{\text{T}} = \frac{31115 + 1.5 \times 10^{-6} \, T_A}{1202 + T_A}  + \frac{7500}{300 + T_A} + \frac{760}{40 + T_A} \, m\text{A} &&
+        \end{flalign}
+    \end{itemize}
+    \item \textbf{Consumo total del sistema:}
+    \begin{flalign}
+        I &= I_{\text{LP}} + I_{\text{HP}} = \frac{31115 + 1.5 \times 10^{-6} \, T_A}{1202 + T_A}  + \frac{7500}{300 + T_A} + \frac{760}{40 + T_A} + 0,0316 \, m\text{A} &&
+    \end{flalign}
+\end{itemize}
 
 
 En este punto ya tenemos todos los valores de intensidad expresados y podemos estimar el
