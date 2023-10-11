@@ -46,18 +46,18 @@ La interfaz inicial de la aplicación guía al usuario a través de un proceso d
 
 % CAMBIAR POR FOTOS DEL ONBOARDING EN UNA FOTO DE 3 ELEMENTOS
 \begin{images}[\label{onboarding_process}]{Proceso de onboarding}
-    \addimage[\label{onboarding_1}]{secciones/section_5/images/onboarding_1}{width=5cm}{}
-    \addimage[\label{onboarding_2}]{secciones/section_5/images/onboarding_2}{width=5cm}{}
-    \addimage[\label{onboarding_3}]{secciones/section_5/images/onboarding_3}{width=5cm}{}
+    \addimage[\label{onboarding_1}]{secciones/section_4/images/onboarding_1}{width=5cm}{}
+    \addimage[\label{onboarding_2}]{secciones/section_4/images/onboarding_2}{width=5cm}{}
+    \addimage[\label{onboarding_3}]{secciones/section_4/images/onboarding_3}{width=5cm}{}
 \end{images}
 
 \subsubsubsection{Registro y Login}
 Primero, para permitir que los usuarios utilicen la aplicación y puedan interactuar con el sistema, es necesario que se registren. Como se ilustra en la Figura \ref{fig:login_process}, los usuarios tendrán la opción de utilizar un método de inicio de sesión social, como el proporcionado por Google, para registrarse e ingresar a la aplicación. La integración con Google es especialmente sencilla, ya que la cuenta de Google proporciona una amplia gama de datos del usuario, incluyendo nombre, apellido, número de teléfono, entre otros. Además, en el mercado argentino, donde Android es el sistema operativo predominante, la autenticación con Google está disponible de forma nativa.
 
 \begin{images}[\label{fig:login_process}]{Proceso de inicio de sesión}
-    \addimage[\label{login_1}]{secciones/section_5/images/login_1}{width=5cm}{}
-    \addimage[\label{login_2}]{secciones/section_5/images/login_2}{width=5cm}{}
-    \addimage[\label{login_3}]{secciones/section_5/images/main_screen}{width=5cm}{}
+    \addimage[\label{login_1}]{secciones/section_4/images/login_1}{width=5cm}{}
+    \addimage[\label{login_2}]{secciones/section_4/images/login_2}{width=5cm}{}
+    \addimage[\label{login_3}]{secciones/section_4/images/main_screen}{width=5cm}{}
 \end{images}
 
 Es importante mencionar que, aunque nuestra solución adopta Google como método de autenticación, existen otras alternativas viables, como Auth0, Firebase, Cognito, Apple ID, entre otras. Esta elección no representa un desafío técnico ni limita ninguna funcionalidad en la integración con el servidor. En este caso, hemos implementado una de estas soluciones (Google) para demostrar su uso.
@@ -67,7 +67,7 @@ La funcionalidad esencial de nuestra aplicación es la capacidad de buscar y res
 
 Para entender como funciona el proceso de búsqueda, veamos la imagen \ref{busqueda_parking_software}: 
 
-\insertimage[\label{busqueda_parking_software}]{secciones/section_4/images/busqueda_parking_software}{width=5cm}{Diagrama de flujos con representación de la búsqueda de destinos} % TODO: we need to change this image for an excalidraw example
+\insertimage[\label{busqueda_parking_software}]{secciones/section_4/images/busqueda_parking_software}{width=15cm}{Diagrama de flujos con representación de la búsqueda de destinos} % TODO: we need to change this image for an excalidraw example
 
 El proceso comienza con la búsqueda de estacionamientos. Los usuarios pueden iniciar este proceso dos maneras: explorando el mapa de la aplicación o utilizando la barra de búsqueda para especificar su destino deseado. Una vez que el destino está seleccionado, la aplicación realiza una consulta en el backend para determinar qué estacionamientos están disponibles en esa área. El objetivo de esta consulta es mostrar al usuario en el mapa marcadores que representan estacionamientos con plazas disponibles.
 
@@ -77,4 +77,4 @@ Una vez que el usuario ha examinado las opciones disponibles, puede seleccionar 
 
 Finalmente, una vez que el usuario ha realizado su selección, la información se envía al sistema de reservas (servidor) para su validación. Este, verifica la disponibilidad en tiempo real y, si es posible, confirma la reserva. Luego, se informa al usuario sobre el estado de la reserva, confirmando si la reserva se ha realizado con éxito o no.
 
-Cabe aclarar que, en esta descripción, no hemos adjuntado imágenes de la aplicación, como anticipábamos. Estas imágenes se presentarán en el capítulo \ref{title:resultados} (\quotes{Despliegue y Resultados}).
+Cabe aclarar que, en esta descripción, no hemos adjuntado imágenes de la aplicación, como anticipábamos. Estas imágenes se presentarán en el capítulo \ref{title:resultados} (\quotes{Resultados}).
