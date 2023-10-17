@@ -1,85 +1,215 @@
 \clearpage
 
-\subsection{Sistema de Reservas}
-Esta sección presenta una visión general de la arquitectura propuesta para el sistema de Smart Parking, contextualizando brevemente el sistema multiagente a integrar y las razones detrás de la utilización de tecnologías en la nube. También se describe la estructura, detallando el papel de los componentes principales del sistema.
-
-\subsubsection{Resumen de la Arquitectura}
-
-Uno de los principales objetivos de la arquitectura propuesta es permitir la interacción del usuario con el sistema multiagente desarrollado en este proyecto. En resumen, este sistema realiza la interconexión entre componentes físicos y recursos computacionales con un enfoque basado en la descentralización del sistema. En la figura a continuación se puede observar la arquitectura completa del sistema y su interconexión con la interfaz del usuario y los sensores.
-
-% CAMBIAR FOTO ARQUITECTURA
-\insertimage[\label{arquitectura_software}]{secciones/section_4/images/sistemas_reservas}{width=16cm}{Resumen de Arquitectura en el Cloud}
-
-Como se puede apreciar debemos poder tener una comunicación entre los sensores físicos y la información visualizada por los conductores. Pensando esto en una escalabilidad muy alta es necesario integrar todo el sistema a una plataforma que permita la comunicación entre ambas partes sin tener limitaciones que afectan la experiencia de usuario. Basado en esto hemos optado por alojar la solución en el cloud (específicamente AWS), como se ha mencionado en capítulos anteriores esta opción no depende solo de un servidor físico. Alojar la solución en el cloud permite un número ilimitado de servidores actuando como un único sistema unificado, permitiendo así la flexibilidad, escalabilidad y ahorro de costos dado que se paga únicamente por los recursos utilizados. En este caso el uso del cloud será como PaaS (Platform as a Service) que variará los recursos computacionales en función de la demanda.
-
-En esta arquitectura, los componentes principales son autenticación del usuario, capa de base de datos, motor en tiempo real, manejo de eventos por publicación con SNS.
-
-\subsubsubsection{Autenticación del usuario}
-El objetivo principal de un módulo de autenticación es verificar la identidad del usuario, lo que implica métodos de validación de datos para confirmar su autenticidad. Es importante contar con un módulo de autenticación flexible y accesible en todo momento para que los usuarios puedan acceder a la aplicación. Dado que también es a través de este módulo que se verifican los roles del mismo, de esta forma se pueden limitar las características a la que un usuario tiene acceso frente a un administrador (no desarrollado en este trabajo).
-
-En las aplicaciones actuales, es comúnmente compatible la autenticación mediante correo electrónico y contraseña, números de teléfono e incluso proveedores como Google, Facebook y Twitter. Cuando se utiliza uno de estos métodos, el sistema puede reconocer qué usuario está llevando a cabo una determinada acción y, en función del rol asignado, puede controlar el acceso al uso de los recursos del sistema. Para nuestro caso se decidió implementar la autenticación con un proveedor social (Social Provider) como Google dado que es ampliamente difundido y la mayor parte del mercado cuenta con un dispositivo Android lo que hace que deba tener una cuenta de Google activa.
-
-\subsubsubsection{Base de datos NoSQL}
-Ha habido un aumento masivo en el almacenamiento de datos en los últimos años, en gran parte debido a las enormes redes sociales como Facebook y Twitter, los motores de búsqueda como Google y otros sitios web que almacenan grandes cantidades de datos. Por lo tanto, surgen varios desafíos relacionados con el almacenamiento, captura, análisis y transferencia de estos datos, y ahí es donde entran en juego las bases de datos NoSQL (por ejemplo, MongoDB, Firestore, DynamoDB), conocidas por funcionar bien con big data y aplicaciones en tiempo real.
-
-\subsubsubsectionanumnoi{Concepto}
-La principal ventaja de utilizar este tipo de base de datos es su modelo extremadamente flexible. Al comparar con el desarrollo de bases de datos relacionales como MySQL o Postgres, se nota la importancia de modelar toda su estructura en un esquema predefinido, que incluye tablas, campos, restricciones y también el tipo de cada campo. En las bases de datos NoSQL, también conocidas como bases de datos no relacionales, no es necesario crear esquemas, lo que significa que no hay restricciones a nivel de base de datos en tablas predefinidas o qué tipo de datos colocar en ciertos campos, lo que permite iterar fácilmente en el diseño de la base de datos, agregando o cambiando campos según sea necesario sin el alto riesgo de corromper los procesos actuales. Sin embargo, es importante realizar cierta planificación para que la estructura no se desorganice con el tiempo.
-
-Las bases de datos NoSQL son, en muchos casos, más rápidas y más económicas de administrar debido al aspecto de la escalabilidad. La escalabilidad es de gran importancia en la industria actual, que está creciendo cada vez más, donde los sitios web y las aplicaciones tienden a atraer a más clientes y, por lo tanto, más datos. Las bases de datos relacionales tienden a utilizar métodos de escalabilidad vertical, lo que significa que se deben agregar componentes adicionales, como memoria RAM, potencia de CPU, puertos de red y otros componentes normalmente costosos, a una máquina para escalarla. Este proceso de escalabilidad vertical tiene algunas desventajas, como el costoso costo de nuevos materiales o incluso la necesidad de una nueva infraestructura. Desde este punto de vista, el hardware y la centralización de datos en una sola máquina tienen muchas desventajas.
-
-% CAMBIAR FOTO VERTICAL VS HORIZONTAL
-\insertimage[\label{scaling_concept}]{secciones/section_4/images/scaling_concept}{width=13cm}{Comparativa escalado vertical vs horizontal}
-
-Por otro lado, el enfoque de escalabilidad horizontal permite agregar nuevas máquinas al clúster de recursos como nodos y facilita el mantenimiento y la adición de nuevos nodos en bases de datos no relacionales. Este enfoque implica separar una parte secuencial de la lógica en partes más pequeñas para que se puedan realizar en varias máquinas en paralelo, aumentando la eficiencia de las lecturas y escrituras a gran escala.
-
-Existen diferentes tipos de bases de datos NoSQL, como los pares de clave-valor, que son las más simples de ellas, donde solo están presentes las claves y sus respectivos valores, siendo ideales para conjuntos de datos grandes con detalles muy básicos. Son extremadamente rápidas, personalizables y no muy complicadas, similares a un hash o un arreglo asociativo. Además, existen bases de datos de gráficos, que no son tan comunes, donde todo se trata como un nodo, que puede tener relaciones con otros nodos a través de lo que se llama un "edge".
-
-Finalmente, las bases de datos de documentos almacenan datos similares a la Notación de Objetos JavaScript (JSON), donde los datos están envueltos entre llaves y tienen pares de clave-valor. Estos valores pueden contener cadenas, números, arreglos, objetos incrustados, etc. A nivel de base de datos, es completamente sin esquema, por lo que la aplicación puede ser muy dinámica
+\subsection{Sistema de reservas y búsquedas}
+Este sector del proyecto es el encargado de centralizar los datos enviados por los sensores a través del concentrador y gestionar las solicitudes que los clientes realizan utilizando la aplicación móvil. En términos del paradigma cliente-servidor, este componente desempeña la función de servidor.
 
 
-\subsubsubsection{Indexación H3 - Uber System Approach}
-En el desarrollo de nuestro proyecto nos encontramos con un potencial problema asociado a costos y performance que tiene que ver con la base de datos y cómo los datos dentro de esta podrían ser consultados. Inicialmente se consideró que teniendo como dato la Latitud y Longitud del estacionamiento junto con un radio de búsqueda era suficiente para que un usuario pueda hallar el estacionamiento próximo a su destino, sin embargo esto requeriría consultar todos los datos de la tabla cada vez que un usuario procesa una solicitud lo cual además de ser altamente costoso es también no performante.
 
-De nuestra investigación, descubrimos que actualmente Uber (plataforma de contratación de taxis online) había tenido este problema y desarrolló un sistema de indexación geoespacial denominado H3 para lidiar con este problema.
+\subsubsection{Arquitectura}
+La arquitectura propuesta esta basada en la idea de los microservicios, en la que cada funcionalidad del sistema o un conjunto limitado de ellas se desarrolla, despliega y escala de forma independiente. La figura que se presenta a continuación representa la interconexión de los diversos componentes dentro de la arquitectura.
 
-% CAMBIAR FOTO INDEX UBER
+\insertimage[\label{arquitectura_software}]{secciones/section_4/images/sistemas_reservas}{width=14cm}{Diagrama de arquitectura}
+
+
+\subsubsubsection{Balanceador de carga de aplicaciones}
+Un balanceador de carga es una pieza fundamental en la infraestructura de servidores que desempeña el papel de distribuir el tráfico de red de manera equitativa entre varios servidores, garantizando un rendimiento óptimo y alta disponibilidad. Su principal función es asegurarse de que ningún servidor se sobrecargue mientras otros permanecen inactivos, lo que ayuda a prevenir cuellos de botella y tiempos de inactividad. Además de equilibrar la carga, estos dispositivos pueden realizar funciones como el monitoreo de la salud de los servidores, la gestión de sesiones y la optimización del rendimiento, lo que contribuye a una experiencia más eficiente y confiable para los usuarios finales.
+
+Existen diferentes tipos de balanceadores y se suelen clasificar dependiendo de en que capa del modelo OSI operan, como lo son los balanceadores de carga de capa siete o de aplicación, los cuales son capaces de tomar decisiones basadas en la información contenida en esta última capa, por ejemplo si el protocolo de aplicación es HTTP, puede acceder a las URLs, encabezados y contenido de la solicitud. Esto les permite realizar enrutamiento basado en contenido y tomar decisiones más inteligentes sobre la distribución de tráfico. Son ideales para aplicaciones web y servicios que requieren una distribución precisa y basada en la lógica de la aplicación.
+
+
+\subsubsubsection{Servicio}
+Servicio se refiere a una unidad de funcionalidad independiente y autónoma que proporciona una o más capacidades o funciones específicas a través de una interfaz bien definida. Estos servicios son componentes de software diseñados para realizar tareas específicas y pueden ser utilizados por otros componentes de software o aplicaciones de manera modular y reutilizable.
+
+Algunas características clave de un servicio en ingeniería de software incluyen:
+\begin{itemize}
+    \item Independencia: Un servicio debe ser independiente y autosuficiente en términos de su funcionalidad y datos. No debe depender en exceso de otros servicios y debe ser capaz de funcionar de manera aislada.
+    \item Interfaz bien definida: Un servicio debe tener una interfaz claramente definida que especifique cómo otros componentes pueden interactuar con él. Esto a menudo se logra a través de API (Interfaz de Programación de Aplicaciones) o protocolos de comunicación estándar.
+    \item Modularidad y reutilización: Los servicios están diseñados para ser reutilizables en diferentes contextos. Esto promueve la modularidad en el desarrollo de software y facilita la construcción de sistemas complejos mediante la combinación de servicios existentes.
+    \item Escalabilidad: Los servicios pueden escalarse de manera independiente, lo que permite ajustar la capacidad de un servicio en función de la carga o la demanda, sin afectar negativamente a otros componentes del sistema.
+    \item Independencia tecnológica: Los servicios pueden estar implementados en diferentes tecnologías o lenguajes de programación, siempre que cumplan con la interfaz especificada.
+    \item Abstracción de detalles internos: Los servicios ocultan los detalles de su implementación interna a los consumidores, lo que facilita la interoperabilidad y el mantenimiento.
+\end{itemize}
+
+Los servicios son fundamentales en arquitecturas de software como la arquitectura orientada a servicios (SOA) y la arquitectura de microservicios, donde la descomposición de una aplicación en servicios independientes facilita la escalabilidad, la flexibilidad y la mantenibilidad del sistema en su conjunto.
+
+
+\subsubsubsection{Bus de eventos}
+Un bus de eventos es un mecanismo de comunicación que permite que los componentes de un sistema se comuniquen de manera desacoplada, es decir, sin necesidad de conocer directamente a los demás componentes con los que interactúan. En lugar de comunicarse de forma directa, los componentes generan eventos cuando ocurren ciertas acciones o cambios de estado, y otros componentes pueden suscribirse a estos eventos para responder o actuar en consecuencia.
+
+Un bus de eventos se compone de tres elementos clave:
+\begin{itemize}
+    \item Eventos: Los eventos son sucesos o cambios de estado que ocurren en el sistema. Por ejemplo, un botón que se pulsa, un archivo que se ha modificado, o un usuario que inicia sesión pueden ser ejemplos de eventos. Cada evento tiene un nombre y puede llevar información adicional.
+    \item Publicadores (o emisores): Los componentes que generan eventos se conocen como \quotes{publicadores} o \quotes{emisores}. Cuando un evento relevante ocurre, el publicador lo emite a través del bus de eventos, notificando a otros componentes interesados.
+    \item Suscriptores (o consumidores): Los componentes que desean responder o actuar en función de un evento en particular se registran como \quotes{suscriptores} o \quotes{consumidores}. Cuando un evento se emite, los suscriptores que se han registrado para ese evento específico reciben la notificación y pueden ejecutar una acción predefinida en respuesta al evento.
+\end{itemize}
+
+Ventajas de la comunicación a través de un bus de eventos:
+\begin{itemize}
+    \item Desacoplamiento: Los componentes no necesitan conocerse mutuamente, lo que facilita la modularidad y el mantenimiento del sistema. Cada componente solo necesita entender los eventos que genera y consume.
+    \item Flexibilidad: Se pueden agregar o quitar componentes sin afectar significativamente otros módulos, siempre que sigan cumpliendo con la interfaz de eventos establecida.
+    \item Escalabilidad: Los sistemas basados en buses de eventos son escalables y pueden manejar un gran número de componentes y eventos de manera eficiente.
+    \item Depuración y monitoreo: Facilita la depuración y el monitoreo del sistema, ya que los eventos se pueden registrar y analizar fácilmente.
+\end{itemize}
+
+
+\subsubsubsection{Síntesis}
+En nuestro sistema, los servicios que entablan interacciones con usuarios finales, deben exponer una interfaz de programación de aplicaciones (API) REST. De esta manera, el balanceador de carga puede dirigir las solicitudes al servicio correspondiente, basándose en la URL de destino. Una vez que la solicitud alcanza el servicio, este ejecuta la lógica necesaria para proporcionar al usuario lo que necesita, haciendo uso de tecnologías como bases de datos o servicios de terceros. Durante el proceso de procesamiento de la solicitud, el servicio tiene la capacidad de emitir eventos, lo que permite a otros servicios llevar a cabo acciones.
+
+A modo de ejemplo un conductor podría generar una reserva al enviar una solicitud HTTP al balanceador de carga. El balanceador de carga envía esta solicitud al servicio de reservas, el cual emplea un mecanismo de persistencia, como una base de datos, para almacenar la reserva creada. Posteriormente, este servicio puede emitir un evento denominado "reserva creada". El servicio de búsqueda puede estar suscrito a este tipo de eventos, lo que le permite recibir notificaciones y, en consecuencia, eliminar el lugar reservado. De este modo, se garantiza que otros usuarios que estén realizando búsquedas no encuentren el lugar reservado, ya que este se encuentra ocupado.
+
+
+
+\subsubsection{Servicio de reservas}
+Es el servicio que se encarga de gestionar las reserva, permitiéndoles a los conductores crear reservas o cancelarlas, al mismo tiempo que le brinda información del precio, el tiempo de duración, el lugar de estacionamiento al que fue asignada, etc.
+
+
+\subsubsubsection{API REST}
+\begin{itemize}
+    \item \textbf{GET /bookings}: Lista las reservas que pertenecen a un cierto conductor.
+    \item \textbf{PUT /bookings}: Crea una nueva reserva.
+    \item \textbf{GET /bookings/\texttt{\{booking\_id\}}}: Obtiene detalles de una reserva.
+    \item \textbf{DELETE /bookings/\texttt{\{booking\_id\}}}: Cancela una reserva.
+\end{itemize}
+
+
+\subsubsubsection{Eventos publicados}
+\begin{itemize}
+    \item \textbf{BookingCreated}: Emitido luego de que un conductor cree una reserva.
+    \item \textbf{BookingCanceled}: Emitido luego de que un conductor cancele una reserva.
+    \item \textbf{AccommodatedBookingCanceled}: Emitido luego de que un conductor cancele una reserva que ya había sido acomodada en el estacionamiento.
+\end{itemize}
+
+\subsubsubsection{Eventos suscriptos}
+\begin{itemize}
+    \item \textbf{BookingRefused}: Cuando una reserva es rechazada por el estacionamiento el servicio de reservas debe cancelar la reserva.
+    \item \textbf{BookingAccommodated}: Cuando una reserva es aceptada por el estacionamiento el servicio de reservas debe actualizar la reserva con datos como por ejemplo el espacio de estacionamiento asignado.
+    \item \textbf{DriverArrived}: Cuando el conductor llega al estacionamiento el servicio de reservas debe inicial el cronómetro de la reserva.
+    \item \textbf{DriverLeft}: Cuando el conductor abandona el estacionamiento el servicio de reservas debe detener el cronómetro para computar el costo.
+\end{itemize}
+
+
+
+\subsubsection{Servicios de búsquedas}
+El servicio de búsquedas proporciona una interfaz para que los conductores encuentren estacionamientos con espacios disponibles cercanos al lugar donde desean dirigirse.
+
+\subsubsubsection{Indexación H3}
+En el desarrollo de nuestro proyecto nos encontramos con un potencial problema asociado a costos y performance que tiene que ver con la base de datos y cómo los datos dentro de esta podrían ser consultados. Inicialmente se consideró que teniendo como dato la latitud y longitud del estacionamiento junto con un radio de búsqueda era suficiente para que un usuario pueda hallar el estacionamiento próximo a su destino, sin embargo esto requeriría consultar todos los datos de la tabla cada vez que un usuario procesa una solicitud lo cual es muy poco eficiente.
+
+De nuestra investigación, descubrimos que actualmente Uber (plataforma de contratación de taxis online) había tenido este problema y desarrolló un mecanismo denominado H3 para lidiar con este problema.
+
 \insertimage[\label{uber_index_globe}]{secciones/section_4/images/uber_index_globe}{width=15cm}{Representación indexación H3 Uber en imagen de globo}
 
-Esta biblioteca (H3) es un sistema de indexación geoespacial que divide el mundo en celdas hexagonales. El mismo es de código abierto y está disponible en Github para la comunidad. H3 asigna un índice jerárquico único a cada celda, formando una malla hexagonal que cubre toda la superficie terrestre. Este enfoque jerárquico permite representar ubicaciones con diferentes niveles de precisión, desde grandes áreas geográficas hasta puntos específicos en el mapa. La estructura hexagonal se adapta particularmente bien a la representación de datos geoespaciales debido a su uniformidad y capacidad para abordar el problema de la distorsión de área, común en otros sistemas de cuadrícula.
+H3 es un sistema de indexación geoespacial que divide el mundo en celdas hexagonales. H3 asigna un índice jerárquico único a cada celda, formando una malla hexagonal que cubre toda la superficie terrestre. Este enfoque jerárquico permite representar ubicaciones con diferentes niveles de precisión, desde grandes áreas geográficas hasta puntos específicos en el mapa. La estructura hexagonal se adapta particularmente bien a la representación de datos geoespaciales debido a su uniformidad y capacidad para abordar el problema de la distorsión de área, común en otros sistemas de cuadrícula.
 
-% CAMBIAR FOTO INDEX UBER rectangulo
 \insertimage[\label{hexagono_uber}]{secciones/section_4/images/hexagono_uber}{width=15cm}{Vista de una celda con codificación H3}
 
 Una de las ventajas más destacadas del sistema H3 es su capacidad para reducir significativamente el número de consultas a una base de datos, al organizar la información en una jerarquía de celdas hexagonales. De esta forma, el sistema reduce la cantidad de datos que deben ser recuperados en cada consulta, lo que se traduce en una mejora notable en el rendimiento y la eficiencia del acceso a la base de datos. Esto es especialmente relevante cuando se trata de grandes volúmenes de datos geoespaciales que deben ser procesados en tiempo real para soportar aplicaciones como rastreo de vehículos, optimización de rutas, etc.
 
-Por lo explicado anteriormente, es que hemos adoptado el sistema de indexado H3 en nuestro proyecto para poder representar donde se encuentran los estacionamientos. Y al momento en el que el conductor realice una consulta, de fondo se estarán convirtiendo la latitud y longitud a un hash específico lo que nos permitirá optimizar el número de consultas a realizar para encontrar la opción que desea el usuario. En la imagen a continuación se puede apreciar un mapa de la ciudad de Rosario en la cual hemos graficado como se representa el mismo utilizando el indexado de H3. En este caso, estamos utilizando la resolución por defecto que es de 8 y corresponde con un promedio de 0.737327598 KM2 de área hexagonal aproximadamente.
+Por lo explicado anteriormente, es que hemos adoptado el sistema de indexado H3 en nuestro proyecto para poder representar donde se encuentran los estacionamientos. Y al momento en el que el conductor realice una consulta, de fondo se estarán convirtiendo la latitud y longitud a un número, el cual identifica cuál es el hexágono que contiene la ubicación lo que nos permitirá optimizar el número de consultas a realizar para encontrar la opción que desea el usuario. En la imagen a continuación se puede apreciar un mapa de la ciudad de Rosario en la cual hemos graficado como se representa el mismo utilizando el indexado de H3. En este caso, estamos utilizando la resolución por defecto que es de 8 y corresponde con un promedio de 0.737327598 KM2 de área hexagonal aproximadamente.
 
-% CAMBIAR FOTO INDEX UBER rosario cuadricula
 \insertimage[\label{rosario_celdas}]{secciones/section_4/images/rosario_celdas}{width=15cm}{Mapa de la ciudad de Rosario con índices superpuestos}
-\subsubsection{Búsqueda de estacionamientos disponibles}
-El proceso de búsqueda y reserva de estacionamientos disponibles comienza con el usuario ingresando a la aplicación, previamente autenticado. A través del uso del mapa o la barra de búsqueda, seleccione su destino y la ubicación cercana donde desea estacionar su vehículo. Al seleccionar el destino, la aplicación envía una consulta al backend, que a su vez devuelve una lista de estacionamientos cercanos con disponibilidad.
 
-Para evitar sobrecargar el sistema con datos innecesarios, solo se muestra la disponibilidad de los estacionamientos en la parte gráfica. Una vez que el usuario visualiza los estacionamientos disponibles, puede seleccionar el que prefiera y proceder a confirmar su reserva. En ese momento, el backend verifica si el booking es aceptado o rechazado, informando al usuario sobre el resultado. Para una mejor visualización de lo descrito en este párrafo se adjunta a continuación un diagrama de flujos que corresponde al proceso de creación de reserva de una usuario.
-
-% CAMBIAR FOTO BUSQUEDA DESTINO
-\insertimage[\label{busqueda_parking_software}]{secciones/section_4/images/busqueda_parking_software}{width=5cm}{Diagrama de flujos con representación de la búsqueda de destinos}
-
-En caso de que la reserva sea aceptada, el usuario puede ver el estado de su reserva en la sección "Mis reservas", manteniéndose al tanto de los detalles de la reserva realizada. Este sistema de búsqueda y reserva proporciona a los usuarios una forma eficiente y conveniente de encontrar estacionamientos disponibles en las cercanías de su destino, mejorando la experiencia de estacionamiento para los usuarios de la aplicación.
-
-Algo a remarcar en en este proceso, es el funcionamiento del backend y como tiene un rol crucial en la búsqueda de estacionamientos cercanos. De secciones anteriores hemos visto que utilizamos el sistema de indexado H3 de Uber en nuestra base de datos y a continuación adjuntamos de una manera gráfica como es el proceso que realiza el backend para decidir el estacionamiento más cercano próximo a nuestro destino. De esta forma el lector puede interpretar de una manera gráfica y simple cómo está funcionando el sistema sin necesidad de incurrir en detalles técnicos específicos.
-
-% CAMBIAR FOTO PROCESO DE BUSQUEDA
-\insertimage[\label{funcionamiento_h3}]{secciones/section_4/images/funcionamiento_h3}{width=13cm}{Representación funcionamiento búsqueda basada en índices}
-
-\subsubsubsection{AWS (Amazon Web Services)}
-
-Es una plataforma de servicios en la nube que ofrece soluciones para el desarrollo y el despliegue de aplicaciones web. La elección de AWS como opción para el hosteo del backend de la aplicación del proyecto se basa en varias características: 
-
+\subsubsubsection{API REST}
 \begin{itemize}
-    \item El equipo tiene más de 4 años de experiencia utilizando esta compañía.
-    \item Son el mayor proveedor de servicios cloud del mundo con más del 70\% del mercado.
-    \item Permiten la escalabilidad de servicios y gran disponibilidad asegurando un modelo de mercado de pago por demanda.
-    \item Etc.
+    \item \textbf{GET /searches}: Lista las búsquedas realizadas.
+    \item \textbf{PUT /searches}: Busca los estacionamientos más cercanos al destino seleccionado por el conductor que tengan espacios disponibles.
 \end{itemize}
 
-AWS, siglas de Amazon Web Services, es una plataforma de servicios en la nube que ofrece soluciones para el desarrollo y el despliegue de aplicaciones web. La elección de AWS como opción para el hosteo del backend de la aplicación se basa en varios factores que se explicarán en esta tesis. Al usar AWS, se puede acceder a una infraestructura de computación, almacenamiento y red flexible y de alta disponibilidad, que se adapta a las necesidades y al crecimiento de la aplicación. Además, esta proporciona una variedad de herramientas y servicios que facilitan la integración, el monitoreo y la optimización del rendimiento del backend. En esta tesis se analizarán las ventajas y los desafíos de usar AWS para el hosteo del backend de la aplicación, así como las mejores prácticas y las lecciones aprendidas durante el proceso.
+\subsubsubsection{Eventos publicados}
+Este servicio no publica eventos.
+
+\subsubsubsection{Eventos suscriptos}
+\begin{itemize}
+    \item \textbf{ParkingSpaceCreated}: Cuando un estacionamiento registra lugares el servicio de búsqueda actualiza su registro para incluir el nuevo lugar.
+    \item \textbf{BookingAccommodated}: Cuando una reserva es acomodada en un espacio de estacionamiento el servicio de búsqueda quita el lugar del registro para que no aparezca en próximas búsquedas.
+    \item \textbf{DriverLeft}: Cuando un conductor abandona un espacio de estacionamiento el servicio de búsqueda vuelva a agregar el lugar al registro para que aparezca en próximas búsquedas.
+\end{itemize}
+
+
+
+\subsubsection{Servicio de estacionamientos}
+El servicio de gestión de estacionamiento facilita la creación y administración de áreas de estacionamiento. Su API es utilizada directamente por los propietarios de estacionamientos para agregar plazas, establecer tarifas, y también por el concentrador para indicar el estado de ocupación de las plazas, basándose en la información proporcionada por los sensores distribuidos. Este servicio interactúa con otros componentes del sistema mediante eventos; por ejemplo, cuando un conductor realiza una reserva, el sistema responde a este evento al verificar la disponibilidad de plazas y posteriormente emite sus propios eventos para notificar a otros servicios si la reserva pudo ser atendida satisfactoriamente o no.
+
+
+\subsubsubsection{API REST}
+\begin{itemize}
+    \item \textbf{GET /parkinglots}: Lista los estacionamientos de los cuales sos dueño.
+    \item \textbf{PUT /parkinglots}: Crea un nuevo estacionamiento.
+    \item \textbf{GET /parkinglots/\texttt{\{parkinglots\_id\}}}: Obtiene detalles de un estacionamiento.
+    \item \textbf{PUT /parkinglots/\texttt{\{parkinglots\_id\}}/price}: Actualiza el precio de los espacios de estacionamiento de un estacionamiento.
+    \item \textbf{GET /parkinglots/\texttt{\{parkinglots\_id\}}/spaces}: Lista los espacios de estacionamiento de un estacionamiento.
+    \item \textbf{PUT /parkinglots/\texttt{\{parkinglots\_id\}}/spaces}: Agrega espacios de estacionamiento a un estacionamiento.
+    \item \textbf{PUT /parkinglots/\texttt{\{parkinglots\_id\}}/concentrator}: Agrega un concentrador a un estacionamiento.
+    \item \textbf{PUT /parkinglots/\texttt{\{parkinglots\_id\}}/spaces/\texttt{\{space\_id\}}/take}: Marca un espacio de estacionamiento como ocupado.
+    \item \textbf{PUT /parkinglots/\texttt{\{parkinglots\_id\}}/spaces/\texttt{\{space\_id\}}/realease}: Marca un espacio de estacionamiento como desocupado.
+\end{itemize}
+
+
+\subsubsubsection{Eventos publicados}
+
+\begin{itemize}
+    \item \textbf{ParkinglotCreated}: Emitido luego de que se cree un estacionamiento.
+    \item \textbf{ParkingSpaceCreated}: Emitido luego de que un se cree un espacio de estacionamiento.
+    \item \textbf{BookingRefused}: Emitido luego de que una reserva no haya podido ser acomodada.
+    \item \textbf{BookingAccommodated}: Emitido luego de que una reserva haya sido acomodada.
+    \item \textbf{DriverArrived}: Emitido luego de que un conductor ocupe un espacio de estacionamiento.
+    \item \textbf{DriverLeft}: Emitido luego de que un conductor abandone un espacio de estacionamiento.
+\end{itemize}
+
+
+\subsubsubsection{Eventos suscriptos}
+\begin{itemize}
+    \item \textbf{BookingCreated}: Cuando una reserva es creada el servicio de estacionamientos debe verificar que puede ser acomodada y asignarle un espacio de estacionamiento.
+    \item \textbf{AccommodatedBookingCanceled}: Cuando una reserva acomodada es cancelada por un conductor el servicio de estacionamiento debe liberar el espacio de estacionamiento reservado.
+\end{itemize}
+
+
+% \subsubsubsection{Autenticación del usuario}
+% El objetivo principal de un módulo de autenticación es verificar la identidad del usuario, lo que implica métodos de validación de datos para confirmar su autenticidad. Es importante contar con un módulo de autenticación flexible y accesible en todo momento para que los usuarios puedan acceder a la aplicación. Dado que también es a través de este módulo que se verifican los roles del mismo, de esta forma se pueden limitar las características a la que un usuario tiene acceso frente a un administrador (no desarrollado en este trabajo).
+
+% En las aplicaciones actuales, es comúnmente compatible la autenticación mediante correo electrónico y contraseña, números de teléfono e incluso proveedores como Google, Facebook y Twitter. Cuando se utiliza uno de estos métodos, el sistema puede reconocer qué usuario está llevando a cabo una determinada acción y, en función del rol asignado, puede controlar el acceso al uso de los recursos del sistema. Para nuestro caso se decidió implementar la autenticación con un proveedor social (Social Provider) como Google dado que es ampliamente difundido y la mayor parte del mercado cuenta con un dispositivo Android lo que hace que deba tener una cuenta de Google activa.
+
+% \subsubsubsection{Base de datos NoSQL}
+% Ha habido un aumento masivo en el almacenamiento de datos en los últimos años, en gran parte debido a las enormes redes sociales como Facebook y Twitter, los motores de búsqueda como Google y otros sitios web que almacenan grandes cantidades de datos. Por lo tanto, surgen varios desafíos relacionados con el almacenamiento, captura, análisis y transferencia de estos datos, y ahí es donde entran en juego las bases de datos NoSQL (por ejemplo, MongoDB, Firestore, DynamoDB), conocidas por funcionar bien con big data y aplicaciones en tiempo real.
+% \subsubsubsectionanumnoi{Concepto}
+% La principal ventaja de utilizar este tipo de base de datos es su modelo extremadamente flexible. Al comparar con el desarrollo de bases de datos relacionales como MySQL o Postgres, se nota la importancia de modelar toda su estructura en un esquema predefinido, que incluye tablas, campos, restricciones y también el tipo de cada campo. En las bases de datos NoSQL, también conocidas como bases de datos no relacionales, no es necesario crear esquemas, lo que significa que no hay restricciones a nivel de base de datos en tablas predefinidas o qué tipo de datos colocar en ciertos campos, lo que permite iterar fácilmente en el diseño de la base de datos, agregando o cambiando campos según sea necesario sin el alto riesgo de corromper los procesos actuales. Sin embargo, es importante realizar cierta planificación para que la estructura no se desorganice con el tiempo.
+
+% Las bases de datos NoSQL son, en muchos casos, más rápidas y más económicas de administrar debido al aspecto de la escalabilidad. La escalabilidad es de gran importancia en la industria actual, que está creciendo cada vez más, donde los sitios web y las aplicaciones tienden a atraer a más clientes y, por lo tanto, más datos. Las bases de datos relacionales tienden a utilizar métodos de escalabilidad vertical, lo que significa que se deben agregar componentes adicionales, como memoria RAM, potencia de CPU, puertos de red y otros componentes normalmente costosos, a una máquina para escalarla. Este proceso de escalabilidad vertical tiene algunas desventajas, como el costoso costo de nuevos materiales o incluso la necesidad de una nueva infraestructura. Desde este punto de vista, el hardware y la centralización de datos en una sola máquina tienen muchas desventajas.
+
+% % CAMBIAR FOTO VERTICAL VS HORIZONTAL
+% \insertimage[\label{scaling_concept}]{secciones/section_4/images/scaling_concept}{width=13cm}{Comparativa escalado vertical vs horizontal}
+
+% Por otro lado, el enfoque de escalabilidad horizontal permite agregar nuevas máquinas al clúster de recursos como nodos y facilita el mantenimiento y la adición de nuevos nodos en bases de datos no relacionales. Este enfoque implica separar una parte secuencial de la lógica en partes más pequeñas para que se puedan realizar en varias máquinas en paralelo, aumentando la eficiencia de las lecturas y escrituras a gran escala.
+
+% Existen diferentes tipos de bases de datos NoSQL, como los pares de clave-valor, que son las más simples de ellas, donde solo están presentes las claves y sus respectivos valores, siendo ideales para conjuntos de datos grandes con detalles muy básicos. Son extremadamente rápidas, personalizables y no muy complicadas, similares a un hash o un arreglo asociativo. Además, existen bases de datos de gráficos, que no son tan comunes, donde todo se trata como un nodo, que puede tener relaciones con otros nodos a través de lo que se llama un "edge".
+
+% Finalmente, las bases de datos de documentos almacenan datos similares a la Notación de Objetos JavaScript (JSON), donde los datos están envueltos entre llaves y tienen pares de clave-valor. Estos valores pueden contener cadenas, números, arreglos, objetos incrustados, etc. A nivel de base de datos, es completamente sin esquema, por lo que la aplicación puede ser muy dinámica
+
+
+% \subsubsection{Búsqueda de estacionamientos disponibles}
+% El proceso de búsqueda y reserva de estacionamientos disponibles comienza con el usuario ingresando a la aplicación, previamente autenticado. A través del uso del mapa o la barra de búsqueda, seleccione su destino y la ubicación cercana donde desea estacionar su vehículo. Al seleccionar el destino, la aplicación envía una consulta al backend, que a su vez devuelve una lista de estacionamientos cercanos con disponibilidad.
+
+% Para evitar sobrecargar el sistema con datos innecesarios, solo se muestra la disponibilidad de los estacionamientos en la parte gráfica. Una vez que el usuario visualiza los estacionamientos disponibles, puede seleccionar el que prefiera y proceder a confirmar su reserva. En ese momento, el backend verifica si el booking es aceptado o rechazado, informando al usuario sobre el resultado. Para una mejor visualización de lo descrito en este párrafo se adjunta a continuación un diagrama de flujos que corresponde al proceso de creación de reserva de una usuario.
+
+% % CAMBIAR FOTO BUSQUEDA DESTINO
+% \insertimage[\label{busqueda_parking_software}]{secciones/section_4/images/busqueda_parking_software}{width=5cm}{Diagrama de flujos con representación de la búsqueda de destinos}
+
+% En caso de que la reserva sea aceptada, el usuario puede ver el estado de su reserva en la sección "Mis reservas", manteniéndose al tanto de los detalles de la reserva realizada. Este sistema de búsqueda y reserva proporciona a los usuarios una forma eficiente y conveniente de encontrar estacionamientos disponibles en las cercanías de su destino, mejorando la experiencia de estacionamiento para los usuarios de la aplicación.
+
+% Algo a remarcar en en este proceso, es el funcionamiento del backend y como tiene un rol crucial en la búsqueda de estacionamientos cercanos. De secciones anteriores hemos visto que utilizamos el sistema de indexado H3 de Uber en nuestra base de datos y a continuación adjuntamos de una manera gráfica como es el proceso que realiza el backend para decidir el estacionamiento más cercano próximo a nuestro destino. De esta forma el lector puede interpretar de una manera gráfica y simple cómo está funcionando el sistema sin necesidad de incurrir en detalles técnicos específicos.
+
+% % CAMBIAR FOTO PROCESO DE BUSQUEDA
+% \insertimage[\label{funcionamiento_h3}]{secciones/section_4/images/funcionamiento_h3}{width=13cm}{Representación funcionamiento búsqueda basada en índices}
+
+% \subsubsubsection{AWS (Amazon Web Services)}
+
+% Es una plataforma de servicios en la nube que ofrece soluciones para el desarrollo y el despliegue de aplicaciones web. La elección de AWS como opción para el hosteo del backend de la aplicación del proyecto se basa en varias características:
+
+% \begin{itemize}
+%     \item El equipo tiene más de 4 años de experiencia utilizando esta compañía.
+%     \item Son el mayor proveedor de servicios cloud del mundo con más del 70\% del mercado.
+%     \item Permiten la escalabilidad de servicios y gran disponibilidad asegurando un modelo de mercado de pago por demanda.
+%     \item Etc.
+% \end{itemize}
+
+% AWS, siglas de Amazon Web Services, es una plataforma de servicios en la nube que ofrece soluciones para el desarrollo y el despliegue de aplicaciones web. La elección de AWS como opción para el hosteo del backend de la aplicación se basa en varios factores que se explicarán en esta tesis. Al usar AWS, se puede acceder a una infraestructura de computación, almacenamiento y red flexible y de alta disponibilidad, que se adapta a las necesidades y al crecimiento de la aplicación. Además, esta proporciona una variedad de herramientas y servicios que facilitan la integración, el monitoreo y la optimización del rendimiento del backend. En esta tesis se analizarán las ventajas y los desafíos de usar AWS para el hosteo del backend de la aplicación, así como las mejores prácticas y las lecciones aprendidas durante el proceso.
