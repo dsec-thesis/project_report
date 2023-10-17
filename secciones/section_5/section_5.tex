@@ -1,54 +1,131 @@
 \clearpage
-\section{Despliegue y resultados}{\label{title:resultados}}
-En este proyecto se abordó la propuesta, diseño y desarrollo de un prototipo de aplicación funcional con el objetivo de ayudar a los usuarios finales a conseguir estacionamiento por medio de un sistema de reservas en las cercanías de su destino deseado.
-Para llevar esto a cabo en el capítulo 4, se explicó el desarrollo principal de tres “Nodos” (o módulos) del sistema:
+\section{Resultados}{\label{title:resultados}}
+En este proyecto, abordamos la propuesta, diseño y desarrollo de un prototipo funcional de \textit{Smart Parking}, con el objetivo de brindar a los usuarios finales la capacidad de encontrar una plaza de estacionamiento cercana a su destino deseado mediante un sistema de reservas utilizando la aplicación que hemos construido.
+
+En el capítulo anterior (Capítulo 4), se detalló el desarrollo de los cuatro módulos fundamentales del sistema:
 
 \begin{itemize}
     \item Nodo sensor
-    \item Nodo de borde (concentrador)
-    \item Software integral (arquitectura Cloud-based)
+    \item Nodo concentrador
+    \item Sistema de Reservas (servidor)
+    \item Aplicación Móvil
 \end{itemize}
 
-Con base a esto y para la integración entre los diferentes módulos se utiliza la aplicación móvil desarrollada en Flutter. Por lo tanto esta sección demuestra y adjunta el ciclo completo del proyecto, desde el onboarding de la aplicación, la búsqueda de un estacionamiento disponible, pasando por su reserva, detección del estacionamiento y checkout del vehículo.
-% SUB-SECCIÓN
-\subsection{Búsqueda y reserva de una plaza}
-Para hacer una reserva el usuario puede navegar en el mapa, o bien utilizar la barra de búsqueda para introducir su destino. Una vez que el mismo esté seleccionado, se realiza una consulta en el backend para poder verificar cuales estacionamientos cuentan aún con disponibilidad y mostrarselos al usuario. Como puede verse en la Figura ~\ref{busqueda_process}.
+En este capítulo, nos enfocaremos en la validación y resultados obtenidos a través de las diferentes pruebas realizadas. Estas pruebas se han dividido en tres categorías:
+\begin{itemize}
+    \item Pruebas de Sensores
+    \item Pruebas de Conectividad LoRa
+    \item Pruebas de la Aplicación Móvil
+\end{itemize}
+
+A continuación, describiremos en detalle cada una de estas categorías de pruebas y presentaremos los hallazgos y resultados que surgieron durante el desarrollo del proyecto.
+
+\subsection{Pruebas de Sensores}\label{title:pruebas_sensores}
+
+Como se detalló en la sección de Elección de Sensores (ver: \ref{title:eleccion_sensores}), al validar los tipos de sensores a utilizar, llevamos a cabo un experimento en el garaje de uno de los miembros del equipo. Esto se realizó para medir el comportamiento de los sensores, y repetimos estas pruebas en varias ocasiones para obtener las muestras que se presentarán a continuación.
+
+Para comenzar, montamos los sensores en nuestra placa de desarrollo. Iniciamos las pruebas utilizando vehículos estacionados de frente. Es importante señalar que, para esta sección, solo se mostrará cómo interactúa el sistema cuando el automóvil se estaciona de frente. El mismo experimento se repitió también para cuando el automóvil estaciona en reversa.
+
+\begin{images}[\label{experimento_auto}]{Diferentes momentos del vehículo durante el experimento}
+    \addimage[\label{experimento_auto:inicial}]{secciones/section_5/images/auto_momento_inicial}{width=8cm}{Posición inicial del vehículo}
+    \addimage[\label{experimento_auto:ocupacion}]{secciones/section_5/images/auto_momento_ocupado_perspectiva}{width=8cm}{Vehículo estacionado}
+    \addimage[\label{experimento_auto:libre}]{secciones/section_5/images/auto_momento_final}{width=8cm}{Vehículo en proceso de retirada}
+\end{images}
+
+En la fase inicial del experimento, el vehículo se encontraba en la posición que se muestra en la figura \ref{experimento_auto:inicial}. En este punto, el sensor de tiempo de vuelo (ToF) tenía un valor claro que indicaba que el objeto estaba fuera de rango. Este valor se representa en el recuadro A de la figura \ref{plot_labeled:vlx}. De manera similar, el magnetómetro mantenía un nivel constante del campo magnético, tal como se observa en \ref{plot_labeled:qmc}.
+
+\begin{images}[\label{plot_labeled}]{Diferentes momentos del vehículo durante el experimento}
+    \addimage[\label{plot_labeled:vlx}]{secciones/section_5/images/vl53X0_indicaciones}{width=8cm}{Muestras del sensor VL53L0X}
+    \addimage[\label{plot_labeled:qmc}]{secciones/section_5/images/qmc_edited}{width=8cm}{Muestras del sensor QMC5883L}
+\end{images}
+
+A medida que el automóvil se posicionaba sobre el sensor (\ref{experimento_auto:ocupacion}), observamos que el sensor láser (\ref{plot_labeled:vlx}) comenzó a medir la distancia desde el sensor al chasis del vehículo. Esta distancia osciló alrededor de los $180 mm$, un valor constante que depende del tipo de vehículo debido a las diferentes alturas de los chasis. También observamos una fuerte variación en el campo magnético registrado por el magnetómetro, que luego se estabilizó, como se muestra en la situación descrita por el sensor láser. Ambas situaciones mencionadas aquí se refieren al recuadro \quotes{B} de ambas imágenes.
+
+Finalmente, cuando el vehículo comenzó a retirarse (\ref{experimento_auto:libre}), nuevamente se detectaron variaciones, que se describen en el recuadro \quotes{C}.
+
+Cabe destacar que las lecturas del magnetómetro, como se observa en la figura \ref{plot_labeled:qmc}, eran ruidosas, lo que dificultaba la definición de un umbral de detección. Fue durante este experimento que implementamos el \textit{Detector de Anomalías}, que se puede ver en \ref{detector_anomalias}.
+
+
+\subsection{Pruebas de Conectividad LoRa}\label{title:cx_load_concentrador}
+
+En este apartado, describiremos las pruebas realizadas para verificar el funcionamiento y conectividad de nuestra modulación LoRa entre el nodo sensor y el nodo concentrador.
+
+Dado que estamos trabajando con un prototipo, a fin de realizar validaciones inicialiales como nuestra topología de red es una configuración en estrella, donde los nodos sensores envían datos al concentrador, hemos llevado a cabo las siguientes pruebas:
+
+\begin{itemize}
+    \item Prueba de conectividad inicial
+    \item Prueba de carga
+\end{itemize}
+
+Comenzamos con una prueba de conectividad inicial sencilla de transmisión punto a punto para evaluar la conectividad del sistema. Creamos un código simple para enviar un mensaje de prueba, en este caso, \quotes{Hola Mundo}, con el objetivo de comprobar la conectividad entre ambos dispositivos. En esta prueba, el nodo sensor enviaba \quotes{Hola Mundo}, y el nodo concentrador lo leía y lo visualizaba.
+
+Una vez que esta prueba resultó exitosa, procedimos a enviar información de forma continua al concentrador desde dos de los nodos sensores con el propósito de evaluar el rendimiento en una situación de \quotes{prueba de carga} más real. Esta prueba consistió en enviar un paquete de datos típico que solemos enviar, como se describe en el apartado \ref{title:transmition_node}, y esperar la confirmación de recepción (acknowledgment) por parte del concentrador. Para esto se utilizaron 3 placas Heltec enviando información al nodo concentrador. Esta prueba arrojó los siguientes tiempos promedio para el nodo sensor:
+\begin{table}[H]
+    \centering
+    \caption{Resultados ensayo de carga LoRa}
+    \begin{tabular}{|p{6cm}|*{2}{>{\raggedright\arraybackslash}p{5cm}|}}
+        \hline
+        \textbf{Resultados} & \textbf{""} \\
+        \hline
+            Number of messages processed &642 messages \\
+            Elapsed time & 59.58 seconds \\
+            Messages per second & 10.78 messages/second \\
+        \hline
+        \end{tabular}
+    \label{tab:tabla_valores_resultados_cx_lora}
+\end{table}
+
+Como conclusión, se observa que tenemos un promedio de 10 mensajes por segundo, lo cual es considerablemente superior a la capacidad física de vehículos que pueden ingresar al estacionamiento en un escenario real. Dado que no disponemos de más dispositivos, no podemos predecir si la red presentará colisiones, es decir, si habrá paquetes de información que no se podrán enviar o recibir. No obstante, esto fue considerado en el diseño del nodo sensor, que espera la confirmación de recepción (acknowledgment) y realiza un reintento en caso de no recibir dicho mensaje.
+
+Además, el nodo concentrador tiene implementado una cola de mensajes con el propósito de almacenar los mensajes que llegan desde los sensores para evitar la pérdida de alguno. Estos dos mecanismos trabajando en conjunto nos ayudan a manejar la carga correctamente.
+
+\subsection{Pruebas y componentes de la Aplicación Móvil} \label{title:mobile_application_result}
+
+Este apartado detalla las pruebas realizadas para validar la integración de la aplicación móvil construida, cuyo diseño se encuentra detallado en el apartado \ref{title:mobile_aplication}, con el servidor.
+
+\subsubsection{Búsqueda y reserva de una plaza}
+
+
+Esta prueba se centra en la funcionalidad principal de la aplicación, que es permitir a los usuarios buscar y reservar espacios de estacionamiento. A continuación, se detalla el proceso:
+
+Para realizar una reserva, el usuario puede explorar un mapa interactivo o utilizar la barra de búsqueda para ingresar su destino. Una vez seleccionado, la aplicación consulta al servidor para verificar la disponibilidad de estacionamientos en las cercanías. El proceso se ilustra en la Figura \ref{busqueda_process}.
 
 \begin{images}[\label{busqueda_process}]{Proceso de busqueda de estacionamientos disponibles}
-    \addimage[\label{busqueda_1}]{secciones/section_5/images/busqueda_1}{width=5cm}{}
-    \addimage[\label{busqueda_2}]{secciones/section_5/images/busqueda_2}{width=5cm}{}
-    \addimage[\label{busqueda_3}]{secciones/section_5/images/busqueda_3}{width=5cm}{}
+    \addimage[\label{busqueda_process:busqueda_1}]{secciones/section_5/images/busqueda_1}{width=5cm}{}
+    \addimage[\label{busqueda_process:busqueda_2}]{secciones/section_5/images/busqueda_2}{width=5cm}{}
+    \addimage[\label{busqueda_process:busqueda_3}]{secciones/section_5/images/busqueda_3}{width=5cm}{}
 \end{images}
 
-Ya el usuario habiendo seleccionado el estacionamiento que desea, completa con el tipo de reserva que quiere elegir, teniendo la posibilidad de que la reserva sea fija según un esquema de tiempo definido o libre.
+Luego de enviar esto, el servidor responde proporcionando información sobre estacionamientos cercanos, que son representados como marcadores rojos en la pantalla, como se muestra en la Figura \ref{busqueda_process:busqueda_2}.
+
+Una vez que los marcadores están en el mapa, el usuario puede seleccionar un estacionamiento y elegir el tipo de reserva. Las opciones incluyen reservas fijas, que siguen un esquema de tiempo definido, o reservas flexibles, como se observa en la Figura \ref{reserva_limitada}.
 
 \begin{images}[\label{reserva_process}]{Selección del tipo de reserva (libre o limitada)}
-    \addimage[\label{reserva_limitada}]{secciones/section_5/images/reserva_limitada}{width=4cm}{}
-    \addimage[\label{reserva_libre}]{secciones/section_5/images/reserva_libre}{width=4cm}{}
+    \addimage[\label{reserva_limitada}]{secciones/section_5/images/reserva_limitada}{width=5cm}{}
 \end{images}
 
-Finalmente se envía esa información al backend el cual valida e informa el estado de la reserva al usuario.
+Finalmente, la información de la reserva se envía al servidor, que realiza la validación correspondiente para determinar si el espacio de estacionamiento está disponible. A continuación, informa al usuario si la reserva pudo ser creada, como se muestra en la Figura \ref{reservacion_checkout:reserva_checkout_4}.
 
 \begin{images}[\label{reservacion_checkout}]{Información sobre el estado de la reserva}
-    \addimage[\label{reserva_checkout_1}]{secciones/section_5/images/reserva_checkout_1}{width=4cm}{}
-    \addimage[\label{reserva_checkout_2}]{secciones/section_5/images/reserva_checkout_2}{width=4cm}{}
-    \addimage[\label{reserva_checkout_4}]{secciones/section_5/images/reserva_checkout_4}{width=4cm}{}
+    \addimage[\label{reservacion_checkout:reserva_checkout_1}]{secciones/section_5/images/reserva_checkout_1}{width=4cm}{}
+    \addimage[\label{reservacion_checkout:reserva_checkout_2}]{secciones/section_5/images/reserva_checkout_2}{width=4cm}{}
+    \addimage[\label{reservacion_checkout:reserva_checkout_4}]{secciones/section_5/images/reserva_checkout_4}{width=4cm}{}
 \end{images}
 
 
 % SUB-SECCIÓN
-\subsection{Reservaciones en curso e historial}
+\subsubsection{Reservaciones en curso e historial}
 En cualquier aplicación orientada a la reserva de servicios, resulta fundamental contar con una sección que permita a los usuarios visualizar tanto sus reservaciones actuales como las históricas. Esta función proporciona una perspectiva completa de las reservas realizadas y en curso, ofreciendo una experiencia integral de seguimiento y gestión de las mismas.
 
-Basándonos en el contexto anteriormente descrito, hemos desarrollado un componente destinado a la visualización de estas reservas, el cual se puede apreciar en la imagen \ref{vista_reservaciones}
+Basándonos en el contexto anteriormente descrito, hemos desarrollado un componente destinado a la visualización de estas reservas, el cual se puede apreciar en la imagen \ref{vista_reservaciones}. Si bien no se detalla un escenario de testeo para esta funcionalidad es uno de los módulos de la aplicación y la incluimos en esta sección de resultados dado que esta pantalla es lo que vería un usuario final.
 
 \begin{images}[\label{vista_reservaciones}]{Vista reservaciones en curso e historicas}
-    \addimage[\label{reservacion_en_curso}]{secciones/section_5/images/reservacion_en_curso}{width=5cm}{}
-    \addimage[\label{reservacion_historica}]{secciones/section_5/images/reservacion_historica}{width=5cm}{}
+    \addimage[\label{vista_reservaciones:reservacion_en_curso}]{secciones/section_5/images/reservacion_en_curso}{width=5cm}{}
+    \addimage[\label{vista_reservaciones:reservacion_historica}]{secciones/section_5/images/reservacion_historica}{width=5cm}{}
 \end{images}
 
 \subsubsection{Vista detallada de la reserva}
-Tanto para las reservaciones en curso como para las historicas, al ingresar en un item el usuario puede tener una vista detallada de la reserva con algunos datos de interes y un codigo QR generado que podría ser utilizado a futuro en una automatización del ingreso como se detalla en \ref{automatizacion_ingreso}
+Tanto para las reservaciones en curso como para las históricas, al ingresar en un ítem el usuario puede tener una vista detallada de la reserva con algunos datos de interés y un código QR generado que podría ser utilizado a futuro en una automatización del ingreso como se detalla en \ref{automatizacion_ingreso}
 
 \insertimage[\label{vista_detallada_reserva}]{secciones/section_5/images/vista_detallada_reserva}{width=5cm}{Vista detallada de la reserva}
 

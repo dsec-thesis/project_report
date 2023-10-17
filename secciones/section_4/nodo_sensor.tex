@@ -128,7 +128,7 @@ ocupada o no. En nuestro caso optamos por analizar el sensor comercial HMC5883L 
 
 
 
-\subsubsection{Elección del sensor/es}
+\subsubsection{Elección del sensor/es} \label{title:eleccion_sensores}
 En la sección anterior, se presentaron las características de tres sensores diferentes que podrían ser útiles para detectar la ocupación de un vehículo. Sin embargo, no se proporcionó un análisis detallado de las pruebas realizadas ni se especificó cuáles de estos sensores se seleccionarían para su implementación en este proyecto.
 
 En relación con el objetivo principal que debe cumplir el nodo sensor: detectar un vehiculo, se consideró inicialmente el uso de sensores ultrasónicos. Estos sensores son económicos, ampliamente disponibles y capaces de detectar vehículos de manera eficiente. Sin embargo, presentan desventajas significativas, como su tamaño y su principio de funcionamiento. En particular, si el sensor se encuentra parcialmente obstruido, no funcionará correctamente, lo que podría dejar el nodo sensor inoperable. Por esta razón, se descartó esta opción.
@@ -311,7 +311,7 @@ Este paso consiste en utilizar un segundo sensor, en nuestro caso el sensor ToF 
 En el caso de que la ocupación haya cambiado, ya sea porque estaba libre y paso a ser considerada ocupada o viceversa, la información pasa al siguiente módulo, para ser reportada al concentrador.
 En el sector izquierdo de la figura \ref{esquema_energia}, dentro del subsistema de algo consumo, puede verse el funcionamiento de este módulo.
 
-\subsubsubsection{Transmisión de la información}
+\subsubsubsection{Transmisión de la información} \label{title:transmition_node}
 Al detectase una variación en el estado de ocupacion del lugar de estacionamiento el sensor transmitir este evento al concentrador por medio de LoRa y para ello lo primero es seleccionar los datos a ser enviados, en nuetro caso el identificador del sensor y si esta libre o ocupado.
 
 \begin{sourcecode}{json}{}
