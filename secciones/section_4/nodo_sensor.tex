@@ -311,7 +311,7 @@ Este paso consiste en utilizar un segundo sensor, en nuestro caso el sensor ToF 
 En el caso de que la ocupación haya cambiado, ya sea porque estaba libre y paso a ser considerada ocupada o viceversa, la información pasa al siguiente módulo, para ser reportada al concentrador.
 En el sector izquierdo de la figura \ref{esquema_energia}, dentro del subsistema de algo consumo, puede verse el funcionamiento de este módulo.
 
-\subsubsubsection{Transmisión de la información}
+\subsubsubsection{Transmisión de la información} \label{title:transmition_node}
 Al detectase una variación en el estado de ocupacion del lugar de estacionamiento el sensor transmitir este evento al concentrador por medio de LoRa y para ello lo primero es seleccionar los datos a ser enviados, en nuetro caso el identificador del sensor y si esta libre o ocupado.
 
 \begin{sourcecode}{json}{}
