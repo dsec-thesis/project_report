@@ -2,73 +2,83 @@
 
 \begin{appendixd}
     \section{Repositorios de Código}
-        \subsection{Código nodo sensor}{\label{codigo_sensor}}
-            El código de nuestro nodo sensor se encuentra completamente desarrollado en C haciendo uso del framework del fabricante
-            Expressif. Aprovechando lo aprendido en las materias de Sistemas Digitales hemos podido aplicar en la construcción de nuestro
-            nodo sensor los conceptos relacionados al manejo y programación de microcontroladores, protocolos de comunicación como I2C, SPI, etc.
-            manejo de los modos de energía del microcontrolador, etc. En el link adjunto se puede ver el código del nodo sensor.
+    \subsection{Código nodo sensor}{\label{codigo_sensor}}
+    El código de nuestro nodo sensor se encuentra completamente desarrollado en C
+    haciendo uso del framework del fabricante Expressif. Aprovechando lo aprendido en las
+    materias de Sistemas Digitales hemos podido aplicar en la construcción de nuestro
+    nodo sensor los conceptos relacionados con el manejo y programación de
+    microcontroladores, protocolos de comunicación como I2C y SPI, manejo de los
+    modos de energía del microcontrolador, etc.
+
+    Link: \url{https://github.com/dsec-thesis/sensor}
+
+    \subsection{Código nodo concentrador}{\label{codigo_concentrador}}
+    El módulo del nodo concentrador ha sido diseñado en Python, aprovechando su
+    flexibilidad y facilidad de programación para cumplir con sus funciones esenciales.
+    Este componente desempeña un papel crucial en la arquitectura, siendo el puente entre
+    la información de los datos transmitidos por los nodos sensores a través de la
+    tecnología LoRa hacia el backend.
+
+    Link: \url{https://github.com/dsec-thesis/concentrator}
+
+    \subsection{Estimación tiempo de vida teórico de la batería}{\label{codigo_estimacion_bateria}}
+    Como se mencionó en anteriormente en la sección \ref{sec:bateria_del_nodo_sensor}
+    dada la naturaleza de nuestro proyecto, es fundamental realizar los cálculos
+    correctos para que el consumo de la batería sea el mínimo deseado y poder así
+    maximizar el tiempo de vida de esta y del nodo. El código de dicha estimación se
+    encuentra disponible en el siguiente repositorio de GitHub abierto públicamente.
+
+    Link: \url{https://github.com/dsec-thesis/project_report/tree/main/utils/battery_lifetime_estimation.ipynb}
+
+    \subsection{Código generación mapa de Rosario indexado}
+    Este anexo contiene el código en lenguaje Python, utilizado para la generación del
+    mapa de Rosario. Parte del mismo es utilizado en el backend cuando se registra un
+    estacionamiento nuevo para poder guardar su latitud y longitud con el índice H3
+    correspondiente y que esté disponible cuando un usuario busque un estacionamiento
+    determinado.
+
+    Link: \url{https://github.com/dsec-thesis/project_report/tree/main/utils/rosario_h3_index.ipynb}
+
+    \subsection{Código del backend}
+    El link a continuación contiene el código del backend desplegado en AWS.
+
+    Link: \url{https://github.com/dsec-thesis/backend}
+
+    \subsection{Código aplicación móvil}
+    El link a continuación contiene el código de la aplicación desarrollada en Flutter.
+
+    Link: \url{https://github.com/dsec-thesis/application}
 
 
-            Link: \url{https://github.com/dsec-thesis/sensor}
 
-        \subsection{Código nodo concentrador}{\label{codigo_concentrador}}
-            El módulo del nodo concentrador ha sido diseñado en Python, aprovechando su 
-            flexibilidad y facilidad de programación para cumplir con sus funciones esenciales.
-            Este componente desempeña un papel crucial en la arquitectura, siendo el puente entre 
-            la información de los datos transmitidos por los nodos sensores a través de la tecnología
-            LoRa hacia el backend.
-
-
-            Link: \url{https://github.com/dsec-thesis/concentrator}
-
-        \subsection{Estimación tiempo de vida teórico de la bateria}{\label{codigo_estimacion_bateria}}
-            Como se menciono en anteriormente en la seccion ~\ref{sec:bateria_del_nodo_sensor} dada la naturaleza de nuestro
-            proyecto, es fundamental realizar los calculos correctos para que el consumo de la batería sea el minímo deseado 
-            y poder así maximir el tiempo de vida de esta y del nodo. El código de dicha estimación se encuentra disponible
-            en el siguiente repositorio de GitHub abierto publicamente.
-
-            Link: \url{https://github.com/dsec-thesis/project_report/tree/main/utils/battery_lifetime_estimation.ipynb}
-
-
-        \subsection{Código generación mapa de Rosario indexado}
-            Este anexo contiene el código en lenguaje Python, utilizado para la generación del mapa de Rosario. 
-            Parte del mismo es utilizado en el backend cuando se registra un estacionamiento nuevo para poder guardar su latitud y 
-            longitud con un hash de H3 correspondiente y que esté disponible cuando un usuario busque un estacionamiento determinado.
-
-            Link: \url{https://github.com/dsec-thesis/project_report/tree/main/utils/rosario_h3_index.ipynb}
-
-        \subsection{Código del backend}
-            El link a continuación contiene el código del backend desplegado en AWS.
-
-            Link: \url{https://github.com/dsec-thesis/backend}
-
-        \subsection{Código aplicación móvil}
-            El link a continuación conitene el código de la aplicación desarrollada en Flutter
-
-            Link: \url{https://github.com/dsec-thesis/application}
     \clearpage
     \section{WiFi OTA (Over-The-Air)}{\label{configuracion_wifi}}
-        WiFi OTA (Over-The-Air) se refiere a la capacidad de actualizar, configurar o gestionar dispositivos electrónicos de manera inalámbrica, 
-        sin necesidad de conexiones físicas o cables. Esta tecnología ha cobrado gran relevancia en el mundo de la electrónica y 
-        especialmente en el Internet de las Cosas (IoT), donde la conectividad y la capacidad de actualización remota son 
-        esenciales para el funcionamiento y la escalabilidad de los dispositivos. Ademas, la importancia de WiFi OTA radica 
-        en su capacidad para facilitar la administración y el mantenimiento de dispositivos distribuidos en ubicaciones diversas,
-        sin la necesidad de acceso físico a cada uno de ellos. Esto presenta varias ventajas clave:
+    WiFi OTA (Over-The-Air) se refiere a la capacidad de actualizar, configurar o
+    gestionar dispositivos electrónicos de manera inalámbrica, sin necesidad de
+    conexiones físicas o cables. Esta tecnología ha cobrado gran relevancia en el mundo
+    de la electrónica y especialmente en el Internet de las Cosas (IoT), donde la
+    conectividad y la capacidad de actualización remota son esenciales para el
+    funcionamiento y la escalabilidad de los dispositivos. Además, la importancia de WiFi
+    OTA radica en su capacidad para facilitar la administración y el mantenimiento de
+    dispositivos distribuidos en ubicaciones diversas, sin la necesidad de acceso físico
+    a cada uno de ellos. Esto presenta varias ventajas clave:
 
-        \begin{itemize}
-            \item Actualizaciones Remotas: La habilidad de actualizar el firmware y el software de los dispositivos de manera inalámbrica permite corregir errores, 
-            agregar nuevas características y mejorar la seguridad sin requerir la presencia física del dispositivo. Esto es 
-            fundamental en sistemas distribuidos y de gran escala.
-            \item Ahorro de Tiempo y Recursos: La actualización y configuración inalámbrica ahorran tiempo y recursos al 
-            eliminar la necesidad de acceder manualmente a cada dispositivo, lo que sería especialmente costoso en 
-            despliegues masivos o en ubicaciones de difícil acceso.
-            \item Actualización de Firmware: Los dispositivos IoT suelen requerir actualizaciones periódicas para corregir errores, mejorar la seguridad y 
-            añadir nuevas funcionalidades. WiFi OTA permite realizar estas actualizaciones de manera eficiente y sin interrupciones.
-            \item Configuración Inicial: En sistemas IoT, la configuración inicial de los dispositivos puede ser compleja. WiFi OTA posibilita la 
-            configuración remota y simplificada de múltiples dispositivos al mismo tiempo.
-            \item etc
-        \end{itemize}
-
-
-
+    \begin{itemize}
+        \item Actualizaciones Remotas: La habilidad de actualizar el firmware y el
+              software de los dispositivos de manera inalámbrica permite corregir
+              errores, agregar nuevas características y mejorar la seguridad sin requerir
+              la presencia física del dispositivo. Esto es fundamental en sistemas
+              distribuidos y de gran escala.
+        \item Ahorro de Tiempo y Recursos: La actualización y configuración inalámbrica
+              ahorran tiempo y recursos al eliminar la necesidad de acceder manualmente a
+              cada dispositivo, lo que sería especialmente costoso en despliegues masivos
+              o en ubicaciones de difícil acceso.
+        \item Actualización de Firmware: Los dispositivos IoT suelen requerir
+              actualizaciones periódicas para corregir errores, mejorar la seguridad y
+              añadir nuevas funcionalidades. WiFi OTA permite realizar estas
+              actualizaciones de manera eficiente y sin interrupciones.
+        \item Configuración Inicial: En sistemas IoT, la configuración inicial de los
+              dispositivos puede ser compleja. WiFi OTA posibilita la configuración
+              remota y simplificada de múltiples dispositivos al mismo tiempo.
+    \end{itemize}
 \end{appendixd}
