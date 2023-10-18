@@ -2,20 +2,20 @@
 
 \subsection{Aplicación movil} \label{title:mobile_aplication}
 
-La aplicacion movil juega un papel de intermediario entre los conductores y el servidor. Permite a estos acceder a la informacion sobre la disponibilidad de las plazas de estacionamiento previamentes reportadas por el nodo concentrador a traves de los sensores al servidor. Y alli lograr crear una reserva en el mismo que le garantizara un lugar en el estacionmeinto elegido. El funcionamiento de la aplicación puede verse resumida en la figura a continuación.
+La aplicación móvil juega un papel de intermediario entre los conductores y el servidor. Permite a estos acceder a la información sobre la disponibilidad de las plazas de estacionamiento previamente reportadas por el nodo concentrador a través de los sensores al servidor. Y allí lograr crear una reserva en el mismo que le garantizara un lugar en el estacionamiento elegido. El funcionamiento de la aplicación puede verse resumida en la figura a continuación.
 
-\insertimage[\label{aplicacion_simplificada}]{secciones/section_4/images/aplicacion_simplificada}{width=16cm}{Diagrama simplificado de funcionamiento de la aplicación mobile}
+\insertimage[\label{aplicacion_simplificada}]{secciones/section_4/images/aplicacion_simplificada}{width=16cm}{Diagrama simplificado de funcionamiento de la aplicación móvil}
 
-Teniendo en cuanta lo mencionado en el parrafo anterior, en esta sección trataremos el diseño de la aplicación movil creada que permitira al usuario final interactuar con todo el sistema de \textit{Smart Parking}.
+Teniendo en cuanta lo mencionado en el párrafo anterior, en esta sección trataremos el diseño de la aplicación móvil creada que permitirá al usuario final interactuar con todo el sistema de \textit{Smart Parking}.
 
-\subsubsection{Stack de tecnologías}
+\subsubsection{Pila de tecnologías}
 La industria de las aplicaciones móviles se ve influenciada por las fuerzas interconectadas de la demanda del consumidor y una infraestructura tecnológica en constante evolución, utilizada para el desarrollo de aplicaciones móviles. Mientras que el primer elemento es de comprensión sencilla, el segundo requiere una explicación más detallada. La \quotes{pila tecnológica} se refiere a un conjunto integrado de APIs, lenguajes de programación y herramientas que desempeñan un papel fundamental en la configuración de la arquitectura, el rendimiento y los costos asociados al desarrollo de cada aplicación.
 
 Antes de adentrarnos en el diseño de la aplicación móvil, es crucial comprender la elección de la tecnología con la que se construyó la misma. Esto parte de la premisa de los tres tipos de desarrollo de aplicaciones móviles más relevantes, que se resumen en la figura \ref{mobile_stack}.
 
-\insertimage[\label{mobile_stack}]{secciones/section_4/images/mobile_app_stack}{width=17cm}{Stack de tecnologías mobiles disponibles para la construcción de aplicaciones}
+\insertimage[\label{mobile_stack}]{secciones/section_4/images/mobile_app_stack}{width=17cm}{Pila de tecnologías móviles disponibles para la construcción de aplicaciones}
 
-A partir de la imagen anterior, vamos a describir los diferentes stacks disponibles, comenzando por el stack destinado a aplicaciones nativas.
+A partir de la imagen anterior, vamos a describir los diferentes stacks disponibles, comenzando por la pila destinada a aplicaciones nativas.
 
 El desarrollo de aplicaciones nativas implica la creación de aplicaciones diseñadas específicamente para ejecutarse en un sistema operativo particular, como iOS o Android. Este enfoque brinda un alto grado de personalización y control sobre la experiencia del usuario, pero también puede ser un proceso que requiera mucho tiempo y recursos financieros.
 
@@ -63,13 +63,13 @@ Primero, para permitir que los usuarios utilicen la aplicación y puedan interac
 Es importante mencionar que, aunque nuestra solución adopta Google como método de autenticación, existen otras alternativas viables, como Auth0, Firebase, Cognito, Apple ID, entre otras. Esta elección no representa un desafío técnico ni limita ninguna funcionalidad en la integración con el servidor. En este caso, hemos implementado una de estas soluciones (Google) para demostrar su uso.
 
 \subsubsubsection{Búsqueda y Reserva de Estacionamiento}
-La funcionalidad esencial de nuestra aplicación es la capacidad de buscar y reservar una plaza de estacionamiento de manera eficiente. En esta sección, presentaremos una visión general de cómo se implementa este proceso. Y en la sección \ref{title:resultados}, se muestraran las pantallas de la aplicación en interacción con el sistema completo.
+La funcionalidad esencial de nuestra aplicación es la capacidad de buscar y reservar una plaza de estacionamiento de manera eficiente. En esta sección, presentaremos una visión general de cómo se implementa este proceso. Y en la sección \ref{title:resultados}, se muestrearan las pantallas de la aplicación en interacción con el sistema completo.
 
-Para entender como funciona el proceso de búsqueda, veamos la imagen \ref{busqueda_parking_software}: 
+Para entender como funciona el proceso de búsqueda, veamos la imagen \ref{busqueda_parking_software}:
 
 \insertimage[\label{busqueda_parking_software}]{secciones/section_4/images/busqueda_parking_software}{width=15cm}{Diagrama de flujos con representación de la búsqueda de destinos} % TODO: we need to change this image for an excalidraw example
 
-El proceso comienza con la búsqueda de estacionamientos. Los usuarios pueden iniciar este proceso dos maneras: explorando el mapa de la aplicación o utilizando la barra de búsqueda para especificar su destino deseado. Una vez que el destino está seleccionado, la aplicación realiza una consulta en el backend para determinar qué estacionamientos están disponibles en esa área. El objetivo de esta consulta es mostrar al usuario en el mapa marcadores que representan estacionamientos con plazas disponibles.
+El proceso comienza con la búsqueda de estacionamientos. Los usuarios pueden iniciar este proceso dos maneras: explorando el mapa de la aplicación o utilizando la barra de búsqueda para especificar su destino deseado. Una vez que el destino está seleccionado, la aplicación realiza una consulta en el backend para determinar qué estacionamientos están disponibles en esa área. El objetivo de esta consulta es mostrar al usuario marcadores en el mapa que representan estacionamientos con plazas disponibles.
 
 Algo a destacar aquí es que estamos haciendo uso de la información brindada por la API de Google para poder obtener las direcciones como así también ubicaciones de estacionamientos.
 

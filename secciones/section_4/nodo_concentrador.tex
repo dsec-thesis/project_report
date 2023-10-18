@@ -17,7 +17,7 @@ La Raspberry Pi es una computadora de placa unica (SBC por las siglas en ingles 
 
 Teniendo en cuenta lo mencionado anteriormente, en el diagrama de bloques a continuación se visualizan los módulos actuantes para el nodo concentrador.
 
-\insertimage[\label{concentrador_hardware}]{secciones/section_4/images/concentrador_hardware}{width=16cm}{Diagrama de bloques conexion nodo concentrador}
+\insertimage[\label{concentrador_hardware}]{secciones/section_4/images/concentrador_hardware}{width=16cm}{Diagrama de bloques conexión nodo concentrador}
 
 
 \subsubsubsection{PinOut}
@@ -27,7 +27,7 @@ A continuación se visualiza el pinout de la placa Raspberry Pi 3 Model B+:
 
 
 \subsubsubsection{Plano esquemático}
-En el diagrama subsecuente se presentan de manera detallada las interconexiones que existen entre el módulo LoRa SX1278 y la Raspberry Pi, establecidas a través de los pines que componen la interfaz de comunicación serial SPI. 
+En el diagrama subsecuente se presentan de manera detallada las interconexiones que existen entre el módulo LoRa SX1278 y la Raspberry Pi, establecidas a través de los pines que componen la interfaz de comunicación serial SPI.
 
 \insertimage[\label{concentrator_schematic}]{secciones/section_4/images/concentrator_schematic}{width=17cm}{Conexión entre la Raspberry Pi y el módulo LoRa}
 
@@ -41,16 +41,16 @@ La idea es desarrollar un sistema que, al ser activado inicialmente, tenga la ca
 
 
 \subsubsubsection{Pila de tecnologías}
-El software del concentrador esta contruidro sobre la base de una pila de tecnologias que puede resumirse a las que conforman la figura \ref{concentrador_capas}
+El software del concentrador está construido sobre la base de una pila de tecnologías que puede resumirse a las que conforman la figura \ref{concentrador_capas}
 
 \insertimage[\label{concentrador_capas}]{secciones/section_4/images/concentrador_capas}{width=10cm}{Capas del concentrador}
 
 Empezando desde abajo hacia arriba el primer elemento es Raspberry Pi OS, anteriormente conocido como Raspbian, representa una distribución del sistema operativo GNU/Linux, construida sobre la base de Debian y especialmente diseñada para la utilización en la placa computadora de bajo costo Raspberry Pi. Esta plataforma vio la luz por primera vez en junio de 2012 y desde el año 2015 ha sido oficialmente respaldada por la Raspberry Pi Foundation como el sistema operativo predeterminado para su gama de placas SBC (Single Board Computer).
 Es importante destacar que Raspbian, un proyecto concebido de manera independiente por Mike Thompson y Peter Green, sigue evolucionando activamente. Se caracteriza por su notable optimización para el hardware de Raspberry Pi. Desde una perspectiva técnica, este sistema operativo constituye una adaptación no oficial de Debian armhf, adaptada para el procesador (CPU) de Raspberry Pi. Además, incorpora un soporte altamente optimizado para operaciones de coma flotante por hardware, lo que resulta en un rendimiento mejorado en determinados escenarios. Esta adaptación fue esencial debido a la inexistencia de una versión oficial de Debian armhf compatible con la arquitectura ARMv6, presente en la Raspberry Pi.
-Raspberry Pi OS se elige como el sistema operativo para las Raspberry Pi debido a su eficiencia en el hardware y amplia compatibilidad con periféricos, lo que lo convierte en la opción ideal para nuestra aplicacion.
+Raspberry Pi OS se elige como el sistema operativo para las Raspberry Pi debido a su eficiencia en el hardware y amplia compatibilidad con periféricos, lo que lo convierte en la opción ideal para nuestra aplicación.
 
 El segundo elemento, Python, es un lenguaje de programación de alto nivel, multipropósito e interpretado, que se destaca por su sintaxis clara y legible. Fue creado por Guido van Rossum y lanzado por primera vez en 1991, y desde entonces ha ganado una amplia aceptación en la comunidad de desarrollo de software debido a su facilidad de uso y versatilidad. Python ofrece una amplia biblioteca estándar que abarca una variedad de áreas, lo que facilita la implementación de una amplia gama de aplicaciones y proyectos. Su enfoque en la legibilidad del código fomenta la escritura de programas limpios y mantenibles, lo que lo convierte en una elección popular tanto para principiantes como para desarrolladores experimentados en diversas disciplinas, desde la ciencia de datos hasta el desarrollo web.
-La elección de Python como lenguaje de programación para el desarrollo del concentradorse justifica por varias razones fundamentales. En primer lugar, Python es altamente compatible con Raspberry Pi OS. Esto garantiza una integración fluida y una experiencia de desarrollo sin problemas.
+La elección de Python como lenguaje de programación para el desarrollo del concentrador se justifica por varias razones fundamentales. En primer lugar, Python es altamente compatible con Raspberry Pi OS. Esto garantiza una integración fluida y una experiencia de desarrollo sin problemas.
 Además, contamos con experiencia de desarrollo con el lenguaje Python. La familiaridad con la sintaxis y las bibliotecas de Python permite un desarrollo eficiente y una resolución efectiva de problemas.
 
 
@@ -63,7 +63,7 @@ La placa sirve una interfaz web (Figura \ref{wifi_conf}), que permite llevar a c
     \addimage[\label{wifi_conf:bootstrap_1}]{secciones/section_4/images/bootstrap_1}{width=5.1cm}{}
     \addimage[\label{wifi_conf:bootstrap_2}]{secciones/section_4/images/bootstrap_2}{width=5.1cm}{}
     \addimage[\label{wifi_conf:bootstrap_3}]{secciones/section_4/images/bootstrap_3}{width=5.1cm}{}
-    \end{images}
+\end{images}
 
 Una vez que se ha establecido la conexión WiFi, se realiza una consulta HTTP para descargar automáticamente las credenciales de identificación desde el servidor (Figura \ref{credentials_conf:identificacion_estacionamiento}). Estas credenciales validan al nodo concentrador y al estacionamiento dentro del sistema.
 
@@ -71,14 +71,14 @@ Luego, debemos guardar los cambios, y la aplicación indicará que el nodo está
 
 
 \begin{images}[\label{credentials_conf}]{Configuración de las credenciales}
-\addimage[\label{credentials_conf:identificacion_estacionamiento}]{secciones/section_4/images/bootstrap_4}{width=5.1cm}{} 
-\addimage[\label{credentials_conf:nodo_concentrador_listo_1}]{secciones/section_4/images/bootstrap_5}{width=5.1cm}{}
-\addimage[\label{credentials_conf:nodo_concentrador_listo_2}]{secciones/section_4/images/bootstrap_6}{width=5.1cm}{}
+    \addimage[\label{credentials_conf:identificacion_estacionamiento}]{secciones/section_4/images/bootstrap_4}{width=5.1cm}{}
+    \addimage[\label{credentials_conf:nodo_concentrador_listo_1}]{secciones/section_4/images/bootstrap_5}{width=5.1cm}{}
+    \addimage[\label{credentials_conf:nodo_concentrador_listo_2}]{secciones/section_4/images/bootstrap_6}{width=5.1cm}{}
 \end{images}
 
 
 \subsubsubsection{Concentrador}
 El bucle principal del concentrador se compone de dos elementos fundamentales. En primer lugar, encontramos la fase encargada de recibir los mensajes provenientes de los sensores a través de la tecnología LoRa. Esta fase implica la deserialización de los datos, su validación y la confirmación de su recepción mediante el envío de un acuse de recibo (ACK) de vuelta al nodo sensor correspondiente. Por otro lado, existe un módulo específico encargado de procesar estos mensajes y transmitirlos al servidor central.
-La interconexión de estos dos sistemas se realiza mediante una cola, lo que habilita al concentrador para gestionar una mayor cantidad de mensajes entrantes en momentos de alta demanda. Esto posibilita la postergación de la retransmisión de los datos al servidor para un momento más oportuno. Es importante destacar que, si bien esta estrategia puede resultar en notificaciones con cierto retraso para los usuarios, se evita la pérdida de mensajes enviados por los sensores. Este enfoque, en última instancia, contribuye a prolongar la vida útil de la batería de los dispositivos al reducir la necesidad de retransmitir los datos. 
+La interconexión de estos dos sistemas se realiza mediante una cola, lo que habilita al concentrador para gestionar una mayor cantidad de mensajes entrantes en momentos de alta demanda. Esto posibilita la postergación de la retransmisión de los datos al servidor para un momento más oportuno. Es importante destacar que, si bien esta estrategia puede resultar en notificaciones con cierto retraso para los usuarios, se evita la pérdida de mensajes enviados por los sensores. Este enfoque, en última instancia, contribuye a prolongar la vida útil de la batería de los dispositivos al reducir la necesidad de retransmitir los datos.
 
 \insertimage[\label{concentrador_flujo}]{secciones/section_4/images/concentrador_flujo}{width=14cm}{Flujo del concentrador}

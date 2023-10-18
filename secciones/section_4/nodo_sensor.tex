@@ -2,9 +2,9 @@
 El nodo sensor en el contexto de nuestro proyecto se compone de tres etapas esenciales:
 
 \begin{itemize}
-\item Etapa de Adquisición de Datos
-\item Etapa de Procesamiento
-\item Etapa de Comunicación
+    \item Etapa de Adquisición de Datos
+    \item Etapa de Procesamiento
+    \item Etapa de Comunicación
 \end{itemize}
 
 La arquitectura del nodo sensor se ilustra en la figura siguiente:
@@ -15,14 +15,14 @@ Dado que la función principal del nodo sensor es la detección de la presencia 
 
 \subsubsection{Tipo de sensores disponibles}
 Los sistemas de estacionamiento inteligente ocupan un lugar importante como una de las
-infraestructuras esenciales que permite llevar a cabo el IoT en las Smart Cities. Como mencionamos anteriormente es fundamental poder detectar un vehículo con una buena presición sin arrojar falsos positivos y manteniendo un nivel de consumo de energía bajo para maximizar el tiempo de vida de la batería. 
+infraestructuras esenciales que permite llevar a cabo el IoT en las Smart Cities. Como mencionamos anteriormente es fundamental poder detectar un vehículo con una buena precisión sin arrojar falsos positivos y manteniendo un nivel de consumo de energía bajo para maximizar el tiempo de vida de la batería.
 
-Del análisis de nuestra investigación en cuanto a los sensores disponibles y teniendo en cuenta también cuales son utilizados en productos comerciales de características similares vamos a enforcarnos en este informe en los siguientes sensores:
+Del análisis de nuestra investigación en cuanto a los sensores disponibles y teniendo en cuenta también cuáles son utilizados en productos comerciales de características similares vamos a enfocarnos en este informe en los siguientes sensores:
 \begin{itemize}
     \item Sensor ultrasónico
     \item Sensor ToF
     \item Magnetómetro
-    \end{itemize}
+\end{itemize}
 \subsubsubsection{Sensor Ultrasónico}
 Un sensor ultrasónico es un dispositivo electrónico que mide la distancia de un objeto
 objetivo emitiendo ondas de sonido ultrasónico y convierte el sonido reflejado en una
@@ -42,7 +42,7 @@ siguiente fórmula:
     \frac{h_{lt} . vs}{2} = d \quad\text{(Formula de distancia al objetivo)} \label{eqn:distancia_de_la_onda}
 \end{equation}
 
-En nuestro contexto, dado que estamos trabajando en un prototipo y considerando las diversas opciones disponibles en el mercado, hemos elegido analizar el sensor ultrasónico HC-SR04. Este sensor es ampliamente utilizado en el ámbito del prototipado por ser sencillo de implementar, de facil acceso y coste y ofrece una resolución que se ajusta a los requisitos de nuestro proyecto. A continuación, se adjunta una imagen del sensor real:
+En nuestro contexto, dado que estamos trabajando en un prototipo y considerando las diversas opciones disponibles en el mercado, hemos elegido analizar el sensor ultrasónico HC-SR04. Este sensor es ampliamente utilizado en el ámbito del prototipado por ser sencillo de implementar, de fácil acceso y coste y ofrece una resolución que se ajusta a los requisitos de nuestro proyecto. A continuación, se adjunta una imagen del sensor real:
 
 \insertimage[\label{sensor_ultrasonico}]{secciones/section_3/images/sensor_ultrasonico}{width=11cm}{Sensor ultrasónico HC-SR04}
 
@@ -59,22 +59,22 @@ Dentro de la gama de sensores de acceso comercial, se destaca el modelo VL53L0X,
     \caption{Tabla de especificaciones del sensor laser VL53L0X}
     \begin{tabular}{|p{6cm}|*{2}{>{\raggedright\arraybackslash}p{5cm}|}}
         \hline
-        \textbf{Parámetro} & \textbf{VL53L0X} \\
+        \textbf{Parámetro}          & \textbf{VL53L0X}                                   \\
         \hline
-            Ranging chip &VL53L0X \\
-            Measuring distance & 2M (Max) \\
-            Measuring Mode & Default, High precision, Long Distance, High Speed \\
-            Infrared emission mechanish &940nm \\
-            FOV & 25º \\
-            Operating Voltage & 3 - 5V \\
-            Operating temperature & -20°C - 80°C \\
+        Ranging chip                & VL53L0X                                            \\
+        Measuring distance          & 2M (Max)                                           \\
+        Measuring Mode              & Default, High precision, Long Distance, High Speed \\
+        Infrared emission mechanish & 940nm                                              \\
+        FOV                         & 25º                                                \\
+        Operating Voltage           & 3 - 5V                                             \\
+        Operating temperature       & -20°C - 80°C                                       \\
         \hline
-        \end{tabular}
+    \end{tabular}
     \label{tab:tabla_parametros_sensor_laser}
 \end{table}
 
 
-\subsubsubsection{Magnetómegro}
+\subsubsubsection{Magnetómetro}
 Los magnetómetros son dispositivos utilizados para medir y detectar campos magnéticos en
 el entorno. Estos campos magnéticos pueden ser generados por imanes, corrientes
 eléctricas o incluso por la presencia de materiales magnéticos. Los magnetómetros juegan
@@ -104,25 +104,25 @@ ocupada o no. En nuestro caso optamos por analizar el sensor comercial HMC5883L 
     \caption{Tabla de especificaciones del sensor magnético HMC5883L}
     \begin{tabular}{|p{6cm}|*{2}{>{\raggedright\arraybackslash}p{5cm}|}}
         \hline
-        \textbf{Parámetro} & \textbf{HMC5883L} \\
+        \textbf{Parámetro}           & \textbf{HMC5883L} \\
         \hline
-            Voltage Supply (Vs) &2V16 - 3V6 \\
-            Digital Supply (VDDIO) (max) & 1.71V - 3V7 \\
-            Abs. Max VDD/VDD IO & -0.3V - 4.8V \\
-            Interface &I2C \\
-            I2C Address (R,W) [RW] &0x3D, 0x3C \\
-            I2C rates (kHz) & 100, 400, 3400 \\
-            Resolution (ADC) & 12  bits \\
-            Max Gauss (survival) & Not specified. \\
-            Gauss Resolution & ±2mG - ±8G \\
-            Acquisition time &6ms \\
-            Active current (7Hz,10Hz) &100uA \\
-            Active current &Not specified. \\
-            Peak Active current &Not Specified[3] \\
-            Standby mode (leakage) & 2uA \\
-            Operating temperature & -30°C - 85°C \\
+        Voltage Supply (Vs)          & 2V16 - 3V6        \\
+        Digital Supply (VDDIO) (max) & 1.71V - 3V7       \\
+        Abs. Max VDD/VDD IO          & -0.3V - 4.8V      \\
+        Interface                    & I2C               \\
+        I2C Address (R,W) [RW]       & 0x3D, 0x3C        \\
+        I2C rates (kHz)              & 100, 400, 3400    \\
+        Resolution (ADC)             & 12  bits          \\
+        Max Gauss (survival)         & Not specified.    \\
+        Gauss Resolution             & ±2mG - ±8G        \\
+        Acquisition time             & 6ms               \\
+        Active current (7Hz,10Hz)    & 100uA             \\
+        Active current               & Not specified.    \\
+        Peak Active current          & Not Specified[3]  \\
+        Standby mode (leakage)       & 2uA               \\
+        Operating temperature        & -30°C - 85°C      \\
         \hline
-        \end{tabular}
+    \end{tabular}
     \label{tab:tabla_parametros_sensor_magnetico}
 \end{table}
 
@@ -131,7 +131,7 @@ ocupada o no. En nuestro caso optamos por analizar el sensor comercial HMC5883L 
 \subsubsection{Elección del sensor/es} \label{title:eleccion_sensores}
 En la sección anterior, se presentaron las características de tres sensores diferentes que podrían ser útiles para detectar la ocupación de un vehículo. Sin embargo, no se proporcionó un análisis detallado de las pruebas realizadas ni se especificó cuáles de estos sensores se seleccionarían para su implementación en este proyecto.
 
-En relación con el objetivo principal que debe cumplir el nodo sensor: detectar un vehiculo, se consideró inicialmente el uso de sensores ultrasónicos. Estos sensores son económicos, ampliamente disponibles y capaces de detectar vehículos de manera eficiente. Sin embargo, presentan desventajas significativas, como su tamaño y su principio de funcionamiento. En particular, si el sensor se encuentra parcialmente obstruido, no funcionará correctamente, lo que podría dejar el nodo sensor inoperable. Por esta razón, se descartó esta opción.
+En relación con el objetivo principal que debe cumplir el nodo sensor: detectar un vehículo, se consideró inicialmente el uso de sensores ultrasónicos. Estos sensores son económicos, ampliamente disponibles y capaces de detectar vehículos de manera eficiente. Sin embargo, presentan desventajas significativas, como su tamaño y su principio de funcionamiento. En particular, si el sensor se encuentra parcialmente obstruido, no funcionará correctamente, lo que podría dejar el nodo sensor inoperable. Por esta razón, se descartó esta opción.
 
 Continuando con nuestro análisis, se llevaron a cabo pruebas con el sensor ToF VL53L0X, que comparte el mismo principio de funcionamiento que los sensores ultrasónicos. Este sensor ofrece características notables, como la capacidad de no proporcionar muestras cuando el objeto está fuera de su rango de lectura, una mayor velocidad de respuesta y un tamaño físico más reducido. Para ilustrar este punto, se presentan las figuras \ref{VL53L0X_PLOTS}, que muestran los resultados de un experimento realizado al estacionar un vehículo tanto en posición frontal como trasera sobre este dispositivo.
 
@@ -153,7 +153,7 @@ En este punto, resta considerar el magnetómetro, que supera el problema del alt
 
 En vista de las consideraciones anteriores, surge la pregunta de si es posible combinar el sensor ToF con un enfoque de bajo consumo de energía. Esto podría ser una opción viable si el sistema se implementa en un estacionamiento público o en la calle, donde simplemente se necesita proporcionar información a los usuarios sobre la disponibilidad de espacios de estacionamiento, sin la opción de reservas. Sin embargo, en nuestro caso, es fundamental poder reflejar la ocupación en tiempo real (o lo más cercano posible) para gestionar las reservas de manera efectiva. Por lo tanto, considerando lo mencionado anteriormente sobre los sensores, hemos decidido utilizar una combinación de dos sensores para detectar la presencia de un vehículo, aprovechando las ventajas del magnetómetro y el sensor ToF.
 
-El magnetómetro realizará lecturas de manera continua para detectar cambios en las proximidades del sistema debido a su bajo consumo de energía. Como el magnetómetro tiene una precisión limitada, habilitará al sensor ToF cuando detecte cambios, lo que permitirá al sistema confirmar si estos cambios se deben a la entrada o salida de un automóvil en el espacio de estacionamiento. 
+El magnetómetro realizará lecturas de manera continua para detectar cambios en las proximidades del sistema debido a su bajo consumo de energía. Como el magnetómetro tiene una precisión limitada, habilitará al sensor ToF cuando detecte cambios, lo que permitirá al sistema confirmar si estos cambios se deben a la entrada o salida de un automóvil en el espacio de estacionamiento.
 
 Por todo lo mencionado anteriormente y sumado a un análisis comparativo que se presenta en la tabla a continuación optamos por la combinación de ambos sensores para su implementación en este proyecto.
 
@@ -164,18 +164,18 @@ Por todo lo mencionado anteriormente y sumado a un análisis comparativo que se 
     \caption{Tabla comparativa entre sensores}
     \begin{tabular}{|p{8cm}|*{2}{>{\raggedright\arraybackslash}p{3cm}|}}
         \hline
-        \textbf{} & \textbf{ToF} & \textbf{Magnetómetro} \\
+        \textbf{}                                                      & \textbf{ToF} & \textbf{Magnetómetro} \\
         \hline
-        Fiabilidad frente al movimiento de vehículos cercanos & SI & NO \\
-        Fiabilidad frente a vehículos estacionados en las proximidades & SI & NO \\
-        Fiabilidad frente a interferencias electromagnéticas & SI &NO \\
-        Fiabilidad en cualquier escenario de iluminación &SI &SI \\
-        Estabilidad durante estancias prolongadas del vehículo &SI &NO \\
-        No necesita apertura en la caja &SI &SI \\
-        Inmunidad contra la suciedad o el polvo en la caja &SI &SI \\
-        Optimización en consumo de energía &NO &SI \\
+        Fiabilidad frente al movimiento de vehículos cercanos          & SI           & NO                    \\
+        Fiabilidad frente a vehículos estacionados en las proximidades & SI           & NO                    \\
+        Fiabilidad frente a interferencias electromagnéticas           & SI           & NO                    \\
+        Fiabilidad en cualquier escenario de iluminación               & SI           & SI                    \\
+        Estabilidad durante estancias prolongadas del vehículo         & SI           & NO                    \\
+        No necesita apertura en la caja                                & SI           & SI                    \\
+        Inmunidad contra la suciedad o el polvo en la caja             & SI           & SI                    \\
+        Optimización en consumo de energía                             & NO           & SI                    \\
         \hline
-        \end{tabular}
+    \end{tabular}
     \label{tab:tabla_comparativa_sensore}
 \end{table}
 \disabletablerowcolor % Desactiva el color de celda
@@ -201,13 +201,13 @@ Con estos criterios en mente, llegamos a la conclusión de que las tecnologías 
 
 Las redes LPWAN se caracterizan por su bajo consumo de energía, su baja potencia de transmisión y su capacidad limitada de datos. Esto permite que los dispositivos finales sean alimentados por baterías con una vida útil prolongada. Aunque existen varias tecnologías inalámbricas, como Wi-Fi y Bluetooth, que son más conocidas en la sociedad, estas no son adecuadas para soluciones IoT debido a su alto consumo de energía y su limitada cobertura.
 
-Siguiendo con lo mencionado anteriormente, Wi-Fi y Bluetooth se descartaron por su alto consumo de energía y su limitada cobertura. Además, la inmunidad al ruido en el canal de Bluetooth es baja, lo que podría afectar la comunicación del sensor con el servidor. Además, en entornos de estacionamiento con múltiples pisos o extensiones considerables, sería necesario implementar múltiples gateways o repetidores para utilizar estas tecnologías, lo que resultaría poco práctico e incrementaría además el costo de la red.
+Siguiendo con lo mencionado anteriormente, Wi-Fi y Bluetooth se descartaron por su alto consumo de energía y su limitada cobertura. Además, la inmunidad al ruido en el canal de Bluetooth es baja, lo que podría afectar la comunicación del sensor con el servidor. Adicionalmente, en entornos de estacionamiento con múltiples pisos o extensiones considerables, sería necesario implementar múltiples gateways o repetidores para utilizar estas tecnologías, lo que resultaría poco práctico e incrementaría además el costo de la red.
 
 En cuanto a Zigbee, su principal desventaja radica en su dependencia del factor humano, ya que la configuración y el mantenimiento de la red pueden ser complicados. Esto dificultaría la creación de un dispositivo final de fácil instalación. Además, el costo de Zigbee es más elevado que el de las tecnologías mencionadas anteriormente.
 
 Finalmente, nos centraremos en dos tecnologías ampliamente utilizadas en el ámbito del IoT: Sigfox y LoRa. Ambas comparten características como un amplio alcance, bajo consumo de energía y la capacidad de transmitir datos a larga distancia. Sin embargo, Sigfox presenta ciertas limitaciones, como la cantidad máxima de mensajes que se pueden enviar por día y la dependencia de la cobertura proporcionada por el proveedor de servicios.
 
-Por otro lado, LoRa ofrece un amplio alcance tanto en áreas urbanas como rurales, sin limitaciones en la cantidad de mensajes que pueden enviarse y utilizando un espectro gratuito. Además, en caso que el proyecto escale puede implementarse un gateway industrial a través de LoRaWAN, un protocolo basado en LoRa, que permitiría gestionar múltiples estacionamientos o redes de gran tamaño.
+Por otro lado, LoRa ofrece un amplio alcance tanto en áreas urbanas como rurales, sin limitaciones en la cantidad de mensajes que pueden enviarse y utilizando un espectro gratuito. Además, en caso de que el proyecto escale puede implementarse un gateway industrial a través de LoRaWAN, un protocolo basado en LoRa, que permitiría gestionar múltiples estacionamientos o redes de gran tamaño.
 
 Dada esta evaluación y después de considerar todas las opciones disponibles, pensamos que LoRa es la tecnología más prometedora para ser utilizada en este proyecto. Además, para brindar una visión más completa de nuestra decisión, presentamos una tabla comparativa de las características de las tecnologías de comunicación consideradas:
 
@@ -218,21 +218,21 @@ Dada esta evaluación y después de considerar todas las opciones disponibles, p
     \caption{Tabla comparativa sobre tecnologías de comunicación}
     \begin{tabular}{|l|*{5}{>{\raggedright\arraybackslash}p{1.8cm}|}}
         \hline
-        \textbf{} & \textbf{BLE} & \textbf{WiFi} & \textbf{ZigBee} & \textbf{Sigfox} & \textbf{LoRa} \\
+        \textbf{}             & \textbf{BLE}     & \textbf{WiFi}               & \textbf{ZigBee}                     & \textbf{Sigfox}              & \textbf{LoRa}               \\
         \hline
-        Frecuency               & Unlicensed ISM    & Unlicensed ISM bands & Unlicensed ISM & Unlicensed ISM bands & Unlicensed ISM bands \\
-        Bandwidth               & 2,4 GHz           & 2,4-5GHz             & 868MHz (Europe) and 2.4 GHz (World) & 100 Hz & 250kHz and 125 kHz \\
-        Maximum data rate       & 1Mbps             & 150-200 Mbps up to  600Mbps & 250 kbps & 100 bps &50 kbps \\
-        Bidirectional           & Yes               & Yes & Yes & Limited & Yes \\
-        Maximum messages/day    & Unlimited         & Unlimited & Unlimited & 140 (UL), 4(DL) &Unlimited \\
-        Range                   & 10m ~ 1 km        & 15m ~ 100m & 10 ~100m & 10 km (urban), 40 km (rural) & 5 km (urban), 20 km (rural) \\
-        Interference immunity   & Low               & Low & High & Very high & Very high \\
-        Allow private network   & Yes               & Yes & Yes & No &Yes \\
-        Spectrum cost           & Free              & Free & Free & Free & Free \\
-        Supported Topology      & P2P, Start, Mesh  & Start, Mesh & Mesh & Start & Start \\
-        Energy consumption      & Mid               & High & Mid & Low & Low \\
+        Frecuency             & Unlicensed ISM   & Unlicensed ISM bands        & Unlicensed ISM                      & Unlicensed ISM bands         & Unlicensed ISM bands        \\
+        Bandwidth             & 2,4 GHz          & 2,4-5GHz                    & 868MHz (Europe) and 2.4 GHz (World) & 100 Hz                       & 250kHz and 125 kHz          \\
+        Maximum data rate     & 1Mbps            & 150-200 Mbps up to  600Mbps & 250 kbps                            & 100 bps                      & 50 kbps                     \\
+        Bidirectional         & Yes              & Yes                         & Yes                                 & Limited                      & Yes                         \\
+        Maximum messages/day  & Unlimited        & Unlimited                   & Unlimited                           & 140 (UL), 4(DL)              & Unlimited                   \\
+        Range                 & 10m ~ 1 km       & 15m ~ 100m                  & 10 ~100m                            & 10 km (urban), 40 km (rural) & 5 km (urban), 20 km (rural) \\
+        Interference immunity & Low              & Low                         & High                                & Very high                    & Very high                   \\
+        Allow private network & Yes              & Yes                         & Yes                                 & No                           & Yes                         \\
+        Spectrum cost         & Free             & Free                        & Free                                & Free                         & Free                        \\
+        Supported Topology    & P2P, Start, Mesh & Start, Mesh                 & Mesh                                & Start                        & Start                       \\
+        Energy consumption    & Mid              & High                        & Mid                                 & Low                          & Low                         \\
         \hline
-        \end{tabular}
+    \end{tabular}
     \label{tab:tabla_comparativa_tecnologia}
 \end{table}
 \disabletablerowcolor % Desactiva el color de celda
@@ -245,13 +245,13 @@ Además de su eficiencia energética, el ESP32 ofrece una gama completa de perif
 
 Es relevante mencionar que, aunque la creación de una zona Wi-Fi y una configuración detallada de parámetros mediante un servidor web no se encuentra dentro del alcance de este proyecto, se proporciona una breve introducción sobre cómo la actualización por aire a través de Wi-Fi (OTA) podría ser beneficiosa en el Anexo ~\ref{configuracion_wifi}. Además, se plantea como una posible mejora futura en la sección ~\ref{potencial_mejora_wifiOTA}.
 
-Retomando el enfoque en el microcontrolador elegido, en nuestra búsqueda encontramos que el fabricante HELTEC ofrecía una placa de desarrollo denominada \quotes{WiFi LoRa 32 V2} que resultaba sumamente atractiva en términos de relación costo-beneficio. Esta placa integra el chip ESP32 y el módulo LoRa SX1278, lo que eliminaba la necesidad de adquirir una placa LoRa por separado para comunicarse mediante SPI con el ESP32. Además, la placa de desarrollo cuenta con una pantalla, que aunque no se utilizó en este proyecto, podría ser útil para aplicaciones futuras, como depuración o pruebas de conectividad entre dispositivos. A continuación puede verse la placa de desarrollo Heltec: 
+Retomando el enfoque en el microcontrolador elegido, en nuestra búsqueda encontramos que el fabricante Heltec ofrecía una placa de desarrollo denominada \quotes{WiFi LoRa 32 V2} que resultaba sumamente atractiva en términos de relación costo-beneficio. Esta placa integra el chip ESP32 y el módulo LoRa SX1278, lo que eliminaba la necesidad de adquirir una placa LoRa por separado para comunicarse mediante SPI con el ESP32. Además, la placa de desarrollo cuenta con una pantalla, que aunque no se utilizó en este proyecto, podría ser útil para aplicaciones futuras, como depuración o pruebas de conectividad entre dispositivos. A continuación puede verse la placa de desarrollo Heltec:
 
 \insertimage[\label{heltec_lora}]{secciones/section_4/images/heltec}{width=13cm}{Placa de desarrollo Heltec Lora WiFi v2}
 
 Para proporcionar más detalles sobre el equipo Heltec WiFi LoRa 32, es importante destacar que esta placa se orienta hacia el IoT. Se basa en el microcontrolador ESP32 y utiliza el chip SX1278 integrado para las comunicaciones LoRa. Estos dos dispositivos interactúan a través de una interfaz de comunicación Serial Peripheral Interface (SPI). Es importante señalar que el chip SX1278 es el apropiado para su uso en Argentina debido a las bandas de frecuencia permitidas.
 
-Dicho esto, vamos a utilizar la placa de la figura \ref{heltec_lora} en nuestro nodo sensor. Además dejamos una tabla de de especificaciones tecnicas para mayor referencia a continuación.
+Dicho esto, vamos a utilizar la placa de la figura \ref{heltec_lora} en nuestro nodo sensor. Además dejamos una tabla de especificaciones técnicas para mayor referencia a continuación.
 
 
 \enabletablerowcolor[2] % Activa el color de celda
@@ -260,28 +260,28 @@ Dicho esto, vamos a utilizar la placa de la figura \ref{heltec_lora} en nuestro 
     \caption{Tabla de parámetros Heltect WiFi LoRa 32 v2}
     \begin{tabular}{|p{2cm}|*{3}{>{\raggedright\arraybackslash}p{14cm}|}}
         \hline
-        \textbf{Parámetro} & \textbf{Descripción} \\
+        \textbf{Parámetro} & \textbf{Descripción}                                                                                    \\
         \hline
-        Master Chip & ESP32 (240MHz Tensilica LX6 dual-core+1 ULP, 600 DMIPS) \\
-        LoRa Chipset & SX1278 \\
-        Wi-Fi & 802.11 b/g/n (802.11n up to 150 Mbps) \\
-        Bluetooth &Bluetooth V4.2 BR/EDR and Bluetooth LE specification \\
-        Hardware Resource & UART x 3; SPI x 2; I2C x 2; I2S x 1; 12-bits ADC input x 18; 8\-bits DAC output x 2; GPIO x 22; GPI x 6 \\
-        Memory &8MB(64M-bits) SPI FLASH; 520 KB internal SRAM \\
-        Interface &Micro USB x 1; LoRa Antenna interface(IPEX) x 1 \\
-        Dimensions &51 x 25.5 x 10.6 mm \\
+        Master Chip        & ESP32 (240MHz Tensilica LX6 dual-core+1 ULP, 600 DMIPS)                                                 \\
+        LoRa Chipset       & SX1278                                                                                                  \\
+        Wi-Fi              & 802.11 b/g/n (802.11n up to 150 Mbps)                                                                   \\
+        Bluetooth          & Bluetooth V4.2 BR/EDR and Bluetooth LE specification                                                    \\
+        Hardware Resource  & UART x 3; SPI x 2; I2C x 2; I2S x 1; 12-bits ADC input x 18; 8\-bits DAC output x 2; GPIO x 22; GPI x 6 \\
+        Memory             & 8MB(64M-bits) SPI FLASH; 520 KB internal SRAM                                                           \\
+        Interface          & Micro USB x 1; LoRa Antenna interface(IPEX) x 1                                                         \\
+        Dimensions         & 51 x 25.5 x 10.6 mm                                                                                     \\
         \hline
-        \end{tabular}
+    \end{tabular}
     \label{tab:tabla_parametros_heltec}
 \end{table}
 \disabletablerowcolor % Desactiva el color de celda
 
 \subsubsubsection{PinOut}
-\insertimage[\label{heltec_pinout}]{secciones/section_4/images/pinout_heltec}{width=14cm}{Pinout placa de desarrollo Heltec Lora WiFi v2}
+\insertimage[\label{heltec_pinout}]{secciones/section_4/images/pinout_heltec}{width=14cm}{Pinout placa de desarrollo Heltec WiFi Lora 32 v2}
 
 \newpage
 \subsubsection{Plano esquemático}
-\insertimage[\label{plano_esquematico}]{secciones/section_4/images/Schematic_smartparking-sensor}{width=12.5cm}{Plano esquematico del nodo sensor}
+\insertimage[\label{plano_esquematico}]{secciones/section_4/images/Schematic_smartparking-sensor}{width=12.5cm}{Plano esquemático del nodo sensor}
 
 
 
@@ -298,7 +298,7 @@ En el contexto del nodo sensor, nuestro objetivo principal radica en la identifi
 
 Para establecer una referencia en cuanto a lo que se considera un valor típico en estas magnitudes, empleamos una técnica conocida como \quotes{media móvil}. Este algoritmo considera como valor normal el resultado obtenido al calcular el promedio de las últimas $n$ mediciones. La detección de anomalías se lleva a cabo al comparar la última medición registrada con el valor más reciente calculado por la media móvil. Cuando la diferencia supera un umbral previamente definido, se identifica como una anomalía.
 
-En la Figura \ref{comparativa_anomalias_forw} ilustramos el proceso en cuestión. En la primera gráfica, de arriba a abajo, se muestran los datos del campo magnético capturados por el magnetómetro cuando un vehículo se aproxima de manera frontal al sensor. La segunda gráfica muestra los resultados obtenidos al aplicar una media móvil de veinte periodos a los datos previamente mencionados. Finalmente, la tercera gráfica presenta la magnitud en valor absoluto de la diferencia entre el valor del campo magnético en el instante $n$ de la primer gráfica y la media móvil en el instante $n-1$ de la segunda.
+En la Figura \ref{comparativa_anomalias_forw} ilustramos el proceso en cuestión. En la primera gráfica, de arriba a abajo, se muestran los datos del campo magnético capturados por el magnetómetro cuando un vehículo se aproxima de manera frontal al sensor. La segunda gráfica muestra los resultados obtenidos al aplicar una media móvil de veinte periodos a los datos previamente mencionados. Finalmente, la tercera gráfica presenta la magnitud en valor absoluto de la diferencia entre el valor del campo magnético en el instante $n$ del primer gráfico y la media móvil en el instante $n-1$ de la segunda.
 Si nos desplazamos de derecha a izquierda, observamos que inicialmente, en ausencia de cualquier objeto que pueda influir en el campo magnético, los valores permanecen constantes en torno a los 520 miliGauss (mG), lo que conlleva a una variación prácticamente insignificante. Sin embargo, al acercarnos a la muestra doscientos, comenzamos a presenciar una variación en el campo magnético debido a la aproximación del vehículo, lo que resulta en un notable aumento en la variabilidad. Posteriormente, cuando el automóvil se detiene, el campo magnético se estabiliza y la variación vuelve a ser nula. Este patrón persiste hasta que el automóvil inicia su retroceso, aproximadamente en la muestra quinientos, lo que provoca una alteración en el campo significativa como para generar un incremento sustancial en la variación.
 
 \insertimage[\label{comparativa_anomalias_forw}]{secciones/section_4/images/qmc5883l_forward_analysis}{width=16cm}{Estacionamiento frontal}
@@ -312,13 +312,13 @@ En el caso de que la ocupación haya cambiado, ya sea porque estaba libre y paso
 En el sector izquierdo de la figura \ref{esquema_energia}, dentro del subsistema de algo consumo, puede verse el funcionamiento de este módulo.
 
 \subsubsubsection{Transmisión de la información} \label{title:transmition_node}
-Al detectase una variación en el estado de ocupacion del lugar de estacionamiento el sensor transmitir este evento al concentrador por medio de LoRa y para ello lo primero es seleccionar los datos a ser enviados, en nuetro caso el identificador del sensor y si esta libre o ocupado.
+Al detectase una variación en el estado de ocupación del lugar de estacionamiento el sensor transmitir este evento al concentrador por medio de LoRa y para ello lo primero es seleccionar los datos a ser enviados, en nuestro caso el identificador del sensor y si está libre u ocupado.
 
 \begin{sourcecode}{json}{}
-{
-    "id": number,
-    "taken": bool
-}
+    {
+        "id": number,
+        "taken": bool
+    }
 \end{sourcecode}
 
 
@@ -331,7 +331,7 @@ Una vez enviado el mensaje el microcontrolador regresa al modo de Deep-Sleep, pr
 \insertimage[\label{esquema_energia}]{secciones/section_4/images/esquema_energia}{width=17cm}{Diagrama de flujo del nodo sensor}
 
 
-\subsubsection{Estimación tiempo de vida util - bateria del nodo sensor}{\label{sec:bateria_del_nodo_sensor}}
+\subsubsection{Estimación tiempo de vida útil de la batería}{\label{sec:bateria_del_nodo_sensor}}
 Dada la naturaleza de nuestro proyecto, uno de los aspectos clave del mismo en la
 implementación del nodo sensor es el diseño de este para que consuma muy poca energía y
 además acompañar esta implementación junto con la estimación en el tiempo de vida útil
@@ -344,15 +344,15 @@ A continuación introduciremos los conceptos claves junto con los cálculos nece
 para lograr la implementación y la estimación del tiempo de vida.
 
 \subsubsubsection{ESP32 - Modos de energía}
-Segun la hoja de datos, la ESP32 ofrece seis modos de energía distintos (Ver figura \ref{esp_low_power})
+Según la hoja de datos, la ESP32 ofrece seis modos de energía distintos (Ver figura \ref{esp_low_power})
 
 \insertimage[\label{esp_low_power}]{secciones/section_4/images/esp_low_power}{width=17cm}{Modos de consumo de energía ESP32}
 
 Para la construcción del nodo sensor haremos uso de tres de ellos:
 \begin{itemize}
     \item Modem-sleep: La CPU está operativa aunque la radio Wi-Fi/Bluetooth están desactivadas. El subsistema de alto consumo se ejecuta en este modo.
-    \item Deep-sleep: En este estado, únicamente se mantiene activa la memoria RTC, que constituye una variante particular de la memoria RAM concebida para preservar los valores de las variables al ingresar en este modo de operación. De igual manera, se encuentra operativo el ULP (Ultra Low Power coprocesador), un dispositivo que adopta la forma de una máquina de estados finitos (FSM) de sencilla configuración, diseñado específicamente para llevar a cabo mediciones utilizando el conversor analógico-digital (ADC), el sensor de temperatura y los sensores I2C externos, mientras que las unidades de procesamiento principales se encuentran en el estado de suspensión profunda. Este coprecesador sera el encargado de ejecutar el detector de anomalias utilizando el magnetómetro.
-    \item Light-sleep: La CPU está en pausa. El chip puede ser activado mediante cualquier evento de activación. Si bien el consumo en este modo es bastante elevado es util para conservar el estado del sistema mientras se ejcutan tareas como esperar que el modulo LoRa complete el envio de un mensaje.
+    \item Deep-sleep: En este estado, únicamente se mantiene activa la memoria RTC, que constituye una variante particular de la memoria RAM concebida para preservar los valores de las variables al ingresar en este modo de operación. De igual manera, se encuentra operativo el ULP (Ultra Low Power coprocesador), un dispositivo que adopta la forma de una máquina de estados finitos (FSM) de sencilla configuración, diseñado específicamente para llevar a cabo mediciones utilizando el conversor analógico-digital (ADC), el sensor de temperatura y los sensores I2C externos, mientras que las unidades de procesamiento principales se encuentran en el estado de suspensión profunda. Este coprocesador será el encargado de ejecutar el detector de anomalías utilizando el magnetómetro.
+    \item Light-sleep: La CPU está en pausa. El chip puede ser activado mediante cualquier evento de activación. Si bien el consumo en este modo es bastante elevado es útil para conservar el estado del sistema mientras se ejecutan tareas como esperar que el módulo LoRa complete el envió de un mensaje.
 \end{itemize}
 
 
@@ -361,110 +361,110 @@ Para la construcción del nodo sensor haremos uso de tres de ellos:
 Antes de adentrarnos en esta sección, es importante aclarar que, dado que estamos trabajando con una placa de desarrollo, por lo que el consumo de energía real es mayor que el indicado en las hojas de datos de los fabricantes. Además, la placa está siendo alimentada de manera continua, lo que significa que cualquier estimación de consumo de energía en una futura aplicación carecería de fundamentos sólidos. Para futuros desarrollos, planeamos utilizar el SoC ESP32 junto con los sensores mencionados previamente. En ese caso, podremos basarnos en los valores proporcionados en las hojas de datos de los fabricantes para realizar cálculos más precisos sobre la vida útil de la batería.
 
 \begin{itemize}
-    \item \textbf{Subsistema de bajo consumo:} el coprocesador de bajo consumo se activa cada $500 \, ms$, realiza una lectura con el magnetómetro, actualiza el detector y activa el procesador principal si una anomalía es detectada, por lo que los consumo estan asociados al ULP y al magnetómetro.
-    \begin{itemize}
-        \item Consumo coprocesador (ULP):
-        \begin{flalign}
-            I_{\text{ULP on}} &= 400 \, \mu\text{A} &&\text{Corriente ULP encendido}
-        \end{flalign}
-        \begin{flalign}
-            t_{\text{ULP on}} &= 2 \, ms &&\text{Tiempo ULP encendido}
-        \end{flalign}
-        \begin{flalign}
-            I_{\text{ULP off}} &= 10 \, \mu\text{A} &&\text{Corriente ULP apagado}
-        \end{flalign}
-        \begin{flalign}
-            t_{\text{ULP off}} &= 500 \, ms &&\text{Tiempo ULP apagado}
-        \end{flalign}
-        \begin{flalign}
-            I_{\text{ULP}} &= \frac{I_{\text{ULP on}} \, t_{\text{ULP on}} + I_{\text{ULP off}} \, t_{\text{ULP off}}}{t_{\text{ULP on}} + t_{\text{ULP off}}} = 11,55 \, \mu\text{A} &&\text{Corriente ULP}
-        \end{flalign}
-        \item Consumo magnetómetro:
-        \begin{flalign}
-            I_{\text{MAG}} &= 20 \, \mu\text{A} &&\text{Corriente magnetómetro}
-        \end{flalign}
-        \item Consumo total:
-        \begin{flalign}
-            I_{\text{LP}} &= I_{\text{ULP}} + I_{\text{MAG}} = 0,0316 \, m\text{A} &&\text{Corriente total bajo consumo}
-        \end{flalign}
-    \end{itemize}
-    \item \textbf{Subsistema de alto consumo}: el microcontrolador ejecuta mediciones con el sensor laser y envia la información con el modulador LoRa, es por esto que dividimos los calculos en las etapas de sensado y transmisión.
-    \begin{itemize}
-        \item Periodo de permanencia de los automóviles: representa el tiempo transcurrido entre que un auto ingresa y sale de un espacio de estacionamiento
-        \begin{equation}
-            T_A [ms]
-        \end{equation}
-        \item Consumo etapa sensado:
-        \begin{flalign}
-            I_{\text{ESP on}} &= 25 \, m\text{A} &&\text{Corriente ESP en modo activo}
-        \end{flalign}
-        \begin{flalign}
-            t_{\text{ESP on}} &= 300 \, ms &&\text{Tiempo ESP en modo activo}
-        \end{flalign}
-        \begin{flalign}
-            I_{\text{ESP}} &= \frac{I_{\text{ESP on}} \, t_{\text{ESP on}}}{t_{\text{ESP on}} + T_A} = \frac{7.500}{300 + T_A} \, m\text{A} &&\text{Corriente ESP total}
-        \end{flalign}
-        \begin{flalign}
-            I_{\text{LASER on}} &= 19 \, m\text{A} &&\text{Corriente Laser encendido}
-        \end{flalign}
-        \begin{flalign}
-            t_{\text{LASER on}} &= 40 \, ms &&\text{Tiempo Laser encendido}
-        \end{flalign}
-        \begin{flalign}
-            I_{\text{LASER}} &= \frac{I_{\text{LASER on}} \, t_{\text{LASER on}}}{t_{\text{LASER on}} + T_A} = \frac{760}{40 + T_A} \, m\text{A} &&\text{Corriente Laser total}
-        \end{flalign}
-        \begin{flalign}
-            I_{\text{S}} &= I_{\text{ESP}} + I_{\text{LASER}} = \frac{7.500}{300 + T_A} + \frac{760}{40 + T_A} \, m\text{A} &&\text{Corriente total sensando}
-        \end{flalign}
-        \item Consumo etapa transmisión:
-        \begin{flalign}
-            I_{\text{SX stby}} &= 0.0015 \, \mu\text{A} &&\text{Corriente SX standby}
-        \end{flalign}
-        \begin{flalign}
-            t_{\text{SX stby}} &= 27 \, ms &&\text{Tiempo SX standby}
-        \end{flalign}
-        \begin{flalign}
-            I_{\text{SX tx}} &= 100 \, m\text{A} &&\text{Corriente SX transmitiendo}
-        \end{flalign}
-        \begin{flalign}
-            t_{\text{SX tx}} &= 175 \, ms &&\text{Tiempo SX transmitiendo}
-        \end{flalign}
-        \begin{flalign}
-            I_{\text{SX rx}} &= 12 \, m\text{A} &&\text{Corriente SX recibiendo}
-        \end{flalign}
-        \begin{flalign}
-            t_{\text{SX rx}} &= 1000 \, ms &&\text{Tiempo SX recibiendo}
-        \end{flalign}
-        \begin{flalign}
-            I_{\text{SX}} &= \frac{I_{\text{SX stby}} \, T_A +  I_{\text{SX stby}} \, t_{\text{SX stby}} + I_{\text{SX rx}} \,t_{\text{SX rx}} + I_{\text{SX tx}} \, t_{\text{SX tx}}}{T_A + t_{\text{SX stby}} +  t_{\text{SX rx}} + t_{\text{SX tx}}}  &&\text{Corriente SX1278} \label{corriente_total_sx1278_formula}
-        \end{flalign}
-        \begin{flalign}
-            I_{\text{SX}} &= \frac{29500 + 1.5 \times 10^{-6} \, T_A}{1202 + T_A} \, m\text{A} &&\text{Corriente SX1278 total con valores reemplazados}
-        \end{flalign}
-        \begin{flalign}
-            I_{\text{ESP ls}} &= 0.8 \, m\text{A} &&\text{Corriente ESP light sleep}
-        \end{flalign}
-        \begin{flalign}
-            t_{\text{ESP ls}} &= t_{\text{SX tx}} + t_{\text{SX rx}} &&\text{Tiempo ESP light sleep}
-        \end{flalign}
-        \begin{flalign}
-            t_{\text{ESP on}} &= t_{\text{SX stby}} &&\text{Tiempo ESP light sleep}
-        \end{flalign}
-        \begin{flalign}
-            I_{\text{ESP}} &= \frac{I_{\text{ESP on}} \, t_{\text{ESP on}} + I_{\text{ESP ls}} \, t_{\text{ESP ls}}}{t_{\text{ESP on}}+ t_{\text{ESP ls}} + T_A} = \frac{1615}{1202 + T_A} \, m\text{A} &&\text{Corriente ESP total}
-        \end{flalign}
-        \begin{flalign}
-            I_{\text{T}} &= I_{\text{ESP}} + I_{\text{SX}} = \frac{31115 + 1.5 \times 10^{-6} \, T_A}{1202 + T_A} \, m\text{A} &&\text{Corriente total transmitiendo}
-        \end{flalign}
-        \item Consumo total:
-        \begin{flalign}
-            I_{\text{HP}} &= I_{\text{S}} + I_{\text{T}} = \frac{31115 + 1.5 \times 10^{-6} \, T_A}{1202 + T_A}  + \frac{7500}{300 + T_A} + \frac{760}{40 + T_A} \, m\text{A} &&
-        \end{flalign}
-    \end{itemize}
+    \item \textbf{Subsistema de bajo consumo:} el coprocesador de bajo consumo se activa cada $500 \, ms$, realiza una lectura con el magnetómetro, actualiza el detector y activa el procesador principal si una anomalía es detectada, por lo que los consumo están asociados al ULP y al magnetómetro.
+          \begin{itemize}
+              \item Consumo coprocesador (ULP):
+                    \begin{flalign}
+                        I_{\text{ULP on}} & = 400 \, \mu\text{A} &  & \text{Corriente ULP encendido}
+                    \end{flalign}
+                    \begin{flalign}
+                        t_{\text{ULP on}} & = 2 \, ms &  & \text{Tiempo ULP encendido}
+                    \end{flalign}
+                    \begin{flalign}
+                        I_{\text{ULP off}} & = 10 \, \mu\text{A} &  & \text{Corriente ULP apagado}
+                    \end{flalign}
+                    \begin{flalign}
+                        t_{\text{ULP off}} & = 500 \, ms &  & \text{Tiempo ULP apagado}
+                    \end{flalign}
+                    \begin{flalign}
+                        I_{\text{ULP}} & = \frac{I_{\text{ULP on}} \, t_{\text{ULP on}} + I_{\text{ULP off}} \, t_{\text{ULP off}}}{t_{\text{ULP on}} + t_{\text{ULP off}}} = 11,55 \, \mu\text{A} &  & \text{Corriente ULP}
+                    \end{flalign}
+              \item Consumo magnetómetro:
+                    \begin{flalign}
+                        I_{\text{MAG}} & = 20 \, \mu\text{A} &  & \text{Corriente magnetómetro}
+                    \end{flalign}
+              \item Consumo total:
+                    \begin{flalign}
+                        I_{\text{LP}} & = I_{\text{ULP}} + I_{\text{MAG}} = 0,0316 \, m\text{A} &  & \text{Corriente total bajo consumo}
+                    \end{flalign}
+          \end{itemize}
+    \item \textbf{Subsistema de alto consumo}: el microcontrolador ejecuta mediciones con el sensor láser y envía la información con el modulador LoRa, es por esto que dividimos los cálculos en las etapas de censado y transmisión.
+          \begin{itemize}
+              \item Periodo de permanencia de los automóviles: representa el tiempo transcurrido entre que un auto ingresa y sale de un espacio de estacionamiento
+                    \begin{equation}
+                        T_A [ms]
+                    \end{equation}
+              \item Consumo etapa censado:
+                    \begin{flalign}
+                        I_{\text{ESP on}} & = 25 \, m\text{A} &  & \text{Corriente ESP en modo activo}
+                    \end{flalign}
+                    \begin{flalign}
+                        t_{\text{ESP on}} & = 300 \, ms &  & \text{Tiempo ESP en modo activo}
+                    \end{flalign}
+                    \begin{flalign}
+                        I_{\text{ESP}} & = \frac{I_{\text{ESP on}} \, t_{\text{ESP on}}}{t_{\text{ESP on}} + T_A} = \frac{7.500}{300 + T_A} \, m\text{A} &  & \text{Corriente ESP total}
+                    \end{flalign}
+                    \begin{flalign}
+                        I_{\text{LASER on}} & = 19 \, m\text{A} &  & \text{Corriente Láser encendido}
+                    \end{flalign}
+                    \begin{flalign}
+                        t_{\text{LASER on}} & = 40 \, ms &  & \text{Tiempo Láser encendido}
+                    \end{flalign}
+                    \begin{flalign}
+                        I_{\text{LASER}} & = \frac{I_{\text{LASER on}} \, t_{\text{LASER on}}}{t_{\text{LASER on}} + T_A} = \frac{760}{40 + T_A} \, m\text{A} &  & \text{Corriente Láser total}
+                    \end{flalign}
+                    \begin{flalign}
+                        I_{\text{S}} & = I_{\text{ESP}} + I_{\text{LASER}} = \frac{7.500}{300 + T_A} + \frac{760}{40 + T_A} \, m\text{A} &  & \text{Corriente total sensando}
+                    \end{flalign}
+              \item Consumo etapa transmisión:
+                    \begin{flalign}
+                        I_{\text{SX stby}} & = 0.0015 \, \mu\text{A} &  & \text{Corriente SX standby}
+                    \end{flalign}
+                    \begin{flalign}
+                        t_{\text{SX stby}} & = 27 \, ms &  & \text{Tiempo SX standby}
+                    \end{flalign}
+                    \begin{flalign}
+                        I_{\text{SX tx}} & = 100 \, m\text{A} &  & \text{Corriente SX transmitiendo}
+                    \end{flalign}
+                    \begin{flalign}
+                        t_{\text{SX tx}} & = 175 \, ms &  & \text{Tiempo SX transmitiendo}
+                    \end{flalign}
+                    \begin{flalign}
+                        I_{\text{SX rx}} & = 12 \, m\text{A} &  & \text{Corriente SX recibiendo}
+                    \end{flalign}
+                    \begin{flalign}
+                        t_{\text{SX rx}} & = 1000 \, ms &  & \text{Tiempo SX recibiendo}
+                    \end{flalign}
+                    \begin{flalign}
+                        I_{\text{SX}} & = \frac{I_{\text{SX stby}} \, T_A +  I_{\text{SX stby}} \, t_{\text{SX stby}} + I_{\text{SX rx}} \,t_{\text{SX rx}} + I_{\text{SX tx}} \, t_{\text{SX tx}}}{T_A + t_{\text{SX stby}} +  t_{\text{SX rx}} + t_{\text{SX tx}}} &  & \text{Corriente SX1278} \label{corriente_total_sx1278_formula}
+                    \end{flalign}
+                    \begin{flalign}
+                        I_{\text{SX}} & = \frac{29500 + 1.5 \times 10^{-6} \, T_A}{1202 + T_A} \, m\text{A} &  & \text{Corriente SX1278 total con valores reemplazados}
+                    \end{flalign}
+                    \begin{flalign}
+                        I_{\text{ESP ls}} & = 0.8 \, m\text{A} &  & \text{Corriente ESP light sleep}
+                    \end{flalign}
+                    \begin{flalign}
+                        t_{\text{ESP ls}} & = t_{\text{SX tx}} + t_{\text{SX rx}} &  & \text{Tiempo ESP light sleep}
+                    \end{flalign}
+                    \begin{flalign}
+                        t_{\text{ESP on}} & = t_{\text{SX stby}} &  & \text{Tiempo ESP light sleep}
+                    \end{flalign}
+                    \begin{flalign}
+                        I_{\text{ESP}} & = \frac{I_{\text{ESP on}} \, t_{\text{ESP on}} + I_{\text{ESP ls}} \, t_{\text{ESP ls}}}{t_{\text{ESP on}}+ t_{\text{ESP ls}} + T_A} = \frac{1615}{1202 + T_A} \, m\text{A} &  & \text{Corriente ESP total}
+                    \end{flalign}
+                    \begin{flalign}
+                        I_{\text{T}} & = I_{\text{ESP}} + I_{\text{SX}} = \frac{31115 + 1.5 \times 10^{-6} \, T_A}{1202 + T_A} \, m\text{A} &  & \text{Corriente total transmitiendo}
+                    \end{flalign}
+              \item Consumo total:
+                    \begin{flalign}
+                        I_{\text{HP}} & = I_{\text{S}} + I_{\text{T}} = \frac{31115 + 1.5 \times 10^{-6} \, T_A}{1202 + T_A}  + \frac{7500}{300 + T_A} + \frac{760}{40 + T_A} \, m\text{A} &  &
+                    \end{flalign}
+          \end{itemize}
     \item \textbf{Consumo total del sistema:}
-    \begin{flalign}
-        I &= I_{\text{LP}} + I_{\text{HP}} = \frac{31115 + 1.5 \times 10^{-6} \, T_A}{1202 + T_A}  + \frac{7500}{300 + T_A} + \frac{760}{40 + T_A} + 0,0316 \, m\text{A} &&
-    \end{flalign}
+          \begin{flalign}
+              I & = I_{\text{LP}} + I_{\text{HP}} = \frac{31115 + 1.5 \times 10^{-6} \, T_A}{1202 + T_A}  + \frac{7500}{300 + T_A} + \frac{760}{40 + T_A} + 0,0316 \, m\text{A} &  &
+          \end{flalign}
 \end{itemize}
 
 

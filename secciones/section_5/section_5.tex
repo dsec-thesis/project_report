@@ -50,7 +50,7 @@ Cabe destacar que las lecturas del magnetómetro, como se observa en la figura \
 
 En este apartado, describiremos las pruebas realizadas para verificar el funcionamiento y conectividad de nuestra modulación LoRa entre el nodo sensor y el nodo concentrador.
 
-Dado que estamos trabajando con un prototipo, a fin de realizar validaciones inicialiales como nuestra topología de red es una configuración en estrella, donde los nodos sensores envían datos al concentrador, hemos llevado a cabo las siguientes pruebas:
+Dado que estamos trabajando con un prototipo, a fin de realizar validaciones iniciales como nuestra topología de red es una configuración en estrella, donde los nodos sensores envían datos al concentrador, hemos llevado a cabo las siguientes pruebas:
 
 \begin{itemize}
     \item Prueba de conectividad inicial
@@ -62,16 +62,16 @@ Comenzamos con una prueba de conectividad inicial sencilla de transmisión punto
 Una vez que esta prueba resultó exitosa, procedimos a enviar información de forma continua al concentrador desde dos de los nodos sensores con el propósito de evaluar el rendimiento en una situación de \quotes{prueba de carga} más real. Esta prueba consistió en enviar un paquete de datos típico que solemos enviar, como se describe en el apartado \ref{title:transmition_node}, y esperar la confirmación de recepción (acknowledgment) por parte del concentrador. Para esto se utilizaron 3 placas Heltec enviando información al nodo concentrador. Esta prueba arrojó los siguientes tiempos promedio para el nodo sensor:
 \begin{table}[H]
     \centering
-    \caption{Resultados ensayo de carga LoRa}
+    \caption{Resultado ensayo de carga LoRa}
     \begin{tabular}{|p{6cm}|*{2}{>{\raggedright\arraybackslash}p{5cm}|}}
         \hline
-        \textbf{Resultados} & \textbf{""} \\
+        \textbf{Resultados}          & \textbf{""}           \\
         \hline
-            Number of messages processed &642 messages \\
-            Elapsed time & 59.58 seconds \\
-            Messages per second & 10.78 messages/second \\
+        Number of messages processed & 642 messages          \\
+        Elapsed time                 & 59.58 seconds         \\
+        Messages per second          & 10.78 messages/second \\
         \hline
-        \end{tabular}
+    \end{tabular}
     \label{tab:tabla_valores_resultados_cx_lora}
 \end{table}
 
@@ -131,7 +131,7 @@ Tanto para las reservaciones en curso como para las históricas, al ingresar en 
 
 \subsubsection{Cancelación de la reserva}
 
-Finalmente, en caso de que el usuario cambie de opinión después de haber realizado la reserva, se le brinda la opción de cancelarla directamente desde la interfaz. En un entorno de producción, podría ser contemplado dentro del modelo de negocio implementar reembolsos en base al momento en que se efectúa la cancelación. Aunque este aspecto no se aborda en detalle en este proyecto final, se menciona como una nota relevante para los lectores interesados.
+Finalmente, en caso de que el usuario cambie de opinión después de haber realizado la reserva, se le brinda la opción de cancelarla directamente desde la interfaz. En un entorno de producción, podría ser contemplado dentro del modelo de negocio implementar reembolsos basándonos en el momento en que se efectúa la cancelación. Aunque este aspecto no se aborda en detalle en este proyecto final, se menciona como una nota relevante para los lectores interesados.
 
 \begin{images}[\label{cancelacion_reserva}]{Proceso de cancelación de una reserva}
     \addimage[\label{cancelacion_1}]{secciones/section_5/images/cancelacion_1}{width=5cm}{}
