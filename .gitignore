@@ -3,3 +3,6 @@
 
 # Ignore vscode dir
 .vscode/
+
+# Ignore Macfiles
+.DS_Store
